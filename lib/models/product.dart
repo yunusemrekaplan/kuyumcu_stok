@@ -1,11 +1,12 @@
 class Product {
-  late String barcode;
   late int id;
+  late String barcodeText;
+  late String barcodePath;
+  late String name;
   late int carat; // x
   late double gram; // y
   late double costGram; // t
   late double mil; // z
-  late String name;
   late double costPrice; // s
 
   // (x + z) * y = t
