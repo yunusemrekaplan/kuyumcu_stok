@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
+import 'package:kuyumcu_stok/screens/product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/products_screen.dart';
 import 'package:kuyumcu_stok/screens/sale_screen.dart';
 import 'package:window_manager/window_manager.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/': (BuildContext context) => HomeScreen(),
         '/products-screen': (BuildContext context) => const ProductsScreen(),
         '/sale-screen': (BuildContext context) => const SaleScreen(),
+        '/product-add-screen': (BuildContext context) => const ProductAddScreen(),
       },
       initialRoute: '/',
     );

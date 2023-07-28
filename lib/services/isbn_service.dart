@@ -2,15 +2,18 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:aspose_barcode_cloud/api.dart';
-import 'package:http/http.dart' as http;
 import 'package:aspose_barcode_cloud/api.dart' as barcode;
+/*
+import 'package:aspose_barcode_cloud/api.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:http/http.dart' as http;
+*/
 
 class IsbnService {
   static const String firstCode = '978';
   static const List<String> codes = ['1','2','3','4','5','6','7','8','9'];
 
+  // Barkod numarası oluşturma algoritması
   static String generateCode() {
     String res = firstCode;
     int sum = 38; // 9*1 + 7*3 + 8*1
@@ -33,6 +36,7 @@ class IsbnService {
     return res + checkDigit.toString();
   }
 
+  // Isbn barkodu oluşturan fonksiyon
   static Future<String> generateBarcode() async {
     final isbnCode = generateCode();
     final fileName = '$isbnCode.png';

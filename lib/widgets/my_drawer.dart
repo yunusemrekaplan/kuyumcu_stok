@@ -16,8 +16,7 @@ class _MyDrawerState extends State<MyDrawer> {
         children: <Widget>[
           IconButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
             },
             icon: const Icon(Icons.house),
             iconSize: 40,
@@ -35,6 +34,13 @@ class _MyDrawerState extends State<MyDrawer> {
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/sale-screen', (route) => false);
+            },
+          ),
+          ListTile(
+            title: const Text('Ürün Ekle'),
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/product-add-screen', (route) => false);
             },
           ),
         ],
