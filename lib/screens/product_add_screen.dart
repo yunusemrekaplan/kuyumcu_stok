@@ -259,6 +259,14 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                ElevatedButton(onPressed: () {}, child: Text('Kaydet')),
+              ],
+            ),
+          ),
         ],
       ),
     );

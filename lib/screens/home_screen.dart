@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -24,8 +25,13 @@ class HomeScreen extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                //IsbnService.generateBarcode();
-                GoldService.getGoldPrices();
+                late Barcode barcode;
+                IsbnService.generateBarcode().then((value) => () {
+                  barcode = value;
+                  print(barcode.path);
+                  print(barcode.text);
+                });
+                //GoldService.getGoldPrices();
               },
               child: Text('Barkod Üret', style: TextStyle(fontSize: 26,),),
             ),

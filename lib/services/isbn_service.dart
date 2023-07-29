@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:aspose_barcode_cloud/api.dart' as barcode;
+import 'package:kuyumcu_stok/models/barcode.dart';
 /*
 import 'package:aspose_barcode_cloud/api.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,7 +38,7 @@ class IsbnService {
   }
 
   // Isbn barkodu oluşturan fonksiyon
-  static Future<String> generateBarcode() async {
+  static Future<Barcode> generateBarcode() async {
     final isbnCode = generateCode();
     final fileName = '$isbnCode.png';
     const filePath = 'barcodes/';
@@ -53,7 +54,8 @@ class IsbnService {
     Uint8List? generated = await api.getBarcodeGenerate("ISBN", isbnCode);
     print(await File(filePath+fileName).writeAsBytes(generated));
     print("Generated image saved to $fileName");
-    return filePath;
+
+    return Barcode(text: isbnCode, path: filePath);
 
     /*print(await api.putBarcodeGenerateFile("isbn.png", "ISBN", "123456789"));
 

@@ -10,7 +10,7 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  List<Product> products = [
+  /*List<Product> products = [
     Product(name: 'Yüzük', gram: 5.4, mil: 560),
     Product(name: 'Kolye', gram: 7.2, mil: 740),
     Product(name: 'Bileklik', gram: 11.6, mil: 600),
@@ -34,7 +34,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
     Product(name: 'Yüzük', gram: 3.1, mil: 480),
     Product(name: 'Yüzük', gram: 3.1, mil: 480),
     Product(name: 'Yüzük', gram: 3.1, mil: 480),
-  ];
+  ];*/
+
+  late List<Product> products;
 
   @override
   Widget build(BuildContext context) {
