@@ -2,7 +2,7 @@ import 'package:kuyumcu_stok/models/barcode.dart';
 
 class Product {
   late int id;
-  late Barcode barcode;
+  late int barcodeId;
   late String name;
   late int carat; // x
   late double gram; // y
@@ -15,7 +15,7 @@ class Product {
   // (x + z) * y * g = s
 
   Product({
-    required this.barcode,
+    required this.barcodeId,
     required this.name,
     required this.carat,
     required this.gram,
@@ -26,7 +26,7 @@ class Product {
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    barcode = Barcode.fromJson(json['barcode']);
+    barcodeId = json['barcodeId'];
     name = json['name'] ?? '';
     carat = json['carat'];
     gram = json['gram'];
@@ -37,7 +37,7 @@ class Product {
 
   Map<String, dynamic> toJson() {
     return {
-      'barcode': barcode.toJsonWithId(),
+      'barcodeId': barcodeId,
       'name' : name ?? '',
       'carat' : carat,
       'gram' : gram,

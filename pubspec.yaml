@@ -42,6 +42,7 @@ dependencies:
   path_provider: ^2.0.15
   html: ^0.15.4
   web_scraper: ^0.1.4
+  sqflite_common_ffi: ^2.3.0
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
+import 'package:kuyumcu_stok/services/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -24,16 +25,26 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 late Barcode barcode;
-                IsbnService.generateBarcode().then((value) => () {
-                  barcode = value;
-                  print(barcode.path);
-                  print(barcode.text);
-                });
-                //GoldService.getGoldPrices();
+                IsbnService.generateBarcode().then(
+                  (value) async {
+                      print('girdi');
+                      barcode = value;
+                      print(barcode.path);
+                      print(barcode.text);
+
+                      await BarcodeDbHelper().insert('barcodes', barcode.toJson()).then((value) => print('inserted row id: $value'));
+                    },
+                );
+
               },
-              child: Text('Barkod Üret', style: TextStyle(fontSize: 26,),),
+              child: const Text(
+                'Barkod Üret',
+                style: TextStyle(
+                  fontSize: 26,
+                ),
+              ),
             ),
           ],
         ),

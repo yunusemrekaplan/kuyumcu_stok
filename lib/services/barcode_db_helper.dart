@@ -1,82 +1,66 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:sqflite_common/sqlite_api.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class BarcodeDbHelper {
-  static const _databaseName = "MyDatabase.db";
-  static const _databaseVersion = 1;
+  static final BarcodeDbHelper _instance = BarcodeDbHelper._internal();
 
-  static const table = 'my_table';
+  factory BarcodeDbHelper() {
+    return _instance;
+  }
 
-  static const columnId = 'id';
-  static const columnText = 'text';
-  static const columnPath = 'path';
+  BarcodeDbHelper._internal();
 
   late Database _db;
 
-  // this opens the database (and creates it if it doesn't exist)
-  Future<void> init() async {
-    final documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, _databaseName);
-    _db = await openDatabase(
-      path,
-      version: _databaseVersion,
-      onCreate: _onCreate,
-    );
+  Future<void> open() async {
+    sqfliteFfiInit();
+
+    // Path to your database file
+    String path = 'kuyumcu.db';
+
+    // Open the database
+    _db = await databaseFactoryFfi.openDatabase(path);
+    await _createTable();
   }
 
-  // SQL code to create the database table
-  Future _onCreate(Database db, int version) async {
-    await db.execute('''
-          CREATE TABLE $table (
-            $columnId INTEGER PRIMARY KEY,
-            $columnText TEXT NOT NULL,
-            $columnPath INTEGER NOT NULL
-          )
-          ''');
+  Future<void> _createTable() async {
+    await _db.execute('''
+      CREATE TABLE IF NOT EXISTS barcodes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        productId INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        path TEXT NOT NULL
+      )
+    ''');
   }
 
-  // Helper methods
 
-  // Inserts a row in the database where each key in the Map is a column name
-  // and the value is the column value. The return value is the id of the
-  // inserted row.
-  Future<int> insert(Map<String, dynamic> row) async {
-    return await _db.insert(table, row);
+  Future<void> close() async {
+    // Close the database
+    await _db.close();
   }
 
-  // All of the rows are returned as a list of maps, where each map is
-  // a key-value list of columns.
-  Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await _db.query(table);
+  Future<int> insert(String tableName, Map<String, dynamic> data) async {
+    // Güncellenmiş kontrol
+    if (_db == null) {
+      throw Exception("Database is not open.");
+    }
+    // Insert the data into the given table
+    return await _db.insert(tableName, data);
   }
 
-  // All of the methods (insert, query, update, delete) can also be done using
-  // raw SQL commands. This method uses a raw query to give the row count.
-  Future<int> queryRowCount() async {
-    final results = await _db.rawQuery('SELECT COUNT(*) FROM $table');
-    return Sqflite.firstIntValue(results) ?? 0;
+  Future<List<Map<String, dynamic>>> queryAllRows(String tableName) async {
+    // Retrieve all rows from the given table
+    return await _db.query(tableName);
   }
 
-  // We are assuming here that the id column in the map is set. The other
-  // column values will be used to update the row.
-  Future<int> update(Map<String, dynamic> row) async {
-    int id = row[columnId];
-    return await _db.update(
-      table,
-      row,
-      where: '$columnId = ?',
-      whereArgs: [id],
-    );
+  Future<int> update(String tableName, Map<String, dynamic> data, int id) async {
+    // Update a row in the given table with the specified ID
+    return await _db.update(tableName, data, where: 'id = ?', whereArgs: [id]);
   }
 
-  // Deletes the row specified by the id. The number of affected rows is
-  // returned. This should be 1 as long as the row exists.
-  Future<int> delete(int id) async {
-    return await _db.delete(
-      table,
-      where: '$columnId = ?',
-      whereArgs: [id],
-    );
+  Future<int> delete(String tableName, int id) async {
+    // Delete a row from the given table with the specified ID
+    return await _db.delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 }

@@ -55,7 +55,7 @@ class IsbnService {
     print(await File(filePath+fileName).writeAsBytes(generated));
     print("Generated image saved to $fileName");
 
-    return Barcode(text: isbnCode, path: filePath);
+    return Barcode(productId: 0, text: isbnCode, path: (filePath+fileName));
 
     /*print(await api.putBarcodeGenerateFile("isbn.png", "ISBN", "123456789"));
 

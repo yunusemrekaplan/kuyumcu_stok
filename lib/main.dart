@@ -5,9 +5,11 @@ import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:kuyumcu_stok/screens/product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/products_screen.dart';
 import 'package:kuyumcu_stok/screens/sale_screen.dart';
+import 'package:kuyumcu_stok/services/barcode_db_helper.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Must add this line.
   await windowManager.ensureInitialized();
@@ -24,6 +26,9 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
   });
+
+  await BarcodeDbHelper().open();
+
   runApp(const MyApp());
 }
 
