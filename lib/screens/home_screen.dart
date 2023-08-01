@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () async {
-                late Barcode barcode;
+                /*late Barcode barcode;
                 IsbnService.generateBarcode(IsbnService.generateCode()).then(
                   (value) async {
                     print('girdi');
@@ -38,7 +38,10 @@ class HomeScreen extends StatelessWidget {
                         .insert('barcodes', barcode.toJson())
                         .then((value) => print('inserted row id: $value'));
                   },
-                );
+                );*/
+                GoldService.getGoldPrices().then((value) {
+                  print(value);
+                });
               },
               child: const Text(
                 'Barkod Üret',
