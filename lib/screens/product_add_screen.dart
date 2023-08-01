@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -158,6 +159,14 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     onChanged: (Carat? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
+                        if (gramController.value.text.isNotEmpty) {
+                          var map = Calculate.calculateCostPrice(dropdownValue, double.parse(gramController.text));
+                          setState(() {
+                            costGramController.text = map['costGram'].toString();
+                            milController.text = map['carat'].toString();
+                            costPriceController.text = map['costPrice'].toString();
+                          });
+                        }
                       });
                     },
                     /*
@@ -199,38 +208,17 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     constraints: BoxConstraints.tight(const Size(90, 35)),
                     //hintText: '9789756249840',
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Gram Maliyeti: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                Container(
-                  width: 100,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: costGramController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(100, 30)),
-                      //hintText: '9789756249840',
-                    ),
-                  ),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      print('girdi');
+                      var map = Calculate.calculateCostPrice(dropdownValue, double.parse(value));
+                      setState(() {
+                        costGramController.text = map['costGram'].toString();
+                        milController.text = map['carat'].toString();
+                        costPriceController.text = map['costPrice'].toString();
+                      });
+                    }
+                  },
                 ),
               ],
             ),
@@ -252,6 +240,38 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   alignment: Alignment.bottomLeft,
                   child: TextFormField(
                     controller: milController,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      height: 1,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+                      border: const OutlineInputBorder(),
+                      constraints: BoxConstraints.tight(const Size(100, 30)),
+                      //hintText: '9789756249840',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                const Text(
+                  'Gram Maliyeti: ',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+                // ToDo validatörleri unutma!!!
+                Container(
+                  width: 100,
+                  height: 35,
+                  alignment: Alignment.bottomLeft,
+                  child: TextFormField(
+                    controller: costGramController,
                     style: const TextStyle(
                       fontSize: 18,
                       height: 1,

@@ -8,6 +8,7 @@ class Calculate {
     double costPrice = costGram * GoldService.fGold;
     return {
       'costGram': costGram,
+      'carat': carat.milDefinition,
       'costPrice': costPrice,
     };
   }
