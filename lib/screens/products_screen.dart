@@ -36,44 +36,66 @@ class _ProductsScreenState extends State<ProductsScreen> {
     Product(name: 'Yüzük', gram: 3.1, mil: 480),
   ];*/
 
-  late List<Product> products;
+  List<Product> products = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       drawer: const MyDrawer(),
-      body: SizedBox(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                flex: 1,
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('İsim')),
-                    DataColumn(label: Text('Gram')),
-                    DataColumn(label: Text('Milyem')),
-                  ],
-                  rows: products.map(
-                    (e) => DataRow(
-                      cells: [
-                        DataCell(Text(e.name!)),
-                        DataCell(Text(e.gram.toString())),
-                        DataCell(Text(e.mil.toString())),
+      body: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height - 150,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: DataTable(
+                      columns: const [
+                        DataColumn(label: Text('İsim')),
+                        DataColumn(label: Text('Gram')),
+                        DataColumn(label: Text('Karat')),
+                        DataColumn(label: Text('Maliyet')),
                       ],
+                      rows: products
+                          .map(
+                            (e) => DataRow(
+                              cells: [
+                                DataCell(Text(e.name!)),
+                                DataCell(Text(e.gram.toString())),
+                                DataCell(Text(e.carat.toString())),
+                                DataCell(Text(e.costPrice.toString())),
+                              ],
+                            ),
+                          )
+                          .toList(),
                     ),
-                  ).toList(),
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
+          SizedBox(
+            width: 1050,
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/product-add-screen', (route) => false);
+                  },
+                  child: Text('Ürün Ekle'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
