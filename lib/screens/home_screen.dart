@@ -27,17 +27,18 @@ class HomeScreen extends StatelessWidget {
             TextButton(
               onPressed: () async {
                 late Barcode barcode;
-                IsbnService.generateBarcode().then(
+                IsbnService.generateBarcode(IsbnService.generateCode()).then(
                   (value) async {
-                      print('girdi');
-                      barcode = value;
-                      print(barcode.path);
-                      print(barcode.text);
+                    print('girdi');
+                    barcode = value;
+                    print(barcode.path);
+                    print(barcode.text);
 
-                      await BarcodeDbHelper().insert('barcodes', barcode.toJson()).then((value) => print('inserted row id: $value'));
-                    },
+                    await BarcodeDbHelper()
+                        .insert('barcodes', barcode.toJson())
+                        .then((value) => print('inserted row id: $value'));
+                  },
                 );
-
               },
               child: const Text(
                 'Barkod Üret',

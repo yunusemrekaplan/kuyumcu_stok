@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class ProductAddScreen extends StatefulWidget {
@@ -54,15 +55,30 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Barkod Oluştur'),
+                  onPressed: () {
+                    barcodeNo = IsbnService.generateCode();
+                    setState(() {
+                      barcodeNo;
+                    });
+                  },
+                  child: const Text(
+                    'Barkod Oluştur',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   width: 30,
                 ),
                 ElevatedButton(
                   onPressed: () {},
-                  child: const Text('Barkodu Çıkart'),
+                  child: const Text(
+                    'Barkodu Çıkart',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -263,7 +279,15 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
             padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
             child: Row(
               children: [
-                ElevatedButton(onPressed: () {}, child: Text('Kaydet')),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Kaydet',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

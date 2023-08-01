@@ -38,8 +38,8 @@ class IsbnService {
   }
 
   // Isbn barkodu oluşturan fonksiyon
-  static Future<Barcode> generateBarcode() async {
-    final isbnCode = generateCode();
+  static Future<Barcode> generateBarcode(String isbnCode) async {
+    //final isbnCode = generateCode();
     final fileName = '$isbnCode.png';
     const filePath = 'barcodes/';
 
