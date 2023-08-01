@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
-import 'package:web_scraper/web_scraper.dart';
 
 class GoldService {
-  static double fGold = 1700;
+
+  static late double fGold;
+  static String? sFGold;
 
   static var url = Uri.parse("https://www.hasaltin.com/");
-  var data;
 
   static Future<String> getGoldPrices() async {
     var res = await http.get(url);
@@ -18,6 +18,11 @@ class GoldService {
         .getElementsByClassName('kur')[0]
         .getElementsByClassName('alis')[0].children[1].text
         .toString();
+
+    sFGold = response;
+    var temp = response.split(',');
+    fGold = double.parse(temp[0]);
+    fGold += double.parse(temp[1]) / 100;
     return response;
   }
 }

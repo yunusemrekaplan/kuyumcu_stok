@@ -5,7 +5,8 @@ import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:kuyumcu_stok/screens/product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/products_screen.dart';
 import 'package:kuyumcu_stok/screens/sale_screen.dart';
-import 'package:kuyumcu_stok/services/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -28,6 +29,7 @@ Future<void> main() async {
   });
 
   await BarcodeDbHelper().open();
+  await GoldService.getGoldPrices();
 
   runApp(const MyApp());
 }

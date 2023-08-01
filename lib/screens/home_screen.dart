@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
-import 'package:kuyumcu_stok/services/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -17,11 +17,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int counter = 0;
 
-  late String gold;
+  String gold = '....';
 
   @override
   void initState() {
-    GoldService.getGoldPrices().then((value) => gold = value);
+    gold = GoldService.sFGold!;
+    GoldService.getGoldPrices().then((value) => setState(() {
+          gold = value;
+        }));
     super.initState();
   }
 
@@ -53,7 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 );*/
                 GoldService.getGoldPrices().then((value) {
-                  gold = value;
+                  setState(() {
+                    gold = value;
+                  });
                 });
               },
               child: const Text(
@@ -63,7 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Text(gold, style: TextStyle(fontSize: 50),),
+            Text(
+              gold,
+              style: TextStyle(fontSize: 50),
+            ),
           ],
         ),
       ),

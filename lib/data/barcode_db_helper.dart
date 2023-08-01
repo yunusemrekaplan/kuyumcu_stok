@@ -10,7 +10,7 @@ class BarcodeDbHelper {
 
   BarcodeDbHelper._internal();
 
-  late Database _db;
+  Database? _db;
 
   Future<void> open() async {
     sqfliteFfiInit();
@@ -24,7 +24,7 @@ class BarcodeDbHelper {
   }
 
   Future<void> _createTable() async {
-    await _db.execute('''
+    await _db!.execute('''
       CREATE TABLE IF NOT EXISTS barcodes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         productId INTEGER NOT NULL,
@@ -37,7 +37,7 @@ class BarcodeDbHelper {
 
   Future<void> close() async {
     // Close the database
-    await _db.close();
+    await _db!.close();
   }
 
   Future<int> insert(String tableName, Map<String, dynamic> data) async {
@@ -46,17 +46,17 @@ class BarcodeDbHelper {
       throw Exception("Database is not open.");
     }
     // Insert the data into the given table
-    return await _db.insert(tableName, data);
+    return await _db!.insert(tableName, data);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows(String tableName) async {
     // Retrieve all rows from the given table
-    return await _db.query(tableName);
+    return await _db!.query(tableName);
   }
 
   Future<Map<String, dynamic>?> getBarcodeById(int id) async {
     // Get the barcode from the table based on the given id
-    final List<Map<String, dynamic>> results = await _db.query(
+    final List<Map<String, dynamic>> results = await _db!.query(
       'barcodes',
       where: 'id = ?',
       whereArgs: [id],
@@ -72,11 +72,11 @@ class BarcodeDbHelper {
 
   Future<int> update(String tableName, Map<String, dynamic> data, int id) async {
     // Update a row in the given table with the specified ID
-    return await _db.update(tableName, data, where: 'id = ?', whereArgs: [id]);
+    return await _db!.update(tableName, data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(String tableName, int id) async {
     // Delete a row from the given table with the specified ID
-    return await _db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    return await _db!.delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 }

@@ -1,5 +1,5 @@
 import 'package:kuyumcu_stok/models/barcode.dart';
-import 'package:kuyumcu_stok/services/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 
 class Product {
