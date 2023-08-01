@@ -1,7 +1,7 @@
 class Log {
   late DateTime dateTime;
   late String? errorMessage;
-  late Map? process;
+  late String? process;
 
   Log({required this.dateTime, this.errorMessage, this.process});
 

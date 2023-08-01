@@ -22,9 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     gold = GoldService.sFGold!;
-    GoldService.getGoldPrices().then((value) => setState(() {
-          gold = value;
-        }));
+    GoldService.getGoldPrices().then(
+      (value) => setState(
+        () {
+          gold = value!;
+        },
+      ),
+    );
     super.initState();
   }
 
@@ -57,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );*/
                 GoldService.getGoldPrices().then((value) {
                   setState(() {
-                    gold = value;
+                    gold = value!;
                   });
                 });
               },
