@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
@@ -29,22 +31,22 @@ class Product {
 
     switch (carat) {
       case 14:
-        mil = 585;
+        mil = Carat.fourteen.milDefinition;
         costGram = (carat + mil) * gram;
         costPrice = costGram * GoldService.fGold;
         break;
       case 18:
-        mil = 750;
+        mil = Carat.eighteen.milDefinition;
         costGram = (carat + mil) * gram;
         costPrice = costGram * GoldService.fGold;
         break;
       case 22:
-        mil = 916;
+        mil = Carat.twentyTwo.milDefinition;
         costGram = (carat + mil) * gram;
         costPrice = costGram * GoldService.fGold;
         break;
       case 24:
-        mil = 995;
+        mil = Carat.twentyFour.milDefinition;
         costGram = (carat + mil) * gram;
         costPrice = costGram * GoldService.fGold;
         break;
