@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
+import '../enum_carat.dart';
+
 class ProductAddScreen extends StatefulWidget {
   const ProductAddScreen({super.key});
 
   @override
   State<ProductAddScreen> createState() => _ProductAddScreenState();
 }
+// ToDo validatörleri unutma!!!
 
 class _ProductAddScreenState extends State<ProductAddScreen> {
   late String barcodeNo;
@@ -19,7 +22,10 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   late TextEditingController milController;
   late TextEditingController costPriceController;
 
+  late Carat dropdownValue;
+
   _ProductAddScreenState() {
+    dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';
     nameController = TextEditingController();
     caratController = TextEditingController();
@@ -117,34 +123,57 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Karat: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                Container(
-                  width: 70,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: caratController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
+            child: SizedBox(
+              height: 56,
+              child: Row(
+                children: [
+                  const Text(
+                    'Karat: ',
+                    style: TextStyle(
+                      fontSize: 24,
                     ),
+                  ),
+                  DropdownButtonFormField(
+                    alignment: Alignment.centerLeft,
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward),
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
                       border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(70, 30)),
-                      //hintText: '9789756249840',
+                      constraints: BoxConstraints.tight(const Size(100, 120)),
                     ),
+                    items: Carat.values
+                        .map<DropdownMenuItem<Carat>>((Carat value) {
+                      return DropdownMenuItem<Carat>(
+                        alignment: AlignmentDirectional.center,
+                        value: value,
+                        child: Text(
+                          value.intDefinition.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (Carat? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                    /*
+                    <int>[
+                      Carat.twentyFour.intDefinition,
+                      Carat.values.
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                     */
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Padding(
@@ -158,22 +187,17 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   ),
                 ),
                 // ToDo validatörleri unutma!!!
-                Container(
-                  width: 70,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: gramController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(70, 30)),
-                      //hintText: '9789756249840',
-                    ),
+                TextFormField(
+                  controller: gramController,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    height: 1,
+                  ),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+                    border: const OutlineInputBorder(),
+                    constraints: BoxConstraints.tight(const Size(90, 35)),
+                    //hintText: '9789756249840',
                   ),
                 ),
               ],
