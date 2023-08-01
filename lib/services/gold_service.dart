@@ -3,6 +3,7 @@ import 'package:html/parser.dart' as parser;
 import 'package:web_scraper/web_scraper.dart';
 
 class GoldService {
+  static double fGold = 1700;
 
   static Future<void> getGoldPrices() async {
 

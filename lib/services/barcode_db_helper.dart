@@ -54,6 +54,22 @@ class BarcodeDbHelper {
     return await _db.query(tableName);
   }
 
+  Future<Map<String, dynamic>?> getBarcodeById(int id) async {
+    // Get the barcode from the table based on the given id
+    final List<Map<String, dynamic>> results = await _db.query(
+      'barcodes',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    // If the result is not empty, return the first item (since id is unique)
+    if (results.isNotEmpty) {
+      return results.first;
+    }
+
+    return null; // Return null if no barcode with the given id is found
+  }
+
   Future<int> update(String tableName, Map<String, dynamic> data, int id) async {
     // Update a row in the given table with the specified ID
     return await _db.update(tableName, data, where: 'id = ?', whereArgs: [id]);
