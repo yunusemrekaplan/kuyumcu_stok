@@ -63,7 +63,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   rows: products.map(
                     (e) => DataRow(
                       cells: [
-                        DataCell(Text(e.name)),
+                        DataCell(Text(e.name!)),
                         DataCell(Text(e.gram.toString())),
                         DataCell(Text(e.mil.toString())),
                       ],

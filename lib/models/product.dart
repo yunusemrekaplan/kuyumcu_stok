@@ -17,14 +17,15 @@ class Product {
   // t * g = s
   // (x + z) * y * g = s
 
-  Product({
-    required this.barcodeId,
-    required this.name,
-    required this.carat,
-    required this.gram,
-  }) {
+  Product(
+      {required this.barcodeId,
+      required this.name,
+      required this.carat,
+      required this.gram}) {
     BarcodeDbHelper barcodeDbHelper = BarcodeDbHelper();
-    barcodeDbHelper.getBarcodeById(barcodeId).then((value) => barcode = Barcode.fromJson(value!));
+    barcodeDbHelper
+        .getBarcodeById(barcodeId)
+        .then((value) => barcode = Barcode.fromJson(value!));
 
     switch (carat) {
       case 14:
@@ -48,10 +49,8 @@ class Product {
         costPrice = costGram * GoldService.fGold;
         break;
       default:
-        //throw('Bilinmeyen karat değeri');
+      //throw('Bilinmeyen karat değeri');
     }
-
-
   }
 
   Product.fromJson(Map<String, dynamic> json) {
