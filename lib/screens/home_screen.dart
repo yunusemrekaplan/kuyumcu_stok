@@ -7,10 +7,23 @@ import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   int counter = 0;
+
+  late String gold;
+
+  @override
+  void initState() {
+    GoldService.getGoldPrices().then((value) => gold = value);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +53,17 @@ class HomeScreen extends StatelessWidget {
                   },
                 );*/
                 GoldService.getGoldPrices().then((value) {
-                  print(value);
+                  gold = value;
                 });
               },
               child: const Text(
-                'Barkod Üret',
+                'Altın',
                 style: TextStyle(
                   fontSize: 26,
                 ),
               ),
             ),
+            Text(gold, style: TextStyle(fontSize: 50),),
           ],
         ),
       ),
