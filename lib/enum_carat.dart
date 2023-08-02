@@ -5,17 +5,17 @@ enum Carat {
   fourteen,
 }
 
-extension Milyem on Carat {
-  double get milDefinition {
+extension PurityRate on Carat {
+  double get purityRateDefinition {
     switch (this) {
       case Carat.twentyFour:
-        return 999.9;
+        return 995;
       case Carat.twentyTwo:
-        return 916.0;
+        return 916;
       case Carat.eighteen:
-        return 750.0;
+        return 750;
       case Carat.fourteen:
-        return 585.0;
+        return 585;
     }
   }
 }

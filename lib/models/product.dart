@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
@@ -9,15 +10,15 @@ class Product {
   late int barcodeId;
   late Barcode barcode;
   late String? name;
-  late int carat; // x
+  late Carat carat; // x
+  late double purityRate; // x => z
+  late double laborCost; // k
   late double gram; // y
   late double costGram; // t
-  late double mil; // z
   late double costPrice; // s
 
-  // (x + z) * y = t
-  // t * g = s
-  // (x + z) * y * g = s
+  // ((z + k) * g) * y
+
 
   Product(
       {required this.barcodeId,
@@ -29,30 +30,7 @@ class Product {
         .getBarcodeById(barcodeId)
         .then((value) => barcode = Barcode.fromJson(value!));
 
-    switch (carat) {
-      case 14:
-        mil = Carat.fourteen.milDefinition;
-        costGram = (carat + mil) * gram;
-        costPrice = costGram * GoldService.fGold;
-        break;
-      case 18:
-        mil = Carat.eighteen.milDefinition;
-        costGram = (carat + mil) * gram;
-        costPrice = costGram * GoldService.fGold;
-        break;
-      case 22:
-        mil = Carat.twentyTwo.milDefinition;
-        costGram = (carat + mil) * gram;
-        costPrice = costGram * GoldService.fGold;
-        break;
-      case 24:
-        mil = Carat.twentyFour.milDefinition;
-        costGram = (carat + mil) * gram;
-        costPrice = costGram * GoldService.fGold;
-        break;
-      default:
-      //throw('Bilinmeyen karat değeri');
-    }
+    costPrice = Calculate.calculateCostPrice(purityRate, gram, laborCost);
   }
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -62,7 +40,7 @@ class Product {
     carat = json['carat'];
     gram = json['gram'];
     costGram = json['costGram'];
-    mil = json['mil'];
+    purityRate = json['mil'];
     costPrice = json['costPrice'];
   }
 
@@ -73,7 +51,7 @@ class Product {
       'carat': carat,
       'gram': gram,
       'costGram': costGram,
-      'mil': mil,
+      'mil': purityRate,
       'costPrice': costPrice,
     };
   }

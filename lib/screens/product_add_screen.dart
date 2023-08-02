@@ -20,8 +20,9 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   late TextEditingController caratController;
   late TextEditingController gramController;
   late TextEditingController costGramController;
-  late TextEditingController milController;
+  late TextEditingController purityRateController;
   late TextEditingController costPriceController;
+  late TextEditingController laborCostController;
 
   late Carat dropdownValue;
 
@@ -32,8 +33,10 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
     caratController = TextEditingController();
     gramController = TextEditingController();
     costGramController = TextEditingController();
-    milController = TextEditingController();
+    purityRateController = TextEditingController();
     costPriceController = TextEditingController();
+    laborCostController = TextEditingController();
+    purityRateController.text = dropdownValue.purityRateDefinition.toString();
   }
 
   @override
@@ -159,30 +162,114 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     onChanged: (Carat? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
-                        if (gramController.value.text.isNotEmpty) {
-                          var map = Calculate.calculateCostPrice(dropdownValue, double.parse(gramController.text));
-                          setState(() {
-                            costGramController.text = map['costGram'].toString();
-                            milController.text = map['carat'].toString();
-                            costPriceController.text = map['costPrice'].toString();
-                          });
-                        }
+                        purityRateController.text =
+                            dropdownValue.purityRateDefinition.toString();
                       });
+                      if (purityRateController.text.isNotEmpty &&
+                          gramController.text.isNotEmpty &&
+                          laborCostController.text.isNotEmpty) {
+                        print('girdi');
+                        setState(() {
+                          costPriceController.text =
+                              Calculate.calculateCostPrice(
+                                      double.parse(purityRateController.text),
+                                      double.parse(gramController.text),
+                                      double.parse(laborCostController.text))
+                                  .toStringAsFixed(0);
+                        });
+                      }
                     },
-                    /*
-                    <int>[
-                      Carat.twentyFour.intDefinition,
-                      Carat.values.
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                     */
                   ),
                 ],
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                const Text(
+                  'Saflık Oranı: ',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+                // ToDo validatörleri unutma!!!
+                Container(
+                  width: 100,
+                  height: 35,
+                  alignment: Alignment.bottomLeft,
+                  child: TextFormField(
+                    controller: purityRateController,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      height: 1,
+                    ),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+                      border: const OutlineInputBorder(),
+                      constraints: BoxConstraints.tight(const Size(100, 35)),
+                      //hintText: '9789756249840',
+                    ),
+                    onChanged: (value) {
+                      if (purityRateController.text.isNotEmpty &&
+                          gramController.text.isNotEmpty &&
+                          laborCostController.text.isNotEmpty) {
+                        print('girdi');
+                        setState(() {
+                          costPriceController.text =
+                              Calculate.calculateCostPrice(
+                                      double.parse(purityRateController.text),
+                                      double.parse(gramController.text),
+                                      double.parse(laborCostController.text))
+                                  .toStringAsFixed(0);
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                const Text(
+                  'İşçilik: ',
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+                // ToDo validatörleri unutma!!!
+                TextFormField(
+                  controller: laborCostController,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    height: 1,
+                  ),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+                    border: const OutlineInputBorder(),
+                    constraints: BoxConstraints.tight(const Size(90, 35)),
+                    //hintText: '9789756249840',
+                  ),
+                  onChanged: (value) {
+                    if (purityRateController.text.isNotEmpty &&
+                        gramController.text.isNotEmpty &&
+                        laborCostController.text.isNotEmpty) {
+                      print('girdi');
+                      setState(() {
+                        costPriceController.text = Calculate.calculateCostPrice(
+                                double.parse(purityRateController.text),
+                                double.parse(gramController.text),
+                                double.parse(laborCostController.text))
+                            .toStringAsFixed(0);
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
           ),
           Padding(
@@ -209,48 +296,19 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     //hintText: '9789756249840',
                   ),
                   onChanged: (value) {
-                    if (value.isNotEmpty) {
+                    if (purityRateController.text.isNotEmpty &&
+                        gramController.text.isNotEmpty &&
+                        laborCostController.text.isNotEmpty) {
                       print('girdi');
-                      var map = Calculate.calculateCostPrice(dropdownValue, double.parse(value));
                       setState(() {
-                        costGramController.text = map['costGram'].toString();
-                        milController.text = map['carat'].toString();
-                        costPriceController.text = map['costPrice'].toString();
+                        costPriceController.text = Calculate.calculateCostPrice(
+                                double.parse(purityRateController.text),
+                                double.parse(gramController.text),
+                                double.parse(laborCostController.text))
+                            .toStringAsFixed(0);
                       });
                     }
                   },
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Milyem: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                Container(
-                  width: 100,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: milController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(100, 30)),
-                      //hintText: '9789756249840',
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -298,22 +356,17 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   ),
                 ),
                 // ToDo validatörleri unutma!!!
-                Container(
-                  width: 100,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: costPriceController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(100, 30)),
-                      //hintText: '9789756249840',
-                    ),
+                TextFormField(
+                  controller: costPriceController,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    height: 1,
+                  ),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+                    border: const OutlineInputBorder(),
+                    constraints: BoxConstraints.tight(const Size(150, 30)),
+                    //hintText: '9789756249840',
                   ),
                 ),
               ],

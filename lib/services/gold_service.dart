@@ -75,6 +75,6 @@ class GoldService {
     var temp = currencies['fine_gold_sale']!.split(',');
     fGold = double.parse(temp[0]);
     fGold += double.parse(temp[1]) / 100;
-    return currencies['EUR_buy'];
+    return currencies['fine_gold_sale'];
   }
 }
