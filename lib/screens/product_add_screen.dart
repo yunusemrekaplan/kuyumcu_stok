@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
+import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 import '../enum_carat.dart';
@@ -54,20 +55,39 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           buildGramRow(),
           //buildCostGramRow(),
           buildCostPriceRow(),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Kaydet',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+          buildSaveButtonRow(),
+        ],
+      ),
+    );
+  }
+
+  Padding buildSaveButtonRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              if (barcodeNo == '0000000000000') {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('Barkod oluşturun!'),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Tamam')),
+                    ],
                   ),
-                ),
-              ],
+                );
+              }
+              else {
+
+              }
+            },
+            child: const Text(
+              'Kaydet',
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
           ),
         ],
@@ -107,19 +127,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                 fontSize: 20,
               ),
             ),
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text(
-              'Barkodu Çıkart',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -137,18 +145,13 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
             ),
           ),
           // ToDo validatörleri unutma!!!
-          Container(
-            width: 200,
-            height: 35,
-            alignment: Alignment.bottomLeft,
-            child: TextFormField(
-              controller: nameController,
-              style: const TextStyle(
-                fontSize: 18,
-                height: 1,
-              ),
-              decoration: buildInputDecoration(const Size(150, 120)),
+          TextFormField(
+            controller: nameController,
+            style: const TextStyle(
+              fontSize: 18,
+              height: 1,
             ),
+            decoration: buildInputDecoration(const Size(150, 35)),
           ),
         ],
       ),
@@ -227,32 +230,28 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
             ),
           ),
           // ToDo validatörleri unutma!!!
-          Container(
-            width: 100,
-            height: 35,
-            alignment: Alignment.bottomLeft,
-            child: TextFormField(
-              controller: purityRateController,
-              style: const TextStyle(
-                fontSize: 18,
-                height: 1,
-              ),
-              decoration: buildInputDecoration(const Size(100, 35)),
-              onChanged: (value) {
-                if (purityRateController.text.isNotEmpty &&
-                    gramController.text.isNotEmpty &&
-                    laborCostController.text.isNotEmpty) {
-                  print('girdi');
-                  setState(() {
-                    costPriceController.text = Calculate.calculateCostPrice(
-                            double.parse(purityRateController.text),
-                            double.parse(gramController.text),
-                            double.parse(laborCostController.text))
-                        .toStringAsFixed(0);
-                  });
-                }
-              },
+          TextFormField(
+            validator: NumberValidator.validate,
+            controller: purityRateController,
+            style: const TextStyle(
+              fontSize: 18,
+              height: 1,
             ),
+            decoration: buildInputDecoration(const Size(100, 35)),
+            onChanged: (value) {
+              if (purityRateController.text.isNotEmpty &&
+                  gramController.text.isNotEmpty &&
+                  laborCostController.text.isNotEmpty) {
+                print('girdi');
+                setState(() {
+                  costPriceController.text = Calculate.calculateCostPrice(
+                          double.parse(purityRateController.text),
+                          double.parse(gramController.text),
+                          double.parse(laborCostController.text))
+                      .toStringAsFixed(0);
+                });
+              }
+            },
           ),
         ],
       ),
@@ -272,6 +271,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
           // ToDo validatörleri unutma!!!
           TextFormField(
+            validator: NumberValidator.validate,
             controller: laborCostController,
             style: const TextStyle(
               fontSize: 18,
@@ -311,6 +311,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
           // ToDo validatörleri unutma!!!
           TextFormField(
+            validator: NumberValidator.validate,
             controller: gramController,
             style: const TextStyle(
               fontSize: 18,
@@ -349,18 +350,14 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
             ),
           ),
           // ToDo validatörleri unutma!!!
-          Container(
-            width: 100,
-            height: 35,
-            alignment: Alignment.bottomLeft,
-            child: TextFormField(
-              controller: costGramController,
-              style: const TextStyle(
-                fontSize: 18,
-                height: 1,
-              ),
-              decoration: buildInputDecoration(const Size(100, 35)),
+          TextFormField(
+            validator: NumberValidator.validate,
+            controller: costGramController,
+            style: const TextStyle(
+              fontSize: 18,
+              height: 1,
             ),
+            decoration: buildInputDecoration(const Size(100, 35)),
           ),
         ],
       ),
@@ -380,6 +377,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
           // ToDo validatörleri unutma!!!
           TextFormField(
+            validator: NumberValidator.validate,
             controller: costPriceController,
             style: const TextStyle(
               fontSize: 18,
