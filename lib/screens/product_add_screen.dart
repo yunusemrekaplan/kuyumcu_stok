@@ -72,14 +72,32 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: Text('Barkod oluşturun!'),
+                    title: const Text('Barkod oluşturun!'),
                     actions: [
-                      TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Tamam')),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Tamam'),
+                      ),
                     ],
                   ),
                 );
               }
               else {
+                if (NumberValidator.validate(gramController.text) != null || NumberValidator.validate(purityRateController.text) != null || NumberValidator.validate(laborCostController.text) != null || NumberValidator.validate(costPriceController.text) != null) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Boş alanları doldurun!'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('Tamam'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
 
               }
             },

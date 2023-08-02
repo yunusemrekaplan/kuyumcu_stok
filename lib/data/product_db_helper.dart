@@ -1,14 +1,14 @@
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class BarcodeDbHelper {
-  static final BarcodeDbHelper _instance = BarcodeDbHelper._internal();
+class ProductDbHelper {
+  static final ProductDbHelper _instance = ProductDbHelper._internal();
 
-  factory BarcodeDbHelper() {
+  factory ProductDbHelper() {
     return _instance;
   }
 
-  BarcodeDbHelper._internal();
+  ProductDbHelper._internal();
 
   Database? _db;
 
@@ -25,11 +25,15 @@ class BarcodeDbHelper {
 
   Future<void> _createTable() async {
     await _db!.execute('''
-      CREATE TABLE IF NOT EXISTS barcodes (
+      CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        productId INTEGER NOT NULL,
-        text TEXT NOT NULL,
-        path TEXT NOT NULL
+        barcodeId INTEGER NOT NULL,
+        name TEXT,
+        carat INTEGER NOT NULL,
+        purityRate DECIMAL NOT NULL,
+        laborCost DECIMAL NOT NULL,
+        gram DECIMAL NOT NULL,
+        costPrice DECIMAL NOT NULL
       )
     ''');
   }
@@ -46,18 +50,18 @@ class BarcodeDbHelper {
       throw Exception("Database is not open.");
     }
     // Insert the data into the given table
-    return await _db!.insert('barcodes', data);
+    return await _db!.insert('products', data);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     // Retrieve all rows from the given table
-    return await _db!.query('barcodes');
+    return await _db!.query('products');
   }
 
   Future<Map<String, dynamic>?> getBarcodeById(int id) async {
     // Get the barcode from the table based on the given id
     final List<Map<String, dynamic>> results = await _db!.query(
-      'barcodes',
+      'products',
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -72,11 +76,11 @@ class BarcodeDbHelper {
 
   Future<int> update(Map<String, dynamic> data, int id) async {
     // Update a row in the given table with the specified ID
-    return await _db!.update('barcodes', data, where: 'id = ?', whereArgs: [id]);
+    return await _db!.update('products', data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
     // Delete a row from the given table with the specified ID
-    return await _db!.delete('barcodes', where: 'id = ?', whereArgs: [id]);
+    return await _db!.delete('products', where: 'id = ?', whereArgs: [id]);
   }
 }
