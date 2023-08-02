@@ -46,332 +46,14 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
       drawer: const MyDrawer(),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Barkod No: ',
-                  style: TextStyle(fontSize: 22),
-                ),
-                SizedBox(
-                  width: 180,
-                  child: Text(
-                    barcodeNo,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    barcodeNo = IsbnService.generateCode();
-                    setState(() {
-                      barcodeNo;
-                    });
-                  },
-                  child: const Text(
-                    'Barkod Oluştur',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 30,
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Barkodu Çıkart',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'İsim: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                Container(
-                  width: 200,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: nameController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(150, 30)),
-                      //hintText: '9789756249840',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: SizedBox(
-              height: 56,
-              child: Row(
-                children: [
-                  const Text(
-                    'Karat: ',
-                    style: TextStyle(
-                      fontSize: 24,
-                    ),
-                  ),
-                  DropdownButtonFormField(
-                    alignment: Alignment.centerLeft,
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(100, 120)),
-                    ),
-                    items: Carat.values
-                        .map<DropdownMenuItem<Carat>>((Carat value) {
-                      return DropdownMenuItem<Carat>(
-                        alignment: AlignmentDirectional.center,
-                        value: value,
-                        child: Text(
-                          value.intDefinition.toString(),
-                          style: const TextStyle(
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (Carat? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!;
-                        purityRateController.text =
-                            dropdownValue.purityRateDefinition.toString();
-                      });
-                      if (purityRateController.text.isNotEmpty &&
-                          gramController.text.isNotEmpty &&
-                          laborCostController.text.isNotEmpty) {
-                        print('girdi');
-                        setState(() {
-                          costPriceController.text =
-                              Calculate.calculateCostPrice(
-                                      double.parse(purityRateController.text),
-                                      double.parse(gramController.text),
-                                      double.parse(laborCostController.text))
-                                  .toStringAsFixed(0);
-                        });
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Saflık Oranı: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                Container(
-                  width: 100,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: purityRateController,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(100, 35)),
-                      //hintText: '9789756249840',
-                    ),
-                    onChanged: (value) {
-                      if (purityRateController.text.isNotEmpty &&
-                          gramController.text.isNotEmpty &&
-                          laborCostController.text.isNotEmpty) {
-                        print('girdi');
-                        setState(() {
-                          costPriceController.text =
-                              Calculate.calculateCostPrice(
-                                      double.parse(purityRateController.text),
-                                      double.parse(gramController.text),
-                                      double.parse(laborCostController.text))
-                                  .toStringAsFixed(0);
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'İşçilik: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                TextFormField(
-                  controller: laborCostController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    height: 1,
-                  ),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                    border: const OutlineInputBorder(),
-                    constraints: BoxConstraints.tight(const Size(90, 35)),
-                    //hintText: '9789756249840',
-                  ),
-                  onChanged: (value) {
-                    if (purityRateController.text.isNotEmpty &&
-                        gramController.text.isNotEmpty &&
-                        laborCostController.text.isNotEmpty) {
-                      print('girdi');
-                      setState(() {
-                        costPriceController.text = Calculate.calculateCostPrice(
-                                double.parse(purityRateController.text),
-                                double.parse(gramController.text),
-                                double.parse(laborCostController.text))
-                            .toStringAsFixed(0);
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Gram: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                TextFormField(
-                  controller: gramController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    height: 1,
-                  ),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                    border: const OutlineInputBorder(),
-                    constraints: BoxConstraints.tight(const Size(90, 35)),
-                    //hintText: '9789756249840',
-                  ),
-                  onChanged: (value) {
-                    if (purityRateController.text.isNotEmpty &&
-                        gramController.text.isNotEmpty &&
-                        laborCostController.text.isNotEmpty) {
-                      print('girdi');
-                      setState(() {
-                        costPriceController.text = Calculate.calculateCostPrice(
-                                double.parse(purityRateController.text),
-                                double.parse(gramController.text),
-                                double.parse(laborCostController.text))
-                            .toStringAsFixed(0);
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Gram Maliyeti: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                Container(
-                  width: 100,
-                  height: 35,
-                  alignment: Alignment.bottomLeft,
-                  child: TextFormField(
-                    controller: costGramController,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                      border: const OutlineInputBorder(),
-                      constraints: BoxConstraints.tight(const Size(100, 30)),
-                      //hintText: '9789756249840',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                const Text(
-                  'Maliyet Fiyatı: ',
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-                // ToDo validatörleri unutma!!!
-                TextFormField(
-                  controller: costPriceController,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    height: 1,
-                  ),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-                    border: const OutlineInputBorder(),
-                    constraints: BoxConstraints.tight(const Size(150, 30)),
-                    //hintText: '9789756249840',
-                  ),
-                ),
-              ],
-            ),
-          ),
+          buildBarcodeRow(),
+          buildNameRow(),
+          buildCaratRow(),
+          buildPurityRateRow(),
+          buildLaborCostRow(),
+          buildGramRow(),
+          //buildCostGramRow(),
+          buildCostPriceRow(),
           Padding(
             padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
             child: Row(
@@ -390,6 +72,334 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Padding buildBarcodeRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'Barkod No: ',
+            style: TextStyle(fontSize: 22),
+          ),
+          SizedBox(
+            width: 180,
+            child: Text(
+              barcodeNo,
+              style: const TextStyle(
+                fontSize: 22,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              barcodeNo = IsbnService.generateCode();
+              setState(() {
+                barcodeNo;
+              });
+            },
+            child: const Text(
+              'Barkod Oluştur',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 30,
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text(
+              'Barkodu Çıkart',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildNameRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'İsim: ',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          // ToDo validatörleri unutma!!!
+          Container(
+            width: 200,
+            height: 35,
+            alignment: Alignment.bottomLeft,
+            child: TextFormField(
+              controller: nameController,
+              style: const TextStyle(
+                fontSize: 18,
+                height: 1,
+              ),
+              decoration: buildInputDecoration(const Size(150, 120)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildCaratRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: SizedBox(
+        height: 56,
+        child: Row(
+          children: [
+            const Text(
+              'Karat: ',
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            DropdownButtonFormField(
+              alignment: Alignment.centerLeft,
+              value: dropdownValue,
+              icon: const Icon(Icons.arrow_downward),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                constraints: buildBoxConstraints(const Size(100, 120)),
+              ),
+              items: Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
+                return DropdownMenuItem<Carat>(
+                  alignment: AlignmentDirectional.center,
+                  value: value,
+                  child: Text(
+                    value.intDefinition.toString(),
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                );
+              }).toList(),
+              onChanged: (Carat? newValue) {
+                setState(() {
+                  dropdownValue = newValue!;
+                  purityRateController.text =
+                      dropdownValue.purityRateDefinition.toString();
+                });
+                if (purityRateController.text.isNotEmpty &&
+                    gramController.text.isNotEmpty &&
+                    laborCostController.text.isNotEmpty) {
+                  print('girdi');
+                  setState(() {
+                    costPriceController.text = Calculate.calculateCostPrice(
+                            double.parse(purityRateController.text),
+                            double.parse(gramController.text),
+                            double.parse(laborCostController.text))
+                        .toStringAsFixed(0);
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding buildPurityRateRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'Saflık Oranı: ',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          // ToDo validatörleri unutma!!!
+          Container(
+            width: 100,
+            height: 35,
+            alignment: Alignment.bottomLeft,
+            child: TextFormField(
+              controller: purityRateController,
+              style: const TextStyle(
+                fontSize: 18,
+                height: 1,
+              ),
+              decoration: buildInputDecoration(const Size(100, 35)),
+              onChanged: (value) {
+                if (purityRateController.text.isNotEmpty &&
+                    gramController.text.isNotEmpty &&
+                    laborCostController.text.isNotEmpty) {
+                  print('girdi');
+                  setState(() {
+                    costPriceController.text = Calculate.calculateCostPrice(
+                            double.parse(purityRateController.text),
+                            double.parse(gramController.text),
+                            double.parse(laborCostController.text))
+                        .toStringAsFixed(0);
+                  });
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildLaborCostRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'İşçilik: ',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          // ToDo validatörleri unutma!!!
+          TextFormField(
+            controller: laborCostController,
+            style: const TextStyle(
+              fontSize: 18,
+              height: 1,
+            ),
+            decoration: buildInputDecoration(const Size(100, 35)),
+            onChanged: (value) {
+              if (purityRateController.text.isNotEmpty &&
+                  gramController.text.isNotEmpty &&
+                  laborCostController.text.isNotEmpty) {
+                print('girdi');
+                setState(() {
+                  costPriceController.text = Calculate.calculateCostPrice(
+                          double.parse(purityRateController.text),
+                          double.parse(gramController.text),
+                          double.parse(laborCostController.text))
+                      .toStringAsFixed(0);
+                });
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildGramRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'Gram: ',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          // ToDo validatörleri unutma!!!
+          TextFormField(
+            controller: gramController,
+            style: const TextStyle(
+              fontSize: 18,
+              height: 1,
+            ),
+            decoration: buildInputDecoration(const Size(100, 35)),
+            onChanged: (value) {
+              if (purityRateController.text.isNotEmpty &&
+                  gramController.text.isNotEmpty &&
+                  laborCostController.text.isNotEmpty) {
+                print('girdi');
+                setState(() {
+                  costPriceController.text = Calculate.calculateCostPrice(
+                          double.parse(purityRateController.text),
+                          double.parse(gramController.text),
+                          double.parse(laborCostController.text))
+                      .toStringAsFixed(0);
+                });
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildCostGramRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'Gram Maliyeti: ',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          // ToDo validatörleri unutma!!!
+          Container(
+            width: 100,
+            height: 35,
+            alignment: Alignment.bottomLeft,
+            child: TextFormField(
+              controller: costGramController,
+              style: const TextStyle(
+                fontSize: 18,
+                height: 1,
+              ),
+              decoration: buildInputDecoration(const Size(100, 35)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildCostPriceRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          const Text(
+            'Maliyet Fiyatı: ',
+            style: TextStyle(
+              fontSize: 24,
+            ),
+          ),
+          // ToDo validatörleri unutma!!!
+          TextFormField(
+            controller: costPriceController,
+            style: const TextStyle(
+              fontSize: 18,
+              height: 1,
+            ),
+            decoration: buildInputDecoration(const Size(125, 35)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BoxConstraints buildBoxConstraints(Size size) => BoxConstraints.tight(size);
+
+  InputDecoration buildInputDecoration(Size size) {
+    return InputDecoration(
+      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
+      border: const OutlineInputBorder(),
+      constraints: buildBoxConstraints(size),
+      //hintText: '9789756249840',
     );
   }
 }
