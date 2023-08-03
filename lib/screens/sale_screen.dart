@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/enum_carat.dart';
+import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -22,6 +26,8 @@ class _SaleScreenState extends State<SaleScreen> {
   String gramTxt = '..';
   String costTxt = '....';
   String priceTxt = '....';
+
+  late Product product;
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
@@ -158,7 +164,26 @@ class _SaleScreenState extends State<SaleScreen> {
           height: 1,
         ),
         onChanged: (value) {
-
+          if (value.length == 13) {
+            int productId;
+            BarcodeDbHelper().getBarcodeByText(value).then((value) => {
+                  productId = value!['productId'],
+                  print(productId),
+                  for (int i = 0; i < ProductDbHelper().products.length; i++)
+                    {
+                      if (ProductDbHelper().products[i].id == productId)
+                        {
+                          setState(() {
+                            product = ProductDbHelper().products[i];
+                            caratTxt = product.carat.intDefinition.toString();
+                            gramTxt = product.gram.toStringAsFixed(0);
+                            costTxt = product.costPrice.toStringAsFixed(0);
+                            priceTxt = costTxt;
+                          }),
+                        },
+                    },
+                });
+          }
         },
       ),
     );
