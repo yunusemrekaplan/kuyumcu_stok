@@ -18,6 +18,10 @@ class _SaleScreenState extends State<SaleScreen> {
   String usdSale = '.......';
   String eurBuy = '.......';
   String eurSale = '.......';
+  String caratTxt = '..';
+  String gramTxt = '..';
+  String costTxt = '....';
+  String priceTxt = '....';
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
@@ -153,6 +157,9 @@ class _SaleScreenState extends State<SaleScreen> {
           fontSize: 20,
           height: 1,
         ),
+        onChanged: (value) {
+
+        },
       ),
     );
   }
@@ -232,68 +239,68 @@ class _SaleScreenState extends State<SaleScreen> {
   }
 
   Row _buildProductInformationRow() {
-    return const Row(
+    return Row(
       children: [
         // Carat of product
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 34),
+          padding: const EdgeInsets.only(left: 20, top: 34),
           child: Row(
             children: [
-              Text(
+              const Text(
                 'Karat: ',
                 style: TextStyle(fontSize: 22),
               ),
               Text(
-                '24',
-                style: TextStyle(fontSize: 22),
+                caratTxt,
+                style: const TextStyle(fontSize: 22),
               ),
             ],
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 34),
+          padding: const EdgeInsets.only(left: 20, top: 34),
           child: Row(
             children: [
-              Text(
+              const Text(
                 'Gram: ',
                 style: TextStyle(fontSize: 22),
               ),
               Text(
-                '13',
-                style: TextStyle(fontSize: 22),
+                gramTxt,
+                style: const TextStyle(fontSize: 22),
               ),
             ],
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 34),
+          padding: const EdgeInsets.only(left: 20, top: 34),
           child: Row(
             children: [
-              Text(
+              const Text(
                 'Maliyet: ',
                 style: TextStyle(fontSize: 22),
               ),
               SizedBox(
                 width: 116,
                 child: Text(
-                  '4568',
-                  style: TextStyle(fontSize: 22),
+                  costTxt,
+                  style: const TextStyle(fontSize: 22),
                 ),
               ),
             ],
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 24, top: 34),
+          padding: const EdgeInsets.only(left: 24, top: 34),
           child: Row(
             children: [
-              Text(
+              const Text(
                 'Son fiyat: ',
                 style: TextStyle(fontSize: 22),
               ),
               Text(
-                '5320',
-                style: TextStyle(fontSize: 22),
+                priceTxt,
+                style: const TextStyle(fontSize: 22),
               ),
             ],
           ),
