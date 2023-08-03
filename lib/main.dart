@@ -38,7 +38,7 @@ Future<void> main() async {
   List<Product> products = [];
 
   for(int i=10; i<list.length; i++) {
-    products.add(Product.fromJson(list[i]));
+    products.add(Product.fromJson(list[i], list[i]['id']));
   }
   ProductDbHelper().products = products;
 

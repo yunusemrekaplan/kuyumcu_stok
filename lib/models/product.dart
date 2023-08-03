@@ -28,8 +28,7 @@ class Product {
     barcodeDbHelper.getBarcodeById(barcodeId).then((value) => barcode = Barcode.fromJson(value!));*/
   }
 
-  Product.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  Product.fromJson(Map<String, dynamic> json, this.id) {
     barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
     carat = toCarat(json['carat'])!;
