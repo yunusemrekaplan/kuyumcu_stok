@@ -69,7 +69,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         DataColumn(label: Text('Karat')),
                         DataColumn(label: Text('Maliyet')),
                       ],
-                      rows: productDbHelper.products
+                      rows: products
                           .map(
                             (e) => DataRow(
                               cells: [

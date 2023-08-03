@@ -11,7 +11,7 @@ class ProductDbHelper {
 
   ProductDbHelper._internal();
 
-  late List<Product> products;
+  late List<Map<String, dynamic>> products;
 
   Database? _db;
 

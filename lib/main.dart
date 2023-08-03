@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:kuyumcu_stok/screens/product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/products_screen.dart';
@@ -32,6 +33,14 @@ Future<void> main() async {
   await BarcodeDbHelper().open();
   await ProductDbHelper().open();
   await GoldService.getGoldPrices();
+
+  var list = await ProductDbHelper().queryAllRows().then((value) => value);
+  List<Product> products = [];
+
+  for(int i=0; i<list.length; i++) {
+    products.add(Product.fromJson(list[i]));
+  }
+  print(products.length);
 
   runApp(const MyApp());
 }
