@@ -40,7 +40,9 @@ Future<void> main() async {
   for(int i=0; i<list.length; i++) {
     products.add(Product.fromJson(list[i]));
   }
-  print(products.length);
+  ProductDbHelper().products = products;
+
+  print(ProductDbHelper().products.length);
 
   runApp(const MyApp());
 }
