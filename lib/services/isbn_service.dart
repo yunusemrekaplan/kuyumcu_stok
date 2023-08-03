@@ -39,8 +39,8 @@ class IsbnService {
     const filePath = 'barcodes/';
 
     final apiClient = barcode.ApiClient(
-      clientId: '8db0173e-794a-4e7c-b8d7-778253fb2d6a',
-      clientSecret: '96102d9afec010df26c8f421a55adbfc',
+      clientId: 'c276982d-208d-479f-88a7-8a8acfe19523',
+      clientSecret: 'ea0bdfba04f63c25254eef8c9bdf924f',
     );
 
     final api = barcode.BarcodeApi(apiClient);

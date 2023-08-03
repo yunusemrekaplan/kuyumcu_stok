@@ -116,6 +116,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
         );
       }
+      
       Barcode barcode;
       int productId;
 
@@ -150,6 +151,8 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                               purityRateController.text = '';
                               costPriceController.text = '';
                               laborCostController.text = '';
+
+                              Navigator.of(context).pop();
                             },
                           ),
                         },
@@ -158,6 +161,9 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               ),
             },
           );
+      showDialog(context: context, builder: (context) {
+        return Center(child: CircularProgressIndicator());
+      });
     }
   }
 
