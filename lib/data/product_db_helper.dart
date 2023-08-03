@@ -1,3 +1,4 @@
+import 'package:kuyumcu_stok/models/product.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -10,9 +11,12 @@ class ProductDbHelper {
 
   ProductDbHelper._internal();
 
+  late List<Product> products;
+
   Database? _db;
 
   Future<void> open() async {
+    products = [];
     sqfliteFfiInit();
 
     // Path to your database file

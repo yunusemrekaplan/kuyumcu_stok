@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_db_helper.dart';
 import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -10,33 +12,37 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  /*List<Product> products = [
-    Product(name: 'Yüzük', gram: 5.4, mil: 560),
-    Product(name: 'Kolye', gram: 7.2, mil: 740),
-    Product(name: 'Bileklik', gram: 11.6, mil: 600),
-    Product(name: 'Bilezik', gram: 18.4, mil: 870),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-    Product(name: 'Yüzük', gram: 3.1, mil: 480),
-  ];*/
-
   List<Product> products = [];
+
+  ProductDbHelper productDbHelper = ProductDbHelper();
+
+  /*
+      productDbHelper.queryAllRows().then(
+          (value) => {
+        value.map((e) => products.add(Product.fromJson(e))),
+        //Navigator.of(context).pop(),
+      },
+    );
+   */
+  /*
+  showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+   */
+  @override
+  void initState() {
+    ProductDbHelper().queryAllRows().then(
+          (value) => {
+            value.map((e) => products.add(Product.fromJson(e))),
+            print(products.length),
+          },
+        );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +69,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         DataColumn(label: Text('Karat')),
                         DataColumn(label: Text('Maliyet')),
                       ],
-                      rows: products
+                      rows: productDbHelper.products
                           .map(
                             (e) => DataRow(
                               cells: [

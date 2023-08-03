@@ -135,6 +135,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           .then(
             (value) => {
               productId = value,
+              print('id: $value'),
               IsbnService.generateBarcode(barcodeNo).then(
                 (value) => {
                   barcode = value,
@@ -161,8 +162,8 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               ),
             },
           );
-      showDialog(context: context, builder: (context) {
-        return Center(child: CircularProgressIndicator());
+      showDialog(barrierDismissible: false, context: context, builder: (context) {
+        return const Center(child: CircularProgressIndicator());
       });
     }
   }

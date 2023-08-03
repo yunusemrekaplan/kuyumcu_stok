@@ -1,8 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/data/product_db_helper.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -59,11 +61,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         .then((value) => print('inserted row id: $value'));
                   },
                 );*/
-                GoldService.getGoldPrices().then((value) {
+                /*GoldService.getGoldPrices().then((value) {
                   setState(() {
                     gold = value!;
                   });
+                });*/
+                List<Product> products = [];
+                List<Map<String, dynamic>> maps;
+                await ProductDbHelper().queryAllRows().then((value)
+                {
+                  maps = value;
+                  print(maps.length);
+                  maps.map((e) {
+                    print(e);
+
+                  });
                 });
+                //value.map((e) => print(e));
+                //products.add(Product.fromJson(e))
+                //print(products.length);
               },
               child: const Text(
                 'Altın',
