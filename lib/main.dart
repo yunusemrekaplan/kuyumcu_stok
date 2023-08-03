@@ -42,8 +42,6 @@ Future<void> main() async {
   }
   ProductDbHelper().products = products;
 
-  print(ProductDbHelper().products.length);
-
   runApp(const MyApp());
 }
 
