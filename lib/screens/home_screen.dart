@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     GoldService.getGoldPrices().then(
       (value) => setState(
         () {
-          gold = value!;
+          gold = value['fine_gold_sale']!;
         },
       ),
     );

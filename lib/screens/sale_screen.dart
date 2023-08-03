@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class SaleScreen extends StatefulWidget {
@@ -11,11 +12,36 @@ class SaleScreen extends StatefulWidget {
 class _SaleScreenState extends State<SaleScreen> {
   String? barcodeTextFormField;
   String? earningRate;
+  String fineGoldBuy = '.......';
+  String fineGoldSale = '.......';
+  String usdBuy = '.......';
+  String usdSale = '.......';
+  String eurBuy = '.......';
+  String eurSale = '.......';
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
       TextEditingController();
   TextEditingController saleTextEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    var map;
+    GoldService.getGoldPrices().then(
+      (value) => setState(
+        () {
+          map = value;
+          fineGoldBuy = map['fine_gold_buy'];
+          fineGoldSale = map['fine_gold_sale'];
+          usdBuy = map['USD_buy'];
+          usdSale = map['USD_sale'];
+          eurBuy = map['EUR_buy'];
+          eurSale = map['EUR_sale'];
+        },
+      ),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -362,7 +388,7 @@ class _SaleScreenState extends State<SaleScreen> {
 
   Container _buildRightOfBody() {
     return Container(
-      width: 320,
+      width: 340,
       //color: Colors.red,
       alignment: Alignment.topCenter,
       child: DataTable(
@@ -386,10 +412,10 @@ class _SaleScreenState extends State<SaleScreen> {
             ),
           ),
         ],
-        rows: const [
+        rows: [
           DataRow(
             cells: [
-              DataCell(
+              const DataCell(
                 Text(
                   'Has Altın',
                   style: TextStyle(
@@ -399,44 +425,16 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
               DataCell(
                 Text(
-                  '1.650',
-                  style: TextStyle(
+                  fineGoldBuy,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
               ),
               DataCell(
                 Text(
-                  '1.700',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(
-                Text(
-                  'Gram',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              DataCell(
-                Text(
-                  '1687',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              DataCell(
-                Text(
-                  '1715',
-                  style: TextStyle(
+                  fineGoldSale,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
@@ -445,9 +443,9 @@ class _SaleScreenState extends State<SaleScreen> {
           ),
           DataRow(
             cells: [
-              DataCell(
+              const DataCell(
                 Text(
-                  'Ons',
+                  'USD',
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -455,44 +453,16 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
               DataCell(
                 Text(
-                  '1.945',
-                  style: TextStyle(
+                  usdBuy,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
               ),
               DataCell(
                 Text(
-                  '1.945',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(
-                Text(
-                  'Usd/Kg',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              DataCell(
-                Text(
-                  '62.570',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              DataCell(
-                Text(
-                  '62.770',
-                  style: TextStyle(
+                  usdSale,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
@@ -501,9 +471,9 @@ class _SaleScreenState extends State<SaleScreen> {
           ),
           DataRow(
             cells: [
-              DataCell(
+              const DataCell(
                 Text(
-                  'Eur/Kg',
+                  'EUR',
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -511,16 +481,16 @@ class _SaleScreenState extends State<SaleScreen> {
               ),
               DataCell(
                 Text(
-                  '56.970',
-                  style: TextStyle(
+                  eurBuy,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
               ),
               DataCell(
                 Text(
-                  '57.260',
-                  style: TextStyle(
+                  eurSale,
+                  style: const TextStyle(
                     fontSize: 18,
                   ),
                 ),
