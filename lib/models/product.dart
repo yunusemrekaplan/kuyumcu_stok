@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/services/gold_service.dart';
 
 class Product {
   late int id;
@@ -36,8 +32,8 @@ class Product {
     id = json['id'];
     barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
-    carat = json['carat'];
-    gram = json['gram'];
+    carat = toCarat(json['carat'])!;
+    gram = json['gram']!.toDouble();
     //costGram = json['costGram'];
     purityRate = json['purityRate'];
     laborCost = json['laborCost'];
