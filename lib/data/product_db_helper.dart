@@ -11,9 +11,13 @@ class ProductDbHelper {
 
   ProductDbHelper._internal();
 
+  Database? _db;
+
   late List<Product> products;
 
-  Database? _db;
+  /*List<Product> get _products {
+    return
+  }*/
 
   Future<void> open() async {
     products = [];
@@ -54,6 +58,8 @@ class ProductDbHelper {
     if (_db == null) {
       throw Exception("Database is not open.");
     }
+
+    products.add(Product.fromJson(data));
     // Insert the data into the given table
     return await _db!.insert('products', data);
   }
