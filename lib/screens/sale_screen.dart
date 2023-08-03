@@ -14,7 +14,7 @@ class SaleScreen extends StatefulWidget {
 }
 
 class _SaleScreenState extends State<SaleScreen> {
-  String? barcodeTextFormField;
+  //String? barcodeTextFormField;
   String? earningRate;
   String fineGoldBuy = '.......';
   String fineGoldSale = '.......';
@@ -27,7 +27,7 @@ class _SaleScreenState extends State<SaleScreen> {
   String costTxt = '....';
   String priceTxt = '....';
 
-  late Product product;
+  Product? product;
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
@@ -36,17 +36,15 @@ class _SaleScreenState extends State<SaleScreen> {
 
   @override
   void initState() {
-    var map;
     GoldService.getGoldPrices().then(
       (value) => setState(
         () {
-          map = value;
-          fineGoldBuy = map['fine_gold_buy'];
-          fineGoldSale = map['fine_gold_sale'];
-          usdBuy = map['USD_buy'];
-          usdSale = map['USD_sale'];
-          eurBuy = map['EUR_buy'];
-          eurSale = map['EUR_sale'];
+          fineGoldBuy = value['fine_gold_buy']!;
+          fineGoldSale = value['fine_gold_sale']!;
+          usdBuy = value['USD_buy']!;
+          usdSale = value['USD_sale']!;
+          eurBuy = value['EUR_buy']!;
+          eurSale = value['EUR_sale']!;
         },
       ),
     );
@@ -175,9 +173,9 @@ class _SaleScreenState extends State<SaleScreen> {
                         {
                           setState(() {
                             product = ProductDbHelper().products[i];
-                            caratTxt = product.carat.intDefinition.toString();
-                            gramTxt = product.gram.toStringAsFixed(0);
-                            costTxt = product.costPrice.toStringAsFixed(0);
+                            caratTxt = product!.carat.intDefinition.toString();
+                            gramTxt = product!.gram.toStringAsFixed(0);
+                            costTxt = product!.costPrice.toStringAsFixed(0);
                             priceTxt = costTxt;
                           }),
                         },
@@ -251,7 +249,20 @@ class _SaleScreenState extends State<SaleScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          int? earningRate =
+              int.tryParse(earningRateTextEditingController.text);
+          if (earningRate != null) {
+            if (product != null) {
+              setState(() {
+                priceTxt = (product!.costPrice +
+                        (product!.costPrice * earningRate) / 100)
+                    .toStringAsFixed(0);
+                saleTextEditingController.text = priceTxt;
+              });
+            }
+          }
+        },
         child: const Text(
           'Hesapla',
           style: TextStyle(
@@ -404,7 +415,29 @@ class _SaleScreenState extends State<SaleScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 24, top: 80),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  GoldService.getGoldPrices().then(
+                    (value) => setState(
+                      () {
+                        fineGoldBuy = value['fine_gold_buy']!;
+                        fineGoldSale = value['fine_gold_sale']!;
+                        usdBuy = value['USD_buy']!;
+                        usdSale = value['USD_sale']!;
+                        eurBuy = value['EUR_buy']!;
+                        eurSale = value['EUR_sale']!;
+                      },
+                    ),
+                  );
+                  caratTxt = '..';
+                  gramTxt = '..';
+                  costTxt = '....';
+                  priceTxt = '....';
+                  barcodeTextEditingController.text = '';
+                  earningRateTextEditingController.text = '';
+                  saleTextEditingController.text = '';
+                });
+              },
               child: const Text(
                 'Yenile',
                 style: TextStyle(
