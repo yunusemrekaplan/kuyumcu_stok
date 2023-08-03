@@ -35,9 +35,9 @@ class Product {
     carat = toCarat(json['carat'])!;
     gram = json['gram']!.toDouble();
     //costGram = json['costGram'];
-    purityRate = json['purityRate'];
-    laborCost = json['laborCost'];
-    costPrice = json['costPrice'];
+    purityRate = json['purityRate']!.toDouble();
+    laborCost = json['laborCost']!.toDouble();
+    costPrice = json['costPrice']!.toDouble();
   }
 
   Map<String, dynamic> toJson() {
