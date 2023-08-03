@@ -71,69 +71,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            onPressed: () {
-              if (barcodeNo == '0000000000000') {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Barkod oluşturun!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Tamam'),
-                      ),
-                    ],
-                  ),
-                );
-              } else {
-                if (NumberValidator.validate(gramController.text) != null ||
-                    NumberValidator.validate(purityRateController.text) !=
-                        null ||
-                    NumberValidator.validate(laborCostController.text) !=
-                        null ||
-                    NumberValidator.validate(costPriceController.text) !=
-                        null) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Boş alanları doldurun!'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('Tamam'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                Barcode barcode;
-
-
-                int barcodes;
-                int productId;
-
-                ProductDbHelper().insert(Product(
-                  barcodeText: barcodeNo,
-                  name: nameController.text,
-                  carat: dropdownValue,
-                  gram: double.parse(gramController.text),
-                  laborCost: double.parse(laborCostController.text),
-                  costPrice: double.parse(costPriceController.text),
-                  purityRate: double.parse(purityRateController.text),
-                ).toJson()).then((value) => {
-                  productId = value,
-                  IsbnService.generateBarcode(barcodeNo).then((value) => {
-                    barcode = value,
-                    barcode.productId = productId,
-                    BarcodeDbHelper().insert(barcode.toJson()).then((value) => {
-                      print(barcode.toJson()),
-                    }),
-                  }),
-
-                });
-
-              }
-            },
+            onPressed: onSavedFun,
             child: const Text(
               'Kaydet',
               style: TextStyle(
@@ -144,6 +82,83 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
         ],
       ),
     );
+  }
+
+  void onSavedFun() {
+    if (barcodeNo == '0000000000000') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Barkod oluşturun!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (NumberValidator.validate(gramController.text) != null ||
+          NumberValidator.validate(purityRateController.text) != null ||
+          NumberValidator.validate(laborCostController.text) != null ||
+          NumberValidator.validate(costPriceController.text) != null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Boş alanları doldurun!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Tamam'),
+              ),
+            ],
+          ),
+        );
+      }
+      Barcode barcode;
+      int productId;
+
+      ProductDbHelper()
+          .insert(
+            Product(
+              barcodeText: barcodeNo,
+              name: nameController.text,
+              carat: dropdownValue,
+              gram: double.parse(gramController.text),
+              laborCost: double.parse(laborCostController.text),
+              costPrice: double.parse(costPriceController.text),
+              purityRate: double.parse(purityRateController.text),
+            ).toJson(),
+          )
+          .then(
+            (value) => {
+              productId = value,
+              IsbnService.generateBarcode(barcodeNo).then(
+                (value) => {
+                  barcode = value,
+                  barcode.productId = productId,
+                  BarcodeDbHelper().insert(barcode.toJson()).then(
+                        (value) => {
+                          print(barcode.toJson()),
+                          setState(
+                            () {
+                              barcodeNo = '0000000000000';
+                              nameController.text = '';
+                              gramController.text = '';
+                              costGramController.text = '';
+                              purityRateController.text = '';
+                              costPriceController.text = '';
+                              laborCostController.text = '';
+                            },
+                          ),
+                        },
+                      ),
+                },
+              ),
+            },
+          );
+    }
   }
 
   Padding buildBarcodeRow() {
