@@ -13,37 +13,6 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  List<Product> products = [];
-
-  ProductDbHelper productDbHelper = ProductDbHelper();
-
-  /*
-      productDbHelper.queryAllRows().then(
-          (value) => {
-        value.map((e) => products.add(Product.fromJson(e))),
-        //Navigator.of(context).pop(),
-      },
-    );
-   */
-  /*
-  showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-   */
-  @override
-  void initState() {
-    ProductDbHelper().queryAllRows().then(
-          (value) => {
-            value.map((e) => products.add(Product.fromJson(e))),
-            print(products.length),
-          },
-        );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
