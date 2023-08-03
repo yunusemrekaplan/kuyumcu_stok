@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/models/barcode.dart';
+import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -31,7 +35,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
     dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';
     nameController = TextEditingController();
-    caratController = TextEditingController();
+    //caratController = TextEditingController();
     gramController = TextEditingController();
     costGramController = TextEditingController();
     purityRateController = TextEditingController();
@@ -81,9 +85,14 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     ],
                   ),
                 );
-              }
-              else {
-                if (NumberValidator.validate(gramController.text) != null || NumberValidator.validate(purityRateController.text) != null || NumberValidator.validate(laborCostController.text) != null || NumberValidator.validate(costPriceController.text) != null) {
+              } else {
+                if (NumberValidator.validate(gramController.text) != null ||
+                    NumberValidator.validate(purityRateController.text) !=
+                        null ||
+                    NumberValidator.validate(laborCostController.text) !=
+                        null ||
+                    NumberValidator.validate(costPriceController.text) !=
+                        null) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
@@ -97,7 +106,31 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     ),
                   );
                 }
+                Barcode barcode;
 
+
+                int barcodes;
+                int productId;
+
+                ProductDbHelper().insert(Product(
+                  barcodeText: barcodeNo,
+                  name: nameController.text,
+                  carat: dropdownValue,
+                  gram: double.parse(gramController.text),
+                  laborCost: double.parse(laborCostController.text),
+                  costPrice: double.parse(costPriceController.text),
+                  purityRate: double.parse(purityRateController.text),
+                ).toJson()).then((value) => {
+                  productId = value,
+                  IsbnService.generateBarcode(barcodeNo).then((value) => {
+                    barcode = value,
+                    barcode.productId = productId,
+                    BarcodeDbHelper().insert(barcode.toJson()).then((value) => {
+                      print(barcode.toJson()),
+                    }),
+                  }),
+
+                });
 
               }
             },

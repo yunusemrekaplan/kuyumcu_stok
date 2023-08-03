@@ -4,11 +4,6 @@ import 'dart:typed_data';
 
 import 'package:aspose_barcode_cloud/api.dart' as barcode;
 import 'package:kuyumcu_stok/models/barcode.dart';
-/*
-import 'package:aspose_barcode_cloud/api.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:http/http.dart' as http;
-*/
 
 class IsbnService {
   static const String firstCode = '978';
@@ -55,17 +50,6 @@ class IsbnService {
     print(await File(filePath+fileName).writeAsBytes(generated));
     print("Generated image saved to $fileName");
 
-    return Barcode(productId: 0, text: isbnCode, path: (filePath+fileName));
-
-    /*print(await api.putBarcodeGenerateFile("isbn.png", "ISBN", "123456789"));
-
-    final formFile = http.MultipartFile.fromBytes("image", [generated.length], filename: "barcode.png");
-    BarcodeResponseList? recognized = await api.postBarcodeRecognizeFromUrlOrContent(url: 'C:\\FlutterProjects\\kuyumcu_stok\\isbn.png' ,image: formFile);
-
-    print("Recognized Type: ${recognized.barcodes![0].type!}");
-    print("Recognized Value: ${recognized.barcodes![0].barcodeValue!}");
-
-    print(await api.getBarcodeGenerate('ISBN', 'isbn'));
-    print(barcode.StorageExist());*/
+    return Barcode(text: isbnCode, path: (filePath+fileName));
   }
 }

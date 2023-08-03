@@ -20,6 +20,7 @@ class ProductDbHelper {
 
     // Open the database
     _db = await databaseFactoryFfi.openDatabase(path);
+    //await _db!.execute('DROP TABLE products');
     await _createTable();
   }
 
@@ -27,7 +28,7 @@ class ProductDbHelper {
     await _db!.execute('''
       CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        barcodeId INTEGER NOT NULL,
+        barcodeText TEXT NOT NULL,
         name TEXT,
         carat INTEGER NOT NULL,
         purityRate DECIMAL NOT NULL,

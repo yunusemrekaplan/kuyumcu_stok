@@ -54,12 +54,12 @@ class BarcodeDbHelper {
     return await _db!.query('barcodes');
   }
 
-  Future<Map<String, dynamic>?> getBarcodeById(int id) async {
+  Future<Map<String, dynamic>?> getBarcodeByText(String text) async {
     // Get the barcode from the table based on the given id
     final List<Map<String, dynamic>> results = await _db!.query(
       'barcodes',
-      where: 'id = ?',
-      whereArgs: [id],
+      where: 'text = ?',
+      whereArgs: [text],
     );
 
     // If the result is not empty, return the first item (since id is unique)

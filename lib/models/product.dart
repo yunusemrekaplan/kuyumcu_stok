@@ -7,7 +7,7 @@ import 'package:kuyumcu_stok/services/gold_service.dart';
 
 class Product {
   late int id;
-  late int barcodeId;
+  late String barcodeText;
   late Barcode barcode;
   late String? name;
   late Carat carat; // x
@@ -21,37 +21,38 @@ class Product {
 
 
   Product(
-      {required this.barcodeId,
+      {required this.barcodeText,
       required this.name,
       required this.carat,
-      required this.gram}) {
-    BarcodeDbHelper barcodeDbHelper = BarcodeDbHelper();
-    barcodeDbHelper
-        .getBarcodeById(barcodeId)
-        .then((value) => barcode = Barcode.fromJson(value!));
-
-    costPrice = Calculate.calculateCostPrice(purityRate, gram, laborCost);
+      required this.gram,
+      required this.purityRate,
+      required this.laborCost,
+      required this.costPrice,}) {
+   /* BarcodeDbHelper barcodeDbHelper = BarcodeDbHelper();
+    barcodeDbHelper.getBarcodeById(barcodeId).then((value) => barcode = Barcode.fromJson(value!));*/
   }
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    barcodeId = json['barcodeId'];
+    barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
     carat = json['carat'];
     gram = json['gram'];
-    costGram = json['costGram'];
-    purityRate = json['mil'];
+    //costGram = json['costGram'];
+    purityRate = json['purityRate'];
+    laborCost = json['laborCost'];
     costPrice = json['costPrice'];
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'barcodeId': barcodeId,
+      'barcodeText': barcodeText,
       'name': name ?? '',
-      'carat': carat,
+      'carat': carat.intDefinition,
       'gram': gram,
-      'costGram': costGram,
-      'mil': purityRate,
+      //'costGram': costGram,
+      'purityRate': purityRate,
+      'laborCost': laborCost,
       'costPrice': costPrice,
     };
   }

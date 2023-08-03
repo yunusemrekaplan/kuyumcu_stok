@@ -5,7 +5,6 @@ class Barcode {
   late String path;
 
   Barcode({
-    required this.productId,
     required this.text,
     required this.path,
   });
