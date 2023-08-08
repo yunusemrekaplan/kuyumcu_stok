@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -13,6 +11,16 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
+  Map<int, bool> selects = {};
+
+  @override
+  void initState() {
+    ProductDbHelper().products.map((e) => {
+          selects.update(e.id, (value) => false),
+        });
+    print(selects.length);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,29 +38,51 @@ class _ProductsScreenState extends State<ProductsScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  const SizedBox(
+                    width: 30,
+                  ),
                   Expanded(
-                    flex: 1,
                     child: DataTable(
+                      showCheckboxColumn: false,
+                      border: const TableBorder(
+                        top: BorderSide(width: 1),
+                        left: BorderSide(width: 1),
+                        right: BorderSide(width: 1),
+                        bottom: BorderSide(width: 1),
+                        horizontalInside: BorderSide(width: 1),
+                        verticalInside: BorderSide(width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
                       columns: const [
                         DataColumn(label: Text('İsim')),
                         DataColumn(label: Text('Gram')),
                         DataColumn(label: Text('Karat')),
                         DataColumn(label: Text('Maliyet')),
                       ],
-                      rows: ProductDbHelper().products
+                      rows: ProductDbHelper()
+                          .products
                           .map(
                             (e) => DataRow(
+                              key: ValueKey(e.id),
+                              //selected: selects[e.id]!,
                               cells: [
                                 DataCell(Text(e.name!)),
                                 DataCell(Text(e.gram.toString())),
-                                DataCell(Text(e.carat.intDefinition.toString())),
+                                DataCell(
+                                    Text(e.carat.intDefinition.toString())),
                                 DataCell(Text(e.costPrice.toString())),
                               ],
+                              onSelectChanged: (selected) {
+                                
+                              },
                             ),
                           )
                           .toList(),
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    width: 30,
+                  ),
                 ],
               ),
             ),
@@ -66,7 +96,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/product-add-screen', (route) => false);
                   },
-                  child: Text('Ürün Ekle'),
+                  child: const Text('Ürün Ekle'),
                 ),
               ],
             ),
