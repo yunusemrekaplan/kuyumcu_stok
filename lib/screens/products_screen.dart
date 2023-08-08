@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
+import 'package:kuyumcu_stok/screens/product_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -73,7 +74,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 DataCell(Text(e.costPrice.toString())),
                               ],
                               onSelectChanged: (selected) {
-                                
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => ProductScreen(product: e)), (route) => false);
                               },
                             ),
                           )
