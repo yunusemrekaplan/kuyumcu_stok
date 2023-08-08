@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/models/product.dart';
+import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class ProductScreen extends StatefulWidget {
   late Product product;
@@ -14,6 +15,14 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(),
+      drawer: const MyDrawer(),
+      body: Column(
+        children: [
+
+        ],
+      ),
+    );
   }
 }

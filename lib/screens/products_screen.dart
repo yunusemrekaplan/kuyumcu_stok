@@ -69,12 +69,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               cells: [
                                 DataCell(Text(e.name!)),
                                 DataCell(Text(e.gram.toString())),
-                                DataCell(
-                                    Text(e.carat.intDefinition.toString())),
+                                DataCell(Text(e.carat.intDefinition.toString())),
                                 DataCell(Text(e.costPrice.toString())),
                               ],
                               onSelectChanged: (selected) {
-                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) => ProductScreen(product: e)), (route) => false);
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            ProductScreen(product: e)),
+                                    (route) => false);
                               },
                             ),
                           )
