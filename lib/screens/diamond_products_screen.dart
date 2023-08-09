@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/product_diamond_db_helper.dart';
+import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class DiamondProductsScreen extends StatefulWidget {
@@ -79,7 +79,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           ),
                         ),
                       ],
-                      rows: ProductDiamondDbHelper()
+                      rows: DiamondProductDbHelper()
                           .products
                           .map(
                             (e) => DataRow(
@@ -101,10 +101,10 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          ProductDiamondDbHelper()
+                                          DiamondProductDbHelper()
                                               .products
                                               .remove(e);
-                                          ProductDiamondDbHelper().delete(e.id);
+                                          DiamondProductDbHelper().delete(e.id);
                                         });
                                       },
                                       icon: const Icon(Icons.delete),
@@ -112,10 +112,10 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          ProductDiamondDbHelper()
+                                          DiamondProductDbHelper()
                                               .products
                                               .remove(e);
-                                          ProductDiamondDbHelper().delete(e.id);
+                                          DiamondProductDbHelper().delete(e.id);
                                         });
                                       },
                                       icon: const Icon(Icons.delete),

@@ -1,20 +1,21 @@
-import 'package:kuyumcu_stok/models/product_diamond.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class ProductDiamondDbHelper {
-  static final ProductDiamondDbHelper _instance = ProductDiamondDbHelper._internal();
+class GoldProductDbHelper {
+  static final GoldProductDbHelper _instance = GoldProductDbHelper._internal();
 
-  factory ProductDiamondDbHelper() {
+  factory GoldProductDbHelper() {
     return _instance;
   }
 
-  ProductDiamondDbHelper._internal();
+  GoldProductDbHelper._internal();
 
-  late Database _db;
+  Database? _db;
 
-  late List<ProductDiamond> products;
+  late List<GoldProduct> products;
 
-  String tableName = "product_diamonds";
+  String tableName = "product_golds";
 
   Future<void> open() async {
     products = [];
@@ -24,38 +25,44 @@ class ProductDiamondDbHelper {
     String path = 'kuyumcu.db';
 
     _db = await databaseFactoryFfi.openDatabase(path);
-    //await _db.execute('DROP TABLE product_diamonds');
     await _createTable();
   }
 
   Future<void> _createTable() async {
-    await _db.execute('''
-      CREATE TABLE IF NOT EXISTS product_diamonds (
+    await _db!.execute('''
+      CREATE TABLE IF NOT EXISTS product_golds (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         barcodeText TEXT NOT NULL,
         name TEXT,
+        carat INTEGER NOT NULL,
+        purityRate DECIMAL NOT NULL,
+        laborCost DECIMAL NOT NULL,
         gram DECIMAL NOT NULL,
-        price DECIMAL NOT NULL
+        costPrice DECIMAL NOT NULL
       )
     ''');
   }
 
+
   Future<void> close() async {
     // Close the database
-    await _db.close();
+    await _db!.close();
   }
 
   Future<int> insert(Map<String, dynamic> data) async {
+    if (_db == null) {
+      throw Exception("Database is not open.");
+    }
 
-    return await _db.insert(tableName, data);
+    return await _db!.insert(tableName, data);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await _db.query(tableName);
+    return await _db!.query(tableName);
   }
 
   Future<Map<String, dynamic>?> getProductById(int id) async {
-    final List<Map<String, dynamic>> results = await _db.query(
+    final List<Map<String, dynamic>> results = await _db!.query(
       tableName,
       where: 'id = ?',
       whereArgs: [id],
@@ -69,7 +76,7 @@ class ProductDiamondDbHelper {
   }
 
   Future<Map<String, dynamic>?> getProductByBarcodeText(String barcodeText) async {
-    final List<Map<String, dynamic>> results = await _db.query(
+    final List<Map<String, dynamic>> results = await _db!.query(
       tableName,
       where: 'barcodeText = ?',
       whereArgs: [barcodeText],
@@ -83,11 +90,10 @@ class ProductDiamondDbHelper {
   }
 
   Future<int> update(Map<String, dynamic> data, int id) async {
-    return await _db.update(tableName, data, where: 'id = ?', whereArgs: [id]);
+    return await _db!.update(tableName, data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
-    return await _db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    return await _db!.delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
-
 }

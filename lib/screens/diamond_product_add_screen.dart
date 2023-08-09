@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -152,7 +153,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
       child: Row(
         children: [
           const Text(
-            'Price: ',
+            'Fiyat: ',
             style: TextStyle(
               fontSize: 24,
             ),
@@ -181,7 +182,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            onPressed: onSavedFun,
+            onPressed: onSaved,
             child: const Text(
               'Kaydet',
               style: TextStyle(
@@ -194,12 +195,12 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
     );
   }
 
-  void onSavedFun() {
-    /*if (barcodeController.text.length != 13) {
+  void onSaved() {
+    if (barcodeController.text.length != 13) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Doğru formatta barkod kodu giriniz!'),
+          title: const Text('Doğru formatta barkod kodu girin!'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -210,19 +211,28 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
       );
     }
     else {
-      for(int i=0; i<barcodeController.text.length; i++) {
-        if ()
+      if (gramController.text.isEmpty || priceController.text.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Boşlukları doldurun!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Tamam'),
+              ),
+            ],
+          ),
+        );
+      }
+      else {
+
       }
 
 
 
 
-
-
-
-
-
-      if (NumberValidator.validate(gramController.text) != null ||
+      /*if (NumberValidator.validate(gramController.text) != null ||
           NumberValidator.validate(purityRateController.text) != null ||
           NumberValidator.validate(laborCostController.text) != null ||
           NumberValidator.validate(costPriceController.text) != null) {
@@ -288,8 +298,8 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
           context: context,
           builder: (context) {
             return const Center(child: CircularProgressIndicator());
-          });
-    }*/
+          });*/
+    }
   }
 
   BoxConstraints buildBoxConstraints(Size size) => BoxConstraints.tight(size);

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
+import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
-import 'package:kuyumcu_stok/models/product_gold.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -141,7 +141,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
       Barcode barcode;
 
-      Map<String, dynamic> json = ProductGold(
+      Map<String, dynamic> json = GoldProduct(
         barcodeText: barcodeNo,
         name: nameController.text,
         carat: dropdownValue,
@@ -151,10 +151,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         purityRate: double.parse(purityRateController.text),
       ).toJson();
 
-      ProductGoldDbHelper().insert(json).then(
+      GoldProductDbHelper().insert(json).then(
             (value) => {
-              ProductGoldDbHelper().products.add(
-                    ProductGold.fromJson(json, value),
+              GoldProductDbHelper().products.add(
+                    GoldProduct.fromJson(json, value),
                   ),
               print('id: $value'),
               IsbnService.generateBarcode(barcodeNo).then(

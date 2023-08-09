@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
-import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
+import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/product_gold.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class ProductGoldScreen extends StatefulWidget {
-  late ProductGold product;
+  late GoldProduct product;
   ProductGoldScreen({super.key, required this.product});
 
   @override
@@ -17,7 +17,7 @@ class ProductGoldScreen extends StatefulWidget {
 }
 
 class _ProductGoldScreenState extends State<ProductGoldScreen> {
-  late ProductGold product;
+  late GoldProduct product;
   late TextEditingController nameController;
   late TextEditingController caratController;
   late TextEditingController gramController;
@@ -133,15 +133,15 @@ class _ProductGoldScreenState extends State<ProductGoldScreen> {
     product.purityRate = double.parse(purityRateController.text);
 
 
-    for(int i=0; i<ProductGoldDbHelper().products.length; i++) {
-      if (ProductGoldDbHelper().products[i].id == product.id) {
-        ProductGoldDbHelper().products[i] = product;
+    for(int i=0; i<GoldProductDbHelper().products.length; i++) {
+      if (GoldProductDbHelper().products[i].id == product.id) {
+        GoldProductDbHelper().products[i] = product;
         print(product.name);
         break;
       }
     }
-    ProductGoldDbHelper().update(product.toJson(), product.id).then((value) => {
-      ProductGoldDbHelper().getProductById(product.id).then((value) => print(value)),
+    GoldProductDbHelper().update(product.toJson(), product.id).then((value) => {
+      GoldProductDbHelper().getProductById(product.id).then((value) => print(value)),
       Navigator.pushNamedAndRemoveUntil(
           context, '/products-screen', (route) => false),
     });

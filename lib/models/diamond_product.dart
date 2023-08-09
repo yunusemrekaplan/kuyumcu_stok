@@ -1,11 +1,11 @@
-class ProductDiamond {
+class DiamondProduct {
   late int id;
   late String barcodeText;
   late String? name;
   late double gram;
   late double price;
 
-  ProductDiamond.fromJson(Map<String, dynamic> json) {
+  DiamondProduct.fromJson(Map<String, dynamic> json) {
     barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
     gram = json['gram'];

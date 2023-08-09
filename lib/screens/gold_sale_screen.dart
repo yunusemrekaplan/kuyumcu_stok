@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
+import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/product_gold.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -26,7 +26,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
   String costTxt = '....';
   String priceTxt = '....';
 
-  ProductGold? product;
+  GoldProduct? product;
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
@@ -162,11 +162,11 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
         ),
         onChanged: (value) {
           if (value.length == 13) {
-            for (int i = 0; i < ProductGoldDbHelper().products.length; i++) {
-              if (ProductGoldDbHelper().products[i].barcodeText == value) {
+            for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
+              if (GoldProductDbHelper().products[i].barcodeText == value) {
                 print('ürün bulundu');
                 setState(() {
-                  product = ProductGoldDbHelper().products[i];
+                  product = GoldProductDbHelper().products[i];
                   caratTxt = product!.carat.intDefinition.toString();
                   gramTxt = product!.gram.toStringAsFixed(0);
                   costTxt = product!.costPrice.toStringAsFixed(0);

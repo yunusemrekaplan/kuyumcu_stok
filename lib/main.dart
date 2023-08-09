@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kuyumcu_stok/data/product_diamond_db_helper.dart';
-import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
-import 'package:kuyumcu_stok/models/product_gold.dart';
+import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
+import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
@@ -34,17 +34,17 @@ Future<void> main() async {
   });
 
   await BarcodeDbHelper().open();
-  await ProductGoldDbHelper().open();
-  await ProductDiamondDbHelper().open();
+  await GoldProductDbHelper().open();
+  await DiamondProductDbHelper().open();
   await GoldService.getGoldPrices();
 
-  var list = await ProductGoldDbHelper().queryAllRows().then((value) => value);
-  List<ProductGold> products = [];
+  var list = await GoldProductDbHelper().queryAllRows().then((value) => value);
+  List<GoldProduct> products = [];
 
   for(int i=0; i<list.length; i++) {
-    products.add(ProductGold.fromJson(list[i], list[i]['id']));
+    products.add(GoldProduct.fromJson(list[i], list[i]['id']));
   }
-  ProductGoldDbHelper().products = products;
+  GoldProductDbHelper().products = products;
 
   runApp(const MyApp());
 }
