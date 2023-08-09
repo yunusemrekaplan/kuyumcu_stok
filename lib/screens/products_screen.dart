@@ -41,8 +41,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   Expanded(
                     child: DataTable(
-                      columnSpacing: 50,
-                      horizontalMargin: 50,
+                      columnSpacing: 20,
+                      horizontalMargin: 10,
                       showCheckboxColumn: false,
                       border: const TableBorder(
                         top: BorderSide(width: 1),
@@ -56,7 +56,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       columns: [
                         DataColumn(
                           label: Container(
-                            width: 40,
+                            width: width * .1,
                             child: const Text(
                               'İsim',
                               style: TextStyle(fontSize: 22),
@@ -83,7 +83,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ),
                         DataColumn(
                           label: Container(
-                            width: 150,
+                            width: width * .1,
+                            child: const Text(
+                              'Saflık Oranı',
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Container(
+                            width: width * .1,
+                            child: const Text(
+                              'İşçilik',
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Container(
+                            width: width * .1,
                             child: const Text(
                               'Maliyet',
                               style: TextStyle(fontSize: 22),
@@ -92,7 +110,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ),
                         DataColumn(
                           label: Container(
-                            width: 300,
+                            width: width * .1,
                             child: const Text(''),
                           ),
                         ),
@@ -114,6 +132,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 )),
                                 DataCell(Text(
                                   e.carat.intDefinition.toString(),
+                                  style: const TextStyle(fontSize: 20),
+                                )),
+                                DataCell(Text(
+                                  e.purityRate.toString(),
+                                  style: const TextStyle(fontSize: 20),
+                                )),
+                                DataCell(Text(
+                                  e.laborCost.toString(),
                                   style: const TextStyle(fontSize: 20),
                                 )),
                                 DataCell(Text(
