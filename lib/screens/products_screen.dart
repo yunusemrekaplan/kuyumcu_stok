@@ -12,13 +12,10 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  Map<int, bool> selects = {};
 
   @override
   void initState() {
-    ProductDbHelper().products.map((e) => {
-          selects.update(e.id, (value) => false),
-        });
+    //ProductDbHelper().queryAllRows().then((value) => print(value));
     super.initState();
   }
 

@@ -43,6 +43,12 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   @override
+  void initState() {
+    print(product.id);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
@@ -55,7 +61,7 @@ class _ProductScreenState extends State<ProductScreen> {
           buildLaborCostRow(),
           buildGramRow(),
           buildCostPriceRow(),
-          buildSaveButtonRow(),
+          buildUpdateButtonRow(),
           const SizedBox(
             height: 70,
           ),
@@ -83,7 +89,7 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Padding buildSaveButtonRow() {
+  Padding buildUpdateButtonRow() {
     return Padding(
       padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
       child: Row(
@@ -120,7 +126,27 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       );
     }
-    ProductDbHelper().products.map((e) => {
+    product.name = nameController.text;
+    product.carat = dropdownValue;
+    product.gram = double.parse(gramController.text);
+    product.laborCost = double.parse(laborCostController.text);
+    product.costPrice = double.parse(costPriceController.text);
+    product.purityRate = double.parse(purityRateController.text);
+
+
+    for(int i=0; i<ProductDbHelper().products.length; i++) {
+      if (ProductDbHelper().products[i].id == product.id) {
+        ProductDbHelper().products[i] = product;
+        print(product.name);
+        break;
+      }
+    }
+    ProductDbHelper().update(product.toJson(), product.id).then((value) => {
+      ProductDbHelper().getProductById(product.id).then((value) => print(value)),
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/products-screen', (route) => false),
+    });
+    /*ProductDbHelper().products.map((e) => {
       if (e.id == product.id)
       {
         e = product,
@@ -133,7 +159,7 @@ class _ProductScreenState extends State<ProductScreen> {
         Navigator.pushNamedAndRemoveUntil(
             context, '/products-screen', (route) => false),
       },
-    );
+    );*/
   }
 
   Padding buildNameRow() {

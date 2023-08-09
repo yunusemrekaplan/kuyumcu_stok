@@ -73,7 +73,7 @@ class ProductDbHelper {
     return await _db!.query('products');
   }
 
-  Future<Map<String, dynamic>?> getBarcodeById(int id) async {
+  Future<Map<String, dynamic>?> getProductById(int id) async {
     // Get the barcode from the table based on the given id
     final List<Map<String, dynamic>> results = await _db!.query(
       'products',
@@ -90,6 +90,7 @@ class ProductDbHelper {
   }
 
   Future<int> update(Map<String, dynamic> data, int id) async {
+    print('update girdi');
     // Update a row in the given table with the specified ID
     return await _db!.update('products', data, where: 'id = ?', whereArgs: [id]);
   }
