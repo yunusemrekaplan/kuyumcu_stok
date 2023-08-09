@@ -19,7 +19,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     ProductDbHelper().products.map((e) => {
           selects.update(e.id, (value) => false),
         });
-    print(selects.length);
     super.initState();
   }
 
@@ -64,7 +63,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           .products
                           .map(
                             (e) => DataRow(
-                              key: ValueKey(e.id),
+                              //key: ValueKey(e.id),
                               //selected: selects[e.id]!,
                               cells: [
                                 DataCell(Text(e.name!)),

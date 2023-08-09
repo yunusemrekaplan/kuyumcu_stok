@@ -1,7 +1,8 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, no_logic_in_create_state
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
+import 'package:kuyumcu_stok/data/product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
@@ -55,7 +56,7 @@ class _ProductScreenState extends State<ProductScreen> {
           buildGramRow(),
           buildCostPriceRow(),
           buildSaveButtonRow(),
-          SizedBox(
+          const SizedBox(
             height: 70,
           ),
           Padding(
@@ -102,7 +103,37 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   void onUpdateFun() {
-
+    if (NumberValidator.validate(gramController.text) != null ||
+        NumberValidator.validate(purityRateController.text) != null ||
+        NumberValidator.validate(laborCostController.text) != null ||
+        NumberValidator.validate(costPriceController.text) != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Boş alanları doldurun!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    }
+    ProductDbHelper().products.map((e) => {
+      if (e.id == product.id)
+      {
+        e = product,
+        print(e.id),
+        print(product.id),
+      }
+    });
+    ProductDbHelper().update(product.toJson(), product.id).then(
+          (value) => {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/products-screen', (route) => false),
+      },
+    );
   }
 
   Padding buildNameRow() {
@@ -173,7 +204,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 if (purityRateController.text.isNotEmpty &&
                     gramController.text.isNotEmpty &&
                     laborCostController.text.isNotEmpty) {
-                  print('girdi');
+                  //print('girdi');
                   setState(() {
                     costPriceController.text = Calculate.calculateCostPrice(
                             double.parse(purityRateController.text),
@@ -214,7 +245,7 @@ class _ProductScreenState extends State<ProductScreen> {
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
-                print('girdi');
+                //print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
                           double.parse(purityRateController.text),
@@ -254,7 +285,7 @@ class _ProductScreenState extends State<ProductScreen> {
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
-                print('girdi');
+                //print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
                           double.parse(purityRateController.text),
@@ -294,7 +325,7 @@ class _ProductScreenState extends State<ProductScreen> {
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
-                print('girdi');
+                //print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
                           double.parse(purityRateController.text),
