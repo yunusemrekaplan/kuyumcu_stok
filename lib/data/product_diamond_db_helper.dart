@@ -24,6 +24,7 @@ class ProductDiamondDbHelper {
     String path = 'kuyumcu.db';
 
     _db = await databaseFactoryFfi.openDatabase(path);
+    //await _db.execute('DROP TABLE product_diamonds');
     await _createTable();
   }
 
@@ -34,7 +35,7 @@ class ProductDiamondDbHelper {
         barcodeText TEXT NOT NULL,
         name TEXT,
         gram DECIMAL NOT NULL,
-        price DECIMAL NOT NULL,
+        price DECIMAL NOT NULL
       )
     ''');
   }
