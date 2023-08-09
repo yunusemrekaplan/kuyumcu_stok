@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/screens/product_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -114,7 +114,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ),
                         ),
                       ],
-                      rows: ProductDbHelper()
+                      rows: ProductGoldDbHelper()
                           .products
                           .map(
                             (e) => DataRow(
@@ -150,8 +150,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          ProductDbHelper().products.remove(e);
-                                          ProductDbHelper().delete(e.id);
+                                          ProductGoldDbHelper().products.remove(e);
+                                          ProductGoldDbHelper().delete(e.id);
                                         });
                                       },
                                       icon: const Icon(Icons.delete),
@@ -159,8 +159,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          ProductDbHelper().products.remove(e);
-                                          ProductDbHelper().delete(e.id);
+                                          ProductGoldDbHelper().products.remove(e);
+                                          ProductGoldDbHelper().delete(e.id);
                                         });
                                       },
                                       icon: const Icon(Icons.delete),

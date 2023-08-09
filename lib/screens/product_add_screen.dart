@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
-import 'package:kuyumcu_stok/models/product.dart';
+import 'package:kuyumcu_stok/models/product_gold.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -138,30 +138,28 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ),
         );
       }
-      
-      Barcode barcode;
-      int productId;
 
-      ProductDbHelper()
-          .insert(
-            Product(
-              barcodeText: barcodeNo,
-              name: nameController.text,
-              carat: dropdownValue,
-              gram: double.parse(gramController.text),
-              laborCost: double.parse(laborCostController.text),
-              costPrice: double.parse(costPriceController.text),
-              purityRate: double.parse(purityRateController.text),
-            ).toJson(),
-          )
-          .then(
+      Barcode barcode;
+
+      Map<String, dynamic> json = ProductGold(
+        barcodeText: barcodeNo,
+        name: nameController.text,
+        carat: dropdownValue,
+        gram: double.parse(gramController.text),
+        laborCost: double.parse(laborCostController.text),
+        costPrice: double.parse(costPriceController.text),
+        purityRate: double.parse(purityRateController.text),
+      ).toJson();
+
+      ProductGoldDbHelper().insert(json).then(
             (value) => {
-              productId = value,
+              ProductGoldDbHelper().products.add(
+                    ProductGold.fromJson(json, value),
+                  ),
               print('id: $value'),
               IsbnService.generateBarcode(barcodeNo).then(
                 (value) => {
                   barcode = value,
-                  barcode.productId = productId,
                   BarcodeDbHelper().insert(barcode.toJson()).then(
                         (value) => {
                           print(barcode.toJson()),
@@ -184,9 +182,12 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               ),
             },
           );
-      showDialog(barrierDismissible: false, context: context, builder: (context) {
-        return const Center(child: CircularProgressIndicator());
-      });
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return const Center(child: CircularProgressIndicator());
+          });
     }
   }
 

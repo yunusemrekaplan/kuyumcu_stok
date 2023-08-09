@@ -1,7 +1,7 @@
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
 
-class Product {
+class ProductGold {
   late int id;
   late String barcodeText;
   late Barcode barcode;
@@ -16,7 +16,7 @@ class Product {
   // ((z + k) * g) * y
 
 
-  Product(
+  ProductGold(
       {required this.barcodeText,
       required this.name,
       required this.carat,
@@ -28,7 +28,7 @@ class Product {
     barcodeDbHelper.getBarcodeById(barcodeId).then((value) => barcode = Barcode.fromJson(value!));*/
   }
 
-  Product.fromJson(Map<String, dynamic> json, this.id) {
+  ProductGold.fromJson(Map<String, dynamic> json, this.id) {
     barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
     carat = toCarat(json['carat'])!;

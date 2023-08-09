@@ -18,6 +18,7 @@ class BarcodeDbHelper {
     String path = 'kuyumcu.db';
 
     _db = await databaseFactoryFfi.openDatabase(path);
+    //await _db!.execute('DROP TABLE barcodes');
     await _createTable();
   }
 
@@ -25,7 +26,6 @@ class BarcodeDbHelper {
     await _db!.execute('''
       CREATE TABLE IF NOT EXISTS barcodes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        productId INTEGER NOT NULL,
         text TEXT NOT NULL,
         path TEXT NOT NULL
       )

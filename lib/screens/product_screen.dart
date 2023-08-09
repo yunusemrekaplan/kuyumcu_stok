@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
-import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/product.dart';
+import 'package:kuyumcu_stok/models/product_gold.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class ProductScreen extends StatefulWidget {
-  late Product product;
+  late ProductGold product;
   ProductScreen({super.key, required this.product});
 
   @override
@@ -17,7 +17,7 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-  late Product product;
+  late ProductGold product;
   late TextEditingController nameController;
   late TextEditingController caratController;
   late TextEditingController gramController;
@@ -133,15 +133,15 @@ class _ProductScreenState extends State<ProductScreen> {
     product.purityRate = double.parse(purityRateController.text);
 
 
-    for(int i=0; i<ProductDbHelper().products.length; i++) {
-      if (ProductDbHelper().products[i].id == product.id) {
-        ProductDbHelper().products[i] = product;
+    for(int i=0; i<ProductGoldDbHelper().products.length; i++) {
+      if (ProductGoldDbHelper().products[i].id == product.id) {
+        ProductGoldDbHelper().products[i] = product;
         print(product.name);
         break;
       }
     }
-    ProductDbHelper().update(product.toJson(), product.id).then((value) => {
-      ProductDbHelper().getProductById(product.id).then((value) => print(value)),
+    ProductGoldDbHelper().update(product.toJson(), product.id).then((value) => {
+      ProductGoldDbHelper().getProductById(product.id).then((value) => print(value)),
       Navigator.pushNamedAndRemoveUntil(
           context, '/products-screen', (route) => false),
     });

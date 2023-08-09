@@ -1,20 +1,21 @@
-import 'package:kuyumcu_stok/models/product.dart';
+import 'package:kuyumcu_stok/models/product_gold.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class ProductDbHelper {
-  static final ProductDbHelper _instance = ProductDbHelper._internal();
+class ProductGoldDbHelper {
+  static final ProductGoldDbHelper _instance = ProductGoldDbHelper._internal();
 
-  factory ProductDbHelper() {
+  factory ProductGoldDbHelper() {
     return _instance;
   }
 
-  ProductDbHelper._internal();
+  ProductGoldDbHelper._internal();
 
   Database? _db;
 
-  late List<Product> products;
+  late List<ProductGold> products;
 
+  String tableName = "product_golds";
 
   Future<void> open() async {
     products = [];
@@ -29,7 +30,7 @@ class ProductDbHelper {
 
   Future<void> _createTable() async {
     await _db!.execute('''
-      CREATE TABLE IF NOT EXISTS products (
+      CREATE TABLE IF NOT EXISTS product_golds (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         barcodeText TEXT NOT NULL,
         name TEXT,
@@ -52,19 +53,17 @@ class ProductDbHelper {
     if (_db == null) {
       throw Exception("Database is not open.");
     }
-    int id = products.last.id;
 
-    products.add(Product.fromJson(data, id));
-    return await _db!.insert('products', data);
+    return await _db!.insert(tableName, data);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await _db!.query('products');
+    return await _db!.query(tableName);
   }
 
   Future<Map<String, dynamic>?> getProductById(int id) async {
     final List<Map<String, dynamic>> results = await _db!.query(
-      'products',
+      tableName,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -76,11 +75,25 @@ class ProductDbHelper {
     return null;
   }
 
+  Future<Map<String, dynamic>?> getProductByBarcodeText(String barcodeText) async {
+    final List<Map<String, dynamic>> results = await _db!.query(
+      tableName,
+      where: 'barcodeText = ?',
+      whereArgs: [barcodeText],
+    );
+
+    if (results.isNotEmpty) {
+      return results.first;
+    }
+
+    return null;
+  }
+
   Future<int> update(Map<String, dynamic> data, int id) async {
-    return await _db!.update('products', data, where: 'id = ?', whereArgs: [id]);
+    return await _db!.update(tableName, data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
-    return await _db!.delete('products', where: 'id = ?', whereArgs: [id]);
+    return await _db!.delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 }

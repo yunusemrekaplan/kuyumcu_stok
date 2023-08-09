@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/models/product.dart';
+import 'package:kuyumcu_stok/models/product_gold.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -66,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     gold = value!;
                   });
                 });*/
-                List<Product> products = [];
+                List<ProductGold> products = [];
                 List<Map<String, dynamic>> maps;
-                await ProductDbHelper().queryAllRows().then((value)
+                await ProductGoldDbHelper().queryAllRows().then((value)
                 {
                   maps = value;
                   print(maps.length);
