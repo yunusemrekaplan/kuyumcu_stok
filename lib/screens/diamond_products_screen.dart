@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
-import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/screens/product_screen.dart';
+import 'package:kuyumcu_stok/data/product_diamond_db_helper.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-class ProductsScreen extends StatefulWidget {
-  const ProductsScreen({super.key});
+class DiamondProductsScreen extends StatefulWidget {
+  const DiamondProductsScreen({super.key});
 
   @override
-  State<ProductsScreen> createState() => _ProductsScreenState();
+  State<DiamondProductsScreen> createState() => _DiamondProductsScreenState();
 }
 
-class _ProductsScreenState extends State<ProductsScreen> {
-  @override
-  void initState() {
-    //ProductDbHelper().queryAllRows().then((value) => print(value));
-    super.initState();
-  }
-
+class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -75,34 +67,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           label: Container(
                             width: width * .1,
                             child: const Text(
-                              'Karat',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .1,
-                            child: const Text(
-                              'Saflık Oranı',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .1,
-                            child: const Text(
-                              'İşçilik',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Container(
-                            width: width * .1,
-                            child: const Text(
-                              'Maliyet',
+                              'Ücret',
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
@@ -114,15 +79,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ),
                         ),
                       ],
-                      rows: ProductGoldDbHelper()
+                      rows: ProductDiamondDbHelper()
                           .products
                           .map(
                             (e) => DataRow(
-                              //key: ValueKey(e.id),
-                              //selected: selects[e.id]!,
                               cells: [
                                 DataCell(Text(
-                                  e.name!,
+                                  e.name.toString(),
                                   style: const TextStyle(fontSize: 20),
                                 )),
                                 DataCell(Text(
@@ -130,19 +93,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   style: const TextStyle(fontSize: 20),
                                 )),
                                 DataCell(Text(
-                                  e.carat.intDefinition.toString(),
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                                DataCell(Text(
-                                  e.purityRate.toString(),
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                                DataCell(Text(
-                                  e.laborCost.toString(),
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                                DataCell(Text(
-                                  e.costPrice.toString(),
+                                  e.price.toString(),
                                   style: const TextStyle(fontSize: 20),
                                 )),
                                 DataCell(Row(
@@ -150,8 +101,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          ProductGoldDbHelper().products.remove(e);
-                                          ProductGoldDbHelper().delete(e.id);
+                                          ProductDiamondDbHelper()
+                                              .products
+                                              .remove(e);
+                                          ProductDiamondDbHelper().delete(e.id);
                                         });
                                       },
                                       icon: const Icon(Icons.delete),
@@ -159,8 +112,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          ProductGoldDbHelper().products.remove(e);
-                                          ProductGoldDbHelper().delete(e.id);
+                                          ProductDiamondDbHelper()
+                                              .products
+                                              .remove(e);
+                                          ProductDiamondDbHelper().delete(e.id);
                                         });
                                       },
                                       icon: const Icon(Icons.delete),
@@ -168,49 +123,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   ],
                                 )),
                               ],
-                              onSelectChanged: (selected) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            ProductScreen(product: e)),
-                                    (route) => false);
-                              },
+                              /*onSelectChanged: (selected) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ProductDiamondScreen(product: e)),
+                                  (route) => false);
+                        },*/
                             ),
                           )
                           .toList(),
                     ),
                   ),
-                  const SizedBox(
-                    width: 30,
-                  ),
                 ],
               ),
             ),
-          ),
-          SizedBox(
-            //width: 1050,
-            height: 70,
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/product-add-screen', (route) => false);
-                    },
-                    child: const Text(
-                      'Ürün Ekle',
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          )
         ],
       ),
     );

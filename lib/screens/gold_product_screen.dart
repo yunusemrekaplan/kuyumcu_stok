@@ -1,26 +1,23 @@
+// ignore_for_file: must_be_immutable, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/calculate.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
-import 'package:kuyumcu_stok/models/barcode.dart';
+import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/product_gold.dart';
-import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-import '../enum_carat.dart';
-
-class ProductAddScreen extends StatefulWidget {
-  const ProductAddScreen({super.key});
+class ProductGoldScreen extends StatefulWidget {
+  late ProductGold product;
+  ProductGoldScreen({super.key, required this.product});
 
   @override
-  State<ProductAddScreen> createState() => _ProductAddScreenState();
+  State<ProductGoldScreen> createState() => _ProductGoldScreenState(product: product);
 }
-// ToDo validatörleri unutma!!!
 
-class _ProductAddScreenState extends State<ProductAddScreen> {
-  late String barcodeNo;
-
+class _ProductGoldScreenState extends State<ProductGoldScreen> {
+  late ProductGold product;
   late TextEditingController nameController;
   late TextEditingController caratController;
   late TextEditingController gramController;
@@ -31,17 +28,23 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
 
   late Carat dropdownValue;
 
-  _ProductAddScreenState() {
-    dropdownValue = Carat.twentyFour;
-    barcodeNo = '0000000000000';
+  _ProductGoldScreenState({required this.product}) {
+    dropdownValue = product.carat;
     nameController = TextEditingController();
-    //caratController = TextEditingController();
     gramController = TextEditingController();
-    costGramController = TextEditingController();
     purityRateController = TextEditingController();
     costPriceController = TextEditingController();
     laborCostController = TextEditingController();
+    nameController.text = product.name.toString();
+    gramController.text = product.gram.toString();
     purityRateController.text = dropdownValue.purityRateDefinition.toString();
+    costPriceController.text = product.costPrice.toString();
+    laborCostController.text = product.laborCost.toString();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -51,17 +54,15 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
       drawer: const MyDrawer(),
       body: Column(
         children: [
-          buildBarcodeRow(),
           buildNameRow(),
           buildCaratRow(),
           buildPurityRateRow(),
           buildLaborCostRow(),
           buildGramRow(),
-          //buildCostGramRow(),
           buildCostPriceRow(),
-          buildSaveButtonRow(),
+          buildUpdateButtonRow(),
           const SizedBox(
-            height: 10,
+            height: 70,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
@@ -87,15 +88,15 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
     );
   }
 
-  Padding buildSaveButtonRow() {
+  Padding buildUpdateButtonRow() {
     return Padding(
       padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
       child: Row(
         children: [
           ElevatedButton(
-            onPressed: onSavedFun,
+            onPressed: onUpdateFun,
             child: const Text(
-              'Kaydet',
+              'Güncelle',
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -106,12 +107,15 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
     );
   }
 
-  void onSavedFun() {
-    if (barcodeNo == '0000000000000') {
+  void onUpdateFun() {
+    if (NumberValidator.validate(gramController.text) != null ||
+        NumberValidator.validate(purityRateController.text) != null ||
+        NumberValidator.validate(laborCostController.text) != null ||
+        NumberValidator.validate(costPriceController.text) != null) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Barkod oluşturun!'),
+          title: const Text('Boş alanları doldurun!'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -120,113 +124,27 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           ],
         ),
       );
-    } else {
-      if (NumberValidator.validate(gramController.text) != null ||
-          NumberValidator.validate(purityRateController.text) != null ||
-          NumberValidator.validate(laborCostController.text) != null ||
-          NumberValidator.validate(costPriceController.text) != null) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Boş alanları doldurun!'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Tamam'),
-              ),
-            ],
-          ),
-        );
-      }
-
-      Barcode barcode;
-
-      Map<String, dynamic> json = ProductGold(
-        barcodeText: barcodeNo,
-        name: nameController.text,
-        carat: dropdownValue,
-        gram: double.parse(gramController.text),
-        laborCost: double.parse(laborCostController.text),
-        costPrice: double.parse(costPriceController.text),
-        purityRate: double.parse(purityRateController.text),
-      ).toJson();
-
-      ProductGoldDbHelper().insert(json).then(
-            (value) => {
-              ProductGoldDbHelper().products.add(
-                    ProductGold.fromJson(json, value),
-                  ),
-              print('id: $value'),
-              IsbnService.generateBarcode(barcodeNo).then(
-                (value) => {
-                  barcode = value,
-                  BarcodeDbHelper().insert(barcode.toJson()).then(
-                        (value) => {
-                          print(barcode.toJson()),
-                          setState(
-                            () {
-                              barcodeNo = '0000000000000';
-                              nameController.text = '';
-                              gramController.text = '';
-                              costGramController.text = '';
-                              purityRateController.text = '';
-                              costPriceController.text = '';
-                              laborCostController.text = '';
-
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        },
-                      ),
-                },
-              ),
-            },
-          );
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          });
     }
-  }
+    product.name = nameController.text;
+    product.carat = dropdownValue;
+    product.gram = double.parse(gramController.text);
+    product.laborCost = double.parse(laborCostController.text);
+    product.costPrice = double.parse(costPriceController.text);
+    product.purityRate = double.parse(purityRateController.text);
 
-  Padding buildBarcodeRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          const Text(
-            'Barkod No: ',
-            style: TextStyle(fontSize: 22),
-          ),
-          SizedBox(
-            width: 180,
-            child: Text(
-              barcodeNo,
-              style: const TextStyle(
-                fontSize: 22,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              barcodeNo = IsbnService.generateCode();
-              setState(() {
-                barcodeNo;
-              });
-            },
-            child: const Text(
-              'Barkod Oluştur',
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+
+    for(int i=0; i<ProductGoldDbHelper().products.length; i++) {
+      if (ProductGoldDbHelper().products[i].id == product.id) {
+        ProductGoldDbHelper().products[i] = product;
+        print(product.name);
+        break;
+      }
+    }
+    ProductGoldDbHelper().update(product.toJson(), product.id).then((value) => {
+      ProductGoldDbHelper().getProductById(product.id).then((value) => print(value)),
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/products-screen', (route) => false),
+    });
   }
 
   Padding buildNameRow() {
@@ -297,7 +215,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                 if (purityRateController.text.isNotEmpty &&
                     gramController.text.isNotEmpty &&
                     laborCostController.text.isNotEmpty) {
-                  print('girdi');
+                  //print('girdi');
                   setState(() {
                     costPriceController.text = Calculate.calculateCostPrice(
                             double.parse(purityRateController.text),
@@ -338,7 +256,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
-                print('girdi');
+                //print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
                           double.parse(purityRateController.text),
@@ -378,7 +296,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
-                print('girdi');
+                //print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
                           double.parse(purityRateController.text),
@@ -418,7 +336,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
-                print('girdi');
+                //print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
                           double.parse(purityRateController.text),

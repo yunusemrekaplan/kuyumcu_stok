@@ -23,10 +23,17 @@ class _MyDrawerState extends State<MyDrawer> {
             alignment: Alignment.center,
           ),
           ListTile(
-            title: const Text('Ürünler'),
+            title: const Text('Altınlar'),
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/products-screen', (route) => false);
+                  context, '/gold-products-screen', (route) => false);
+            },
+          ),
+          ListTile(
+            title: const Text('Pırlantalar'),
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/diamond-products-screen', (route) => false);
             },
           ),
           ListTile(
