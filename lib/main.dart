@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
@@ -12,7 +13,6 @@ import 'package:kuyumcu_stok/screens/gold_products_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_sale_screen.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
@@ -38,13 +38,21 @@ Future<void> main() async {
   await DiamondProductDbHelper().open();
   await GoldService.getGoldPrices();
 
-  var list = await GoldProductDbHelper().queryAllRows().then((value) => value);
-  List<GoldProduct> products = [];
+  var goldList = await GoldProductDbHelper().queryAllRows().then((value) => value);
+  List<GoldProduct> goldProducts = [];
 
-  for(int i=0; i<list.length; i++) {
-    products.add(GoldProduct.fromJson(list[i], list[i]['id']));
+  var diamondList = await DiamondProductDbHelper().queryAllRows().then((value) => value);
+  List<DiamondProduct> diamondProducts = [];
+
+  for(int i=0; i<goldList.length; i++) {
+    goldProducts.add(GoldProduct.fromJson(goldList[i], goldList[i]['id']));
   }
-  GoldProductDbHelper().products = products;
+  GoldProductDbHelper().products = goldProducts;
+
+  for(int i=0; i<diamondList.length; i++) {
+    diamondProducts.add(DiamondProduct.fromJson(diamondList[i]));
+  }
+  DiamondProductDbHelper().products = diamondProducts;
 
   runApp(const MyApp());
 }

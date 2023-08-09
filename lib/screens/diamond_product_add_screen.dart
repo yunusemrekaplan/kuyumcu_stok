@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -8,7 +9,8 @@ class DiamondProductAddScreen extends StatefulWidget {
   const DiamondProductAddScreen({super.key});
 
   @override
-  State<DiamondProductAddScreen> createState() => _DiamondProductAddScreenState();
+  State<DiamondProductAddScreen> createState() =>
+      _DiamondProductAddScreenState();
 }
 
 class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
@@ -46,8 +48,8 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/diamond-products-screen', (route) => false);
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          '/diamond-products-screen', (route) => false);
                     },
                     child: const Text(
                       'Geri Dön',
@@ -209,8 +211,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
           ],
         ),
       );
-    }
-    else {
+    } else {
       if (gramController.text.isEmpty || priceController.text.isEmpty) {
         showDialog(
           context: context,
@@ -224,81 +225,24 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
             ],
           ),
         );
+      } else {
+        DiamondProduct product = DiamondProduct(
+            barcodeText: barcodeController.text,
+            name: nameController.text,
+            gram: double.parse(gramController.text),
+            price: double.parse(priceController.text));
+
+        DiamondProductDbHelper().products.add(product);
+        DiamondProductDbHelper().insert(product.toJson()).then((value) => print(value));
       }
-      else {
-
-      }
-
-
-
-
-      /*if (NumberValidator.validate(gramController.text) != null ||
-          NumberValidator.validate(purityRateController.text) != null ||
-          NumberValidator.validate(laborCostController.text) != null ||
-          NumberValidator.validate(costPriceController.text) != null) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Boş alanları doldurun!'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Tamam'),
-              ),
-            ],
-          ),
-        );
-      }
-
-      Barcode barcode;
-
-      Map<String, dynamic> json = ProductGold(
-        barcodeText: barcodeNo,
-        name: nameController.text,
-        carat: dropdownValue,
-        gram: double.parse(gramController.text),
-        laborCost: double.parse(laborCostController.text),
-        costPrice: double.parse(costPriceController.text),
-        purityRate: double.parse(purityRateController.text),
-      ).toJson();
-
-      ProductGoldDbHelper().insert(json).then(
-            (value) => {
-          ProductGoldDbHelper().products.add(
-            ProductGold.fromJson(json, value),
-          ),
-          print('id: $value'),
-          IsbnService.generateBarcode(barcodeNo).then(
-                (value) => {
-              barcode = value,
-              BarcodeDbHelper().insert(barcode.toJson()).then(
-                    (value) => {
-                  print(barcode.toJson()),
-                  setState(
-                        () {
-                      barcodeNo = '0000000000000';
-                      nameController.text = '';
-                      gramController.text = '';
-                      costGramController.text = '';
-                      purityRateController.text = '';
-                      costPriceController.text = '';
-                      laborCostController.text = '';
-
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                },
-              ),
-            },
-          ),
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(child: CircularProgressIndicator());
         },
       );
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          });*/
+
     }
   }
 
@@ -312,5 +256,4 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
       //hintText: '9789756249840',
     );
   }
-
 }

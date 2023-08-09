@@ -5,11 +5,13 @@ class DiamondProduct {
   late double gram;
   late double price;
 
+  DiamondProduct({required this.barcodeText, required this.name, required this.gram, required this.price});
+
   DiamondProduct.fromJson(Map<String, dynamic> json) {
     barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
-    gram = json['gram'];
-    price = json['price'];
+    gram = json['gram'] * 1.0;
+    price = json['price'] * 1.0;
   }
 
   Map<String, dynamic> toJson() {
