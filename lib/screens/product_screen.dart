@@ -44,7 +44,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   void initState() {
-    print(product.id);
     super.initState();
   }
 

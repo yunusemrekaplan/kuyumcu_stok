@@ -90,7 +90,6 @@ class ProductDbHelper {
   }
 
   Future<int> update(Map<String, dynamic> data, int id) async {
-    print('update girdi');
     // Update a row in the given table with the specified ID
     return await _db!.update('products', data, where: 'id = ?', whereArgs: [id]);
   }

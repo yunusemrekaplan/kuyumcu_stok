@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/screens/product_screen.dart';
@@ -12,7 +13,6 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-
   @override
   void initState() {
     //ProductDbHelper().queryAllRows().then((value) => print(value));
@@ -21,6 +21,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(),
       drawer: const MyDrawer(),
@@ -40,6 +41,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   Expanded(
                     child: DataTable(
+                      columnSpacing: 50,
+                      horizontalMargin: 50,
                       showCheckboxColumn: false,
                       border: const TableBorder(
                         top: BorderSide(width: 1),
@@ -50,11 +53,49 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         verticalInside: BorderSide(width: 1),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      columns: const [
-                        DataColumn(label: Text('İsim')),
-                        DataColumn(label: Text('Gram')),
-                        DataColumn(label: Text('Karat')),
-                        DataColumn(label: Text('Maliyet')),
+                      columns: [
+                        DataColumn(
+                          label: Container(
+                            width: 40,
+                            child: const Text(
+                              'İsim',
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Container(
+                            width: width * .1,
+                            child: const Text(
+                              'Gram',
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Container(
+                            width: width * .1,
+                            child: const Text(
+                              'Karat',
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Container(
+                            width: 150,
+                            child: const Text(
+                              'Maliyet',
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Container(
+                            width: 300,
+                            child: const Text(''),
+                          ),
+                        ),
                       ],
                       rows: ProductDbHelper()
                           .products
@@ -63,10 +104,44 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               //key: ValueKey(e.id),
                               //selected: selects[e.id]!,
                               cells: [
-                                DataCell(Text(e.name!)),
-                                DataCell(Text(e.gram.toString())),
-                                DataCell(Text(e.carat.intDefinition.toString())),
-                                DataCell(Text(e.costPrice.toString())),
+                                DataCell(Text(
+                                  e.name!,
+                                  style: const TextStyle(fontSize: 20),
+                                )),
+                                DataCell(Text(
+                                  e.gram.toString(),
+                                  style: const TextStyle(fontSize: 20),
+                                )),
+                                DataCell(Text(
+                                  e.carat.intDefinition.toString(),
+                                  style: const TextStyle(fontSize: 20),
+                                )),
+                                DataCell(Text(
+                                  e.costPrice.toString(),
+                                  style: const TextStyle(fontSize: 20),
+                                )),
+                                DataCell(Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          ProductDbHelper().products.remove(e);
+                                          ProductDbHelper().delete(e.id);
+                                        });
+                                      },
+                                      icon: const Icon(Icons.delete),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          ProductDbHelper().products.remove(e);
+                                          ProductDbHelper().delete(e.id);
+                                        });
+                                      },
+                                      icon: const Icon(Icons.delete),
+                                    ),
+                                  ],
+                                )),
                               ],
                               onSelectChanged: (selected) {
                                 Navigator.pushAndRemoveUntil(
@@ -89,15 +164,24 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           ),
           SizedBox(
-            width: 1050,
+            //width: 1050,
+            height: 70,
             child: Row(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/product-add-screen', (route) => false);
-                  },
-                  child: const Text('Ürün Ekle'),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/product-add-screen', (route) => false);
+                    },
+                    child: const Text(
+                      'Ürün Ekle',
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
