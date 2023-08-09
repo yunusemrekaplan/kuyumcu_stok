@@ -15,12 +15,6 @@ class ProductDbHelper {
 
   late List<Product> products;
 
-/*
-  List<Product> get _products {
-
-    return
-  }
-*/
 
   Future<void> open() async {
     products = [];
@@ -29,9 +23,7 @@ class ProductDbHelper {
     // Path to your database file
     String path = 'kuyumcu.db';
 
-    // Open the database
     _db = await databaseFactoryFfi.openDatabase(path);
-    //await _db!.execute('DROP TABLE products');
     await _createTable();
   }
 
@@ -57,45 +49,38 @@ class ProductDbHelper {
   }
 
   Future<int> insert(Map<String, dynamic> data) async {
-    // Güncellenmiş kontrol
     if (_db == null) {
       throw Exception("Database is not open.");
     }
     int id = products.last.id;
 
     products.add(Product.fromJson(data, id));
-    // Insert the data into the given table
     return await _db!.insert('products', data);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    // Retrieve all rows from the given table
     return await _db!.query('products');
   }
 
   Future<Map<String, dynamic>?> getProductById(int id) async {
-    // Get the barcode from the table based on the given id
     final List<Map<String, dynamic>> results = await _db!.query(
       'products',
       where: 'id = ?',
       whereArgs: [id],
     );
 
-    // If the result is not empty, return the first item (since id is unique)
     if (results.isNotEmpty) {
       return results.first;
     }
 
-    return null; // Return null if no barcode with the given id is found
+    return null;
   }
 
   Future<int> update(Map<String, dynamic> data, int id) async {
-    // Update a row in the given table with the specified ID
     return await _db!.update('products', data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
-    // Delete a row from the given table with the specified ID
     return await _db!.delete('products', where: 'id = ?', whereArgs: [id]);
   }
 }
