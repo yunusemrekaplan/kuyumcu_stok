@@ -60,6 +60,28 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           //buildCostGramRow(),
           buildCostPriceRow(),
           buildSaveButtonRow(),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/products-screen', (route) => false);
+                  },
+                  child: const Text(
+                    'Geri Dön',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

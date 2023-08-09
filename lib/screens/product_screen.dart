@@ -145,20 +145,6 @@ class _ProductScreenState extends State<ProductScreen> {
       Navigator.pushNamedAndRemoveUntil(
           context, '/products-screen', (route) => false),
     });
-    /*ProductDbHelper().products.map((e) => {
-      if (e.id == product.id)
-      {
-        e = product,
-        print(e.id),
-        print(product.id),
-      }
-    });
-    ProductDbHelper().update(product.toJson(), product.id).then(
-          (value) => {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/products-screen', (route) => false),
-      },
-    );*/
   }
 
   Padding buildNameRow() {
