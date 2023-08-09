@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        '/': (BuildContext context) => HomeScreen(),
+        '/': (BuildContext context) => const HomeScreen(),
         '/products-screen': (BuildContext context) => const ProductsScreen(),
         '/sale-screen': (BuildContext context) => const SaleScreen(),
         '/product-add-screen': (BuildContext context) => const ProductAddScreen(),
