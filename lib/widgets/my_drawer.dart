@@ -37,17 +37,10 @@ class _MyDrawerState extends State<MyDrawer> {
             },
           ),
           ListTile(
-            title: const Text('Satış İşlemi'),
+            title: const Text('Altın Satış İşlemi'),
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/sale-screen', (route) => false);
-            },
-          ),
-          ListTile(
-            title: const Text('Ürün Ekle'),
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/product-add-screen', (route) => false);
+                  context, '/gold-sale-screen', (route) => false);
             },
           ),
         ],

@@ -6,15 +6,14 @@ import 'package:kuyumcu_stok/models/product_gold.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-class SaleScreen extends StatefulWidget {
-  const SaleScreen({super.key});
+class GoldSaleScreen extends StatefulWidget {
+  const GoldSaleScreen({super.key});
 
   @override
-  State<SaleScreen> createState() => _SaleScreenState();
+  State<GoldSaleScreen> createState() => _GoldSaleScreenState();
 }
 
-class _SaleScreenState extends State<SaleScreen> {
-  //String? barcodeTextFormField;
+class _GoldSaleScreenState extends State<GoldSaleScreen> {
   String? earningRate;
   String fineGoldBuy = '.......';
   String fineGoldSale = '.......';
