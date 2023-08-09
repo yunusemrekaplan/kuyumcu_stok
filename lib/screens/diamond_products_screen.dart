@@ -20,7 +20,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
         children: [
           SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height - 150,
+            //height: MediaQuery.of(context).size.height - 150,
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               physics: const BouncingScrollPhysics(),
@@ -139,7 +139,28 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                 ],
               ),
             ),
-          )
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/diamond-product-add-screen', (route) => false);
+                    },
+                    child: const Text(
+                      'Ürün Ekle',
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

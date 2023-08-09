@@ -198,7 +198,7 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamedAndRemoveUntil(
-                          context, '/product-add-screen', (route) => false);
+                          context, '/gold-product-add-screen', (route) => false);
                     },
                     child: const Text(
                       'Ürün Ekle',

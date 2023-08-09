@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_gold_db_helper.dart';
@@ -332,6 +333,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
             decoration: buildInputDecoration(const Size(100, 35)),
             onChanged: (value) {
               if (purityRateController.text.isNotEmpty &&
@@ -372,6 +376,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
             decoration: buildInputDecoration(const Size(100, 35)),
             onChanged: (value) {
               if (purityRateController.text.isNotEmpty &&
@@ -412,6 +419,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
             decoration: buildInputDecoration(const Size(100, 35)),
             onChanged: (value) {
               if (purityRateController.text.isNotEmpty &&
@@ -452,6 +462,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
             decoration: buildInputDecoration(const Size(100, 35)),
           ),
         ],
@@ -478,6 +491,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
             decoration: buildInputDecoration(const Size(125, 35)),
           ),
         ],
