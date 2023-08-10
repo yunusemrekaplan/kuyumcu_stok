@@ -69,6 +69,63 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
     );
   }
 
+  void onSaved() {
+    if (barcodeController.text.length != 13) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Doğru formatta barkod kodu girin!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (gramController.text.isEmpty || priceController.text.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Boşlukları doldurun!'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Tamam'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return const Center(child: CircularProgressIndicator());
+          },
+        );
+        DiamondProduct product = DiamondProduct(
+          barcodeText: barcodeController.text,
+          name: nameController.text,
+          gram: double.parse(gramController.text),
+          price: double.parse(priceController.text),
+        );
+
+        DiamondProductDbHelper().insert(product.toJson()).then((value) => {
+          product.id = value,
+          DiamondProductDbHelper().products.add(product),
+          print(product.id),
+          barcodeController.text = '',
+          nameController.text = '',
+          gramController.text = '',
+          priceController.text = '',
+          Navigator.of(context).pop(),
+        });
+      }
+    }
+  }
+
   Padding buildBarcodeRow() {
     return Padding(
       padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
@@ -197,63 +254,6 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
         ],
       ),
     );
-  }
-
-  void onSaved() {
-    if (barcodeController.text.length != 13) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Doğru formatta barkod kodu girin!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Tamam'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      if (gramController.text.isEmpty || priceController.text.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Boşlukları doldurun!'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Tamam'),
-              ),
-            ],
-          ),
-        );
-      } else {
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          },
-        );
-        DiamondProduct product = DiamondProduct(
-          barcodeText: barcodeController.text,
-          name: nameController.text,
-          gram: double.parse(gramController.text),
-          price: double.parse(priceController.text),
-        );
-
-        DiamondProductDbHelper().insert(product.toJson()).then((value) => {
-              product.id = value,
-              DiamondProductDbHelper().products.add(product),
-              print(product.id),
-              barcodeController.text = '',
-              nameController.text = '',
-              gramController.text = '',
-              priceController.text = '',
-              Navigator.of(context).pop(),
-            });
-      }
-    }
   }
 
   BoxConstraints buildBoxConstraints(Size size) => BoxConstraints.tight(size);

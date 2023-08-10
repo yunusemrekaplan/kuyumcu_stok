@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
+import 'package:kuyumcu_stok/screens/diamond_product_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class DiamondProductsScreen extends StatefulWidget {
@@ -123,14 +124,14 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                                   ],
                                 )),
                               ],
-                              /*onSelectChanged: (selected) {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      ProductDiamondScreen(product: e)),
-                                  (route) => false);
-                        },*/
+                              onSelectChanged: (selected) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            DiamondProductScreen(product: e)),
+                                    (route) => false);
+                              },
                             ),
                           )
                           .toList(),

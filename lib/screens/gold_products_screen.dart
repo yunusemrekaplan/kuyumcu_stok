@@ -173,7 +173,7 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
-                                            ProductGoldScreen(product: e)),
+                                            GoldProductScreen(product: e)),
                                     (route) => false);
                               },
                             ),
