@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';

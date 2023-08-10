@@ -2,11 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/models/barcode.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/gold_service.dart';
-import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class HomeScreen extends StatefulWidget {

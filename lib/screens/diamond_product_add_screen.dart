@@ -1,3 +1,6 @@
+
+// ToDo Pırlantanın hazır barkodu ile db'deki barkodların çakışma ihtimali?
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
@@ -226,33 +229,30 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
           ),
         );
       } else {
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return const Center(child: CircularProgressIndicator());
+          },
+        );
         DiamondProduct product = DiamondProduct(
             barcodeText: barcodeController.text,
             name: nameController.text,
             gram: double.parse(gramController.text),
             price: double.parse(priceController.text));
 
-        DiamondProductDbHelper().insert(product.toJson()).then(
-              (value) => {
-                product.id = value,
-                DiamondProductDbHelper().products.add(product),
-
-                barcodeController.text = '',
-                nameController.text = '',
-                gramController.text = '',
-                priceController.text = '',
-
-                Navigator.of(context).pop(),
-              },
-            );
+        DiamondProductDbHelper().insert(product.toJson()).then((value) => {
+              product.id = value,
+              DiamondProductDbHelper().products.add(product),
+              print(product.id),
+              barcodeController.text = '',
+              nameController.text = '',
+              gramController.text = '',
+              priceController.text = '',
+              Navigator.of(context).pop(),
+            });
       }
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return const Center(child: CircularProgressIndicator());
-        },
-      );
     }
   }
 

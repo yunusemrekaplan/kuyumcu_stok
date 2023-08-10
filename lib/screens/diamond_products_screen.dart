@@ -46,7 +46,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                       ),
                       columns: [
                         DataColumn(
-                          label: Container(
+                          label: SizedBox(
                             width: width * .1,
                             child: const Text(
                               'İsim',
@@ -55,7 +55,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           ),
                         ),
                         DataColumn(
-                          label: Container(
+                          label: SizedBox(
                             width: width * .1,
                             child: const Text(
                               'Gram',
@@ -64,7 +64,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           ),
                         ),
                         DataColumn(
-                          label: Container(
+                          label: SizedBox(
                             width: width * .1,
                             child: const Text(
                               'Ücret',
@@ -73,7 +73,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           ),
                         ),
                         DataColumn(
-                          label: Container(
+                          label: SizedBox(
                             width: width * .1,
                             child: const Text(''),
                           ),
