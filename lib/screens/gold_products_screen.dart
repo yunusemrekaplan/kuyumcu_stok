@@ -28,7 +28,7 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
         children: [
           SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height - 145,
+            //height: MediaQuery.of(context).size.height - 145,
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               physics: const BouncingScrollPhysics(),

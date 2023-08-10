@@ -136,6 +136,9 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           .toList(),
                     ),
                   ),
+                  const SizedBox(
+                    width: 30,
+                  ),
                 ],
               ),
             ),
