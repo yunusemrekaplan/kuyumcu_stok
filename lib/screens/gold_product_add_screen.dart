@@ -156,14 +156,14 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                       GoldProduct.fromJson(json, value),
                     ),
                 print('id: $value'),
-
                 setState(
-                      () {
+                  () {
                     barcodeNo = '0000000000000';
                     nameController.text = '';
                     gramController.text = '';
                     costGramController.text = '';
-                    purityRateController.text = dropdownValue.purityRateDefinition.toString();
+                    purityRateController.text =
+                        dropdownValue.purityRateDefinition.toString();
                     costPriceController.text = '';
                     laborCostController.text = '';
 

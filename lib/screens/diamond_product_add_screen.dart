@@ -1,4 +1,3 @@
-
 // ToDo Pırlantanın hazır barkodu ile db'deki barkodların çakışma ihtimali?
 
 import 'package:flutter/material.dart';
@@ -237,10 +236,11 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
           },
         );
         DiamondProduct product = DiamondProduct(
-            barcodeText: barcodeController.text,
-            name: nameController.text,
-            gram: double.parse(gramController.text),
-            price: double.parse(priceController.text));
+          barcodeText: barcodeController.text,
+          name: nameController.text,
+          gram: double.parse(gramController.text),
+          price: double.parse(priceController.text),
+        );
 
         DiamondProductDbHelper().insert(product.toJson()).then((value) => {
               product.id = value,
