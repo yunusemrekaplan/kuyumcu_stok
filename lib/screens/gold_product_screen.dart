@@ -71,7 +71,7 @@ class _ProductGoldScreenState extends State<ProductGoldScreen> {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/products-screen', (route) => false);
+                        context, '/gold-products-screen', (route) => false);
                   },
                   child: const Text(
                     'Geri Dön',

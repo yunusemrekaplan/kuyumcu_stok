@@ -169,7 +169,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                               nameController.text = '';
                               gramController.text = '';
                               costGramController.text = '';
-                              purityRateController.text = '';
+                              purityRateController.text = dropdownValue.purityRateDefinition.toString();
                               costPriceController.text = '';
                               laborCostController.text = '';
 
