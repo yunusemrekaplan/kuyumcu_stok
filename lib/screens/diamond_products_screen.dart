@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
+import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/screens/diamond_product_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -11,6 +12,62 @@ class DiamondProductsScreen extends StatefulWidget {
 }
 
 class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
+  late List<DataRow> rows;
+  late List<DiamondProduct> products;
+
+  _DiamondProductsScreenState() {
+    products = DiamondProductDbHelper().products;
+
+    rows = products
+        .map((e) => DataRow(
+              cells: [
+                DataCell(Text(
+                  e.name.toString(),
+                  style: const TextStyle(fontSize: 20),
+                )),
+                DataCell(Text(
+                  e.gram.toString(),
+                  style: const TextStyle(fontSize: 20),
+                )),
+                DataCell(Text(
+                  e.price.toString(),
+                  style: const TextStyle(fontSize: 20),
+                )),
+                DataCell(Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          DiamondProductDbHelper().products.remove(e);
+                          DiamondProductDbHelper().delete(e.id);
+                        });
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          DiamondProductDbHelper().products.remove(e);
+                          DiamondProductDbHelper().delete(e.id);
+                        });
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
+                )),
+              ],
+              onSelectChanged: (selected) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            DiamondProductScreen(product: e)),
+                        (route) => false);
+              },
+            ))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -80,61 +137,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           ),
                         ),
                       ],
-                      rows: DiamondProductDbHelper()
-                          .products
-                          .map(
-                            (e) => DataRow(
-                              cells: [
-                                DataCell(Text(
-                                  e.name.toString(),
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                                DataCell(Text(
-                                  e.gram.toString(),
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                                DataCell(Text(
-                                  e.price.toString(),
-                                  style: const TextStyle(fontSize: 20),
-                                )),
-                                DataCell(Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          DiamondProductDbHelper()
-                                              .products
-                                              .remove(e);
-                                          DiamondProductDbHelper().delete(e.id);
-                                        });
-                                      },
-                                      icon: const Icon(Icons.delete),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          DiamondProductDbHelper()
-                                              .products
-                                              .remove(e);
-                                          DiamondProductDbHelper().delete(e.id);
-                                        });
-                                      },
-                                      icon: const Icon(Icons.delete),
-                                    ),
-                                  ],
-                                )),
-                              ],
-                              onSelectChanged: (selected) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            DiamondProductScreen(product: e)),
-                                    (route) => false);
-                              },
-                            ),
-                          )
-                          .toList(),
+                      rows: rows,
                     ),
                   ),
                   const SizedBox(
