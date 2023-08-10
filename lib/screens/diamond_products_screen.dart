@@ -143,27 +143,27 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        '/diamond-product-add-screen', (route) => false);
-                  },
-                  child: const Text(
-                    'Ürün Ekle',
-                    style: TextStyle(
-                      fontSize: 22,
+          SizedBox(
+            height: 70,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          '/diamond-product-add-screen', (route) => false);
+                    },
+                    child: const Text(
+                      'Ürün Ekle',
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
