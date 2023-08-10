@@ -8,6 +8,7 @@ class DiamondProduct {
   DiamondProduct({required this.barcodeText, required this.name, required this.gram, required this.price});
 
   DiamondProduct.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     barcodeText = json['barcodeText'];
     name = json['name'] ?? '';
     gram = json['gram'] * 1.0;

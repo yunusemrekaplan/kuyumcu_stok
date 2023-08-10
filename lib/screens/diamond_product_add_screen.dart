@@ -115,7 +115,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
         DiamondProductDbHelper().insert(product.toJson()).then((value) => {
           product.id = value,
           DiamondProductDbHelper().products.add(product),
-          print(product.id),
+          print(product.toJson()),
           barcodeController.text = '',
           nameController.text = '',
           gramController.text = '',

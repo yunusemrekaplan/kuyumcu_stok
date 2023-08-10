@@ -22,6 +22,7 @@ class _DiamondProductScreenState extends State<DiamondProductScreen> {
   late TextEditingController priceController;
 
   _DiamondProductScreenState({required this.product}) {
+    print(product.id);
     print(product.toJson());
     nameController = TextEditingController();
     gramController = TextEditingController();
