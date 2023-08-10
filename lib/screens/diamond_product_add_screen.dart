@@ -232,8 +232,13 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
             gram: double.parse(gramController.text),
             price: double.parse(priceController.text));
 
-        DiamondProductDbHelper().products.add(product);
-        DiamondProductDbHelper().insert(product.toJson()).then((value) => print(value));
+        DiamondProductDbHelper().insert(product.toJson()).then(
+              (value) => {
+                product.id = value,
+                DiamondProductDbHelper().products.add(product),
+                Navigator.of(context).pop(),
+              },
+            );
       }
       showDialog(
         barrierDismissible: false,
@@ -242,7 +247,6 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
           return const Center(child: CircularProgressIndicator());
         },
       );
-
     }
   }
 
