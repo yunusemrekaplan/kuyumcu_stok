@@ -139,8 +139,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         );
       }
 
-      Barcode barcode;
-
       Map<String, dynamic> json = GoldProduct(
         barcodeText: barcodeNo,
         name: nameController.text,
@@ -151,37 +149,67 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         purityRate: double.parse(purityRateController.text),
       ).toJson();
 
-      GoldProductDbHelper().insert(json).then(
-            (value) => {
-              GoldProductDbHelper().products.add(
-                    GoldProduct.fromJson(json, value),
-                  ),
-              print('id: $value'),
-              IsbnService.generateBarcode(barcodeNo).then(
-                (value) => {
-                  barcode = value,
-                  BarcodeDbHelper().insert(barcode.toJson()).then(
-                        (value) => {
-                          print(barcode.toJson()),
-                          setState(
-                            () {
-                              barcodeNo = '0000000000000';
-                              nameController.text = '';
-                              gramController.text = '';
-                              costGramController.text = '';
-                              purityRateController.text = dropdownValue.purityRateDefinition.toString();
-                              costPriceController.text = '';
-                              laborCostController.text = '';
+      try {
+        GoldProductDbHelper().insert(json).then(
+              (value) => {
+                GoldProductDbHelper().products.add(
+                      GoldProduct.fromJson(json, value),
+                    ),
+                print('id: $value'),
 
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        },
-                      ),
-                },
+                setState(
+                      () {
+                    barcodeNo = '0000000000000';
+                    nameController.text = '';
+                    gramController.text = '';
+                    costGramController.text = '';
+                    purityRateController.text = dropdownValue.purityRateDefinition.toString();
+                    costPriceController.text = '';
+                    laborCostController.text = '';
+
+                    Navigator.of(context).pop();
+                    //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
+                  },
+                ),
+
+                /*IsbnService.generateBarcode(barcodeNo).then((value) => {
+                barcode = value,
+                BarcodeDbHelper().insert(barcode.toJson()).then(
+                      (value) => {
+                    print(barcode.toJson()),
+                    setState(
+                          () {
+                        barcodeNo = '0000000000000';
+                        nameController.text = '';
+                        gramController.text = '';
+                        costGramController.text = '';
+                        purityRateController.text = dropdownValue.purityRateDefinition.toString();
+                        costPriceController.text = '';
+                        laborCostController.text = '';
+
+                        Navigator.of(context).pop();
+                        //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
+                      },
+                    ),
+                  },
+                ),
+              },),*/
+              },
+            );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Tamam'),
               ),
-            },
-          );
+            ],
+          ),
+        );
+      }
       showDialog(
           barrierDismissible: false,
           context: context,

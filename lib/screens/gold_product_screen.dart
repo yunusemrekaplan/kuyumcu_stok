@@ -143,7 +143,7 @@ class _ProductGoldScreenState extends State<ProductGoldScreen> {
     GoldProductDbHelper().update(product.toJson(), product.id).then((value) => {
       GoldProductDbHelper().getProductById(product.id).then((value) => print(value)),
       Navigator.pushNamedAndRemoveUntil(
-          context, '/products-screen', (route) => false),
+          context, '/gold-products-screen', (route) => false),
     });
   }
 
