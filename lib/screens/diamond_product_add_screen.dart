@@ -236,6 +236,12 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
               (value) => {
                 product.id = value,
                 DiamondProductDbHelper().products.add(product),
+
+                barcodeController.text = '',
+                nameController.text = '',
+                gramController.text = '',
+                priceController.text = '',
+
                 Navigator.of(context).pop(),
               },
             );
