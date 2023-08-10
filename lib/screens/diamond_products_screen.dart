@@ -12,13 +12,16 @@ class DiamondProductsScreen extends StatefulWidget {
 }
 
 class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
-  late List<DataRow> rows;
+  late List<DataRow> _rows;
   late List<DiamondProduct> products;
+
+  int _sortColumnIndex = 0;
+  bool _sortAscending = true;
 
   _DiamondProductsScreenState() {
     products = DiamondProductDbHelper().products;
 
-    rows = products
+    _rows = products
         .map((e) => DataRow(
               cells: [
                 DataCell(Text(
@@ -90,6 +93,8 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                   ),
                   Expanded(
                     child: DataTable(
+                      sortColumnIndex: _sortColumnIndex,
+                      sortAscending: _sortAscending,
                       columnSpacing: 20,
                       horizontalMargin: 10,
                       showCheckboxColumn: false,
@@ -111,6 +116,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
+                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
                         ),
                         DataColumn(
                           label: SizedBox(
@@ -120,6 +126,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
+                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
                         ),
                         DataColumn(
                           label: SizedBox(
@@ -129,6 +136,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
+                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
                         ),
                         DataColumn(
                           label: SizedBox(
@@ -137,7 +145,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                           ),
                         ),
                       ],
-                      rows: rows,
+                      rows: _rows,
                     ),
                   ),
                   const SizedBox(
@@ -172,5 +180,18 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
         ],
       ),
     );
+  }
+
+  void _sortData(int columnIndex, bool ascending) {
+    setState(() {
+      _sortColumnIndex = columnIndex;
+      _sortAscending = ascending;
+
+      if (ascending) {
+        _rows.sort((a, b) => a.cells[columnIndex].child.toString().compareTo(b.cells[columnIndex].child.toString()));
+      } else {
+        _rows.sort((a, b) => b.cells[columnIndex].child.toString().compareTo(a.cells[columnIndex].child.toString()));
+      }
+    });
   }
 }
