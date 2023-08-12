@@ -13,7 +13,8 @@ class GoldProductScreen extends StatefulWidget {
   GoldProductScreen({super.key, required this.product});
 
   @override
-  State<GoldProductScreen> createState() => _GoldProductScreenState(product: product);
+  State<GoldProductScreen> createState() =>
+      _GoldProductScreenState(product: product);
 }
 
 class _GoldProductScreenState extends State<GoldProductScreen> {
@@ -61,10 +62,17 @@ class _GoldProductScreenState extends State<GoldProductScreen> {
           buildGramRow(),
           buildCostPriceRow(),
           buildUpdateButtonRow(),
-          const SizedBox(
-            height: 70,
+          const Expanded(
+            child: SizedBox(),
           ),
-          Padding(
+          buildBackButton(context),
+        ],
+      ),
+    );
+  }
+
+  Padding buildBackButton(BuildContext context) {
+    return Padding(
             padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
             child: Row(
               children: [
@@ -82,10 +90,7 @@ class _GoldProductScreenState extends State<GoldProductScreen> {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   Padding buildUpdateButtonRow() {
@@ -132,8 +137,7 @@ class _GoldProductScreenState extends State<GoldProductScreen> {
     product.costPrice = double.parse(costPriceController.text);
     product.purityRate = double.parse(purityRateController.text);
 
-
-    for(int i=0; i<GoldProductDbHelper().products.length; i++) {
+    for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
       if (GoldProductDbHelper().products[i].id == product.id) {
         GoldProductDbHelper().products[i] = product;
         print(product.name);
@@ -141,10 +145,12 @@ class _GoldProductScreenState extends State<GoldProductScreen> {
       }
     }
     GoldProductDbHelper().update(product.toJson(), product.id).then((value) => {
-      GoldProductDbHelper().getProductById(product.id).then((value) => print(value)),
-      Navigator.pushNamedAndRemoveUntil(
-          context, '/gold-products-screen', (route) => false),
-    });
+          GoldProductDbHelper()
+              .getProductById(product.id)
+              .then((value) => print(value)),
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/gold-products-screen', (route) => false),
+        });
   }
 
   Padding buildNameRow() {
