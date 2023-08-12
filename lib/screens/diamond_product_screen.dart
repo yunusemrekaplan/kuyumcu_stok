@@ -44,33 +44,35 @@ class _DiamondProductScreenState extends State<DiamondProductScreen> {
           buildGramRow(),
           buildPriceRow(),
           buildUpdateButtonRow(),
-          const SizedBox(
-            height: 200,
+          const Expanded(
+            child: SizedBox(),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-              child: Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          '/diamond-products-screen', (route) => false);
-                    },
-                    child: const Text(
-                      'Geri Dön',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          buildBackButton(context),
         ],
       ),
     );
+  }
+
+  Padding buildBackButton(BuildContext context) {
+    return Padding(
+            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        '/diamond-products-screen', (route) => false);
+                  },
+                  child: const Text(
+                    'Geri Dön',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   Padding buildNameRow() {
