@@ -116,7 +116,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
-                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, String),
                         ),
                         DataColumn(
                           label: SizedBox(
@@ -126,7 +126,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
-                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
                         ),
                         DataColumn(
                           label: SizedBox(
@@ -136,7 +136,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
-                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
                         ),
                         DataColumn(
                           label: SizedBox(
@@ -182,15 +182,40 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
     );
   }
 
-  void _sortData(int columnIndex, bool ascending) {
+  void _sortData(int columnIndex, bool ascending, dynamic) {
     setState(() {
       _sortColumnIndex = columnIndex;
       _sortAscending = ascending;
 
-      if (ascending) {
-        _rows.sort((a, b) => a.cells[columnIndex].child.toString().compareTo(b.cells[columnIndex].child.toString()));
-      } else {
-        _rows.sort((a, b) => b.cells[columnIndex].child.toString().compareTo(a.cells[columnIndex].child.toString()));
+      if (dynamic == String) {
+        if (ascending) {
+          _rows.sort((a, b) => a.cells[columnIndex].child
+              .toString()
+              .compareTo(b.cells[columnIndex].child.toString()));
+        } else {
+          _rows.sort((a, b) => b.cells[columnIndex].child
+              .toString()
+              .compareTo(a.cells[columnIndex].child.toString()));
+        }
+      }
+      else {
+        if (ascending) {
+          _rows.sort((a, b) {
+            Text aText = a.cells[columnIndex].child as Text;
+            Text bText = b.cells[columnIndex].child as Text;
+            double aDouble = double.parse(aText.data!.replaceAll(',', '.'));
+            double bDouble = double.parse(bText.data!.replaceAll(',', '.'));
+            return aDouble.compareTo(bDouble);
+          });
+        } else {
+          _rows.sort((a, b) {
+            Text aText = a.cells[columnIndex].child as Text;
+            Text bText = b.cells[columnIndex].child as Text;
+            double aDouble = double.parse(aText.data!.replaceAll(',', '.'));
+            double bDouble = double.parse(bText.data!.replaceAll(',', '.'));
+            return bDouble.compareTo(aDouble);
+          });
+        }
       }
     });
   }
