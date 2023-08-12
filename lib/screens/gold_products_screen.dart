@@ -248,13 +248,21 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
       }
       else {
         if (ascending) {
-          _rows.sort((a, b) => double.parse(a.cells[columnIndex].child
-              .toString())
-              .compareTo(double.parse(b.cells[columnIndex].child.toString())));
+          _rows.sort((a, b) {
+            Text aText = a.cells[columnIndex].child as Text;
+            Text bText = b.cells[columnIndex].child as Text;
+            double aDouble = double.parse(aText.data!.replaceAll(',', '.'));
+            double bDouble = double.parse(bText.data!.replaceAll(',', '.'));
+            return aDouble.compareTo(bDouble);
+          });
         } else {
-          _rows.sort((a, b) => double.parse(b.cells[columnIndex].child
-              .toString())
-              .compareTo(double.parse(a.cells[columnIndex].child.toString())));
+          _rows.sort((a, b) {
+            Text aText = a.cells[columnIndex].child as Text;
+            Text bText = b.cells[columnIndex].child as Text;
+            double aDouble = double.parse(aText.data!.replaceAll(',', '.'));
+            double bDouble = double.parse(bText.data!.replaceAll(',', '.'));
+            return bDouble.compareTo(aDouble);
+          });
         }
       }
     });
