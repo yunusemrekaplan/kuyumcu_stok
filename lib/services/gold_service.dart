@@ -20,7 +20,7 @@ class CurrencyService {
     final body = res.body;
     final document = parser.parse(body);
 
-    var response = document
+    var fineGoldBuyTemp = document
         .getElementById('fxdouble_main')!
         .children[0]
         .children[1]
@@ -30,10 +30,25 @@ class CurrencyService {
         .children[0]
         .text
         .toString();
+    var fineGoldSaleTemp = document
+        .getElementById('fxdouble_main')!
+        .children[0]
+        .children[1]
+        .children[1]
+        .children[0]
+        .children[4]
+        .children[0]
+        .text
+        .toString();
 
-    response = swapDotAndComma(response);
-    print(double.parse(response.toString()));
-    return response;
+
+    fineGoldBuy = double.parse(swapDotAndComma(fineGoldBuyTemp));
+    fineGoldSale = double.parse(swapDotAndComma(fineGoldSaleTemp));
+
+    print(fineGoldSale);
+
+
+    return fineGoldSaleTemp;
     /*Map<String, String> currencies = {
       'fine_gold_buy': document
           .getElementsByClassName('datalist')[0]
