@@ -32,24 +32,26 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.grey,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
       ),
       drawer: const MyDrawer(),
-      body: Column(
-        children: [
-          buildBarcodeRow(),
-          buildNameRow(),
-          buildGramRow(),
-          buildPriceRow(),
-          buildSaveButtonRow(),
-          const Expanded(
-            child: SizedBox(),
-          ),
-          buildBackButton(context),
-        ],
+      body: Container(
+        child: Column(
+          children: [
+            buildBarcodeRow(),
+            buildNameRow(),
+            buildGramRow(),
+            buildPriceRow(),
+            buildSaveButtonRow(),
+            const Expanded(
+              child: SizedBox(),
+            ),
+            buildBackButton(context),
+          ],
+        ),
       ),
     );
   }
