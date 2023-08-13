@@ -20,14 +20,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    gold = CurrencyService.fineGoldSale.toString();
+    /*gold = CurrencyService.fineGoldSale.toString();
     CurrencyService.getGoldPrices().then(
       (value) => setState(
         () {
           gold = value['fine_gold_sale']!;
         },
       ),
-    );
+    );*/
+    CurrencyService.getGoldPrices().then((value) => print(value));
     super.initState();
   }
 
@@ -45,25 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             TextButton(
               onPressed: () async {
-                /*late Barcode barcode;
-                IsbnService.generateBarcode(IsbnService.generateCode()).then(
-                  (value) async {
-                    print('girdi');
-                    barcode = value;
-                    print(barcode.path);
-                    print(barcode.text);
-
-                    await BarcodeDbHelper()
-                        .insert('barcodes', barcode.toJson())
-                        .then((value) => print('inserted row id: $value'));
-                  },
-                );*/
-                /*GoldService.getGoldPrices().then((value) {
-                  setState(() {
-                    gold = value!;
-                  });
-                });*/
-                List<GoldProduct> products = [];
                 List<Map<String, dynamic>> maps;
                 await GoldProductDbHelper().queryAllRows().then((value)
                 {

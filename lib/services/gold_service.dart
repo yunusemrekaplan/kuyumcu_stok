@@ -11,25 +11,30 @@ class CurrencyService {
 
   //static String? sFGold;
 
-
-  static var saglamogluUrl = Uri.parse("https://saglamoglualtin.com");
+  static var hakanAltin = Uri.parse("https://www.hakanaltin.com");
 
   static var url = Uri.parse("https://www.hasaltin.com/");
 
-  static Future<Map<String, String>> getGoldPrices() async {
-    var res = await http.get(saglamogluUrl);
+  static Future<String> getGoldPrices() async {
+    var res = await http.get(hakanAltin);
     final body = res.body;
     final document = parser.parse(body);
+
     var response = document
-        .getElementsByClassName('datalist')[0]
-        .getElementsByClassName('box')[0]
-        .getElementsByClassName('kur')[0]
-        .getElementsByClassName('alis')[0]
+        .getElementById('fxdouble_main')!
+        .children[0]
         .children[1]
+        .children[1]
+        .children[0]
+        .children[3]
+        .children[0]
         .text
         .toString();
 
-    Map<String, String> currencies = {
+    response = swapDotAndComma(response);
+    print(double.parse(response.toString()));
+    return response;
+    /*Map<String, String> currencies = {
       'fine_gold_buy': document
           .getElementsByClassName('datalist')[0]
           .getElementsByClassName('box')[0]
@@ -83,6 +88,9 @@ class CurrencyService {
     var temp = currencies['fine_gold_sale']!.split(',');
     fineGoldBuy = double.parse(temp[0]);
     fineGoldBuy += double.parse(temp[1]) / 100;
-    return currencies;
+    return currencies;*/
+  }
+  static String swapDotAndComma(String input) {
+    return input.split('').map((char) => char == '.' ? '' : char == ',' ? '.' : char).join('');
   }
 }
