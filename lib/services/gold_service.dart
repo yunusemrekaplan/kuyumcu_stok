@@ -1,3 +1,4 @@
+import 'package:html/dom.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 
@@ -15,11 +16,26 @@ class CurrencyService {
 
   static var url = Uri.parse("https://www.hasaltin.com/");
 
-  static Future<String> getGoldPrices() async {
+  static Future<Map<String, double>> getGoldPrices() async {
     var res = await http.get(hakanAltin);
     final body = res.body;
     final document = parser.parse(body);
 
+    buildCurrencies(document);
+
+    Map<String, double> currencies = {
+      'fineGoldBuy' : fineGoldBuy,
+      'fineGoldSale' : fineGoldSale,
+      'usdBuy' : usdBuy,
+      'usdSale' : usdSale,
+      'eurBuy' : eurBuy,
+      'eurSale' : eurSale,
+    };
+
+    return currencies;
+  }
+
+  static String buildCurrencies(Document document) {
     var fineGoldBuyTemp = document
         .getElementById('fxdouble_main')!
         .children[0]
@@ -40,72 +56,64 @@ class CurrencyService {
         .children[0]
         .text
         .toString();
-
+    var usdBuyTemp = document
+        .getElementById('fxdouble_main')!
+        .children[1]
+        .children[1]
+        .children[1]
+        .children[0]
+        .children[3]
+        .children[0]
+        .text
+        .toString();
+    var usdSaleTemp = document
+        .getElementById('fxdouble_main')!
+        .children[1]
+        .children[1]
+        .children[1]
+        .children[0]
+        .children[4]
+        .children[0]
+        .text
+        .toString();
+    var eurBuyTemp = document
+        .getElementById('fxdouble_main')!
+        .children[1]
+        .children[1]
+        .children[1]
+        .children[1]
+        .children[3]
+        .children[0]
+        .text
+        .toString();
+    var eurSaleTemp = document
+        .getElementById('fxdouble_main')!
+        .children[1]
+        .children[1]
+        .children[1]
+        .children[1]
+        .children[4]
+        .children[0]
+        .text
+        .toString();
 
     fineGoldBuy = double.parse(swapDotAndComma(fineGoldBuyTemp));
     fineGoldSale = double.parse(swapDotAndComma(fineGoldSaleTemp));
-
-    print(fineGoldSale);
-
-
+    usdBuy = double.parse(swapDotAndComma(usdBuyTemp));
+    usdSale = double.parse(swapDotAndComma(usdSaleTemp));
+    eurBuy = double.parse(swapDotAndComma(eurBuyTemp));
+    eurSale = double.parse(swapDotAndComma(eurSaleTemp));
     return fineGoldSaleTemp;
-    /*Map<String, String> currencies = {
-      'fine_gold_buy': document
-          .getElementsByClassName('datalist')[0]
-          .getElementsByClassName('box')[0]
-          .getElementsByClassName('kur')[0]
-          .getElementsByClassName('alis')[0]
-          .children[1]
-          .text
-          .toString(),
-      'fine_gold_sale': document
-          .getElementsByClassName('datalist')[0]
-          .getElementsByClassName('box')[0]
-          .getElementsByClassName('kur')[0]
-          .getElementsByClassName('satis')[0]
-          .children[1]
-          .text
-          .toString(),
-      'USD_buy': document
-          .getElementsByClassName('datalist')[1]
-          .getElementsByClassName('box')[0]
-          .getElementsByClassName('kur')[0]
-          .getElementsByClassName('alis')[0]
-          .children[1]
-          .text
-          .toString(),
-      'USD_sale': document
-          .getElementsByClassName('datalist')[1]
-          .getElementsByClassName('box')[0]
-          .getElementsByClassName('kur')[0]
-          .getElementsByClassName('satis')[0]
-          .children[1]
-          .text
-          .toString(),
-      'EUR_buy': document
-          .getElementsByClassName('datalist')[1]
-          .getElementsByClassName('box')[1]
-          .getElementsByClassName('kur')[0]
-          .getElementsByClassName('alis')[0]
-          .children[1]
-          .text
-          .toString(),
-      'EUR_sale': document
-          .getElementsByClassName('datalist')[1]
-          .getElementsByClassName('box')[1]
-          .getElementsByClassName('kur')[0]
-          .getElementsByClassName('satis')[0]
-          .children[1]
-          .text
-          .toString(),
-    };
-
-    var temp = currencies['fine_gold_sale']!.split(',');
-    fineGoldBuy = double.parse(temp[0]);
-    fineGoldBuy += double.parse(temp[1]) / 100;
-    return currencies;*/
   }
+
   static String swapDotAndComma(String input) {
-    return input.split('').map((char) => char == '.' ? '' : char == ',' ? '.' : char).join('');
+    return input
+        .split('')
+        .map((char) => char == '.'
+            ? ''
+            : char == ','
+                ? '.'
+                : char)
+        .join('');
   }
 }

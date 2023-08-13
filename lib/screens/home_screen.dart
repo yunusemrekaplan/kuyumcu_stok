@@ -20,15 +20,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    /*gold = CurrencyService.fineGoldSale.toString();
+    gold = CurrencyService.fineGoldSale.toString();
     CurrencyService.getGoldPrices().then(
       (value) => setState(
         () {
-          gold = value['fine_gold_sale']!;
+          gold = value['fineGoldSale']!.toString();
+          print(value);
         },
       ),
-    );*/
-    CurrencyService.getGoldPrices().then((value) => print(value));
+    );
     super.initState();
   }
 
