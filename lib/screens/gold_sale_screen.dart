@@ -34,18 +34,18 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
 
   @override
   void initState() {
-    /*CurrencyService.getGoldPrices().then(
+    CurrencyService.getGoldPrices().then(
       (value) => setState(
         () {
-          fineGoldBuy = value['fine_gold_buy']!;
-          fineGoldSale = value['fine_gold_sale']!;
-          usdBuy = value['USD_buy']!;
-          usdSale = value['USD_sale']!;
-          eurBuy = value['EUR_buy']!;
-          eurSale = value['EUR_sale']!;
+          fineGoldBuy = value['fineGoldBuy']!.toString();
+          fineGoldSale = value['fineGoldSale']!.toString();
+          usdBuy = value['usdBuy']!.toString();
+          usdSale = value['usdSale']!.toString();
+          eurBuy = value['eurBuy']!.toString();
+          eurSale = value['eurSale']!.toString();
         },
       ),
-    );*/
+    );
     super.initState();
   }
 
@@ -426,12 +426,12 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                   CurrencyService.getGoldPrices().then(
                     (value) => setState(
                       () {
-                        /*fineGoldBuy = value['fine_gold_buy']!;
-                        fineGoldSale = value['fine_gold_sale']!;
-                        usdBuy = value['USD_buy']!;
-                        usdSale = value['USD_sale']!;
-                        eurBuy = value['EUR_buy']!;
-                        eurSale = value['EUR_sale']!;*/
+                        fineGoldBuy = value['fineGoldBuy']!.toString();
+                        fineGoldSale = value['fineGoldSale']!.toString();
+                        usdBuy = value['usdBuy']!.toString();
+                        usdSale = value['usdSale']!.toString();
+                        eurBuy = value['eurBuy']!.toString();
+                        eurSale = value['eurSale']!.toString();
                       },
                     ),
                   );
