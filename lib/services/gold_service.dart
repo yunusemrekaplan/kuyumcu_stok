@@ -1,14 +1,23 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 
-class GoldService {
-  static late double fGold;
-  static String? sFGold;
+class CurrencyService {
+  static late double fineGoldBuy;
+  static late double fineGoldSale;
+  static late double usdBuy;
+  static late double usdSale;
+  static late double eurBuy;
+  static late double eurSale;
+
+  //static String? sFGold;
+
+
+  static var saglamogluUrl = Uri.parse("https://saglamoglualtin.com");
 
   static var url = Uri.parse("https://www.hasaltin.com/");
 
   static Future<Map<String, String>> getGoldPrices() async {
-    var res = await http.get(url);
+    var res = await http.get(saglamogluUrl);
     final body = res.body;
     final document = parser.parse(body);
     var response = document
@@ -71,10 +80,9 @@ class GoldService {
           .toString(),
     };
 
-    sFGold = currencies['fine_gold_sale']!;
     var temp = currencies['fine_gold_sale']!.split(',');
-    fGold = double.parse(temp[0]);
-    fGold += double.parse(temp[1]) / 100;
+    fineGoldBuy = double.parse(temp[0]);
+    fineGoldBuy += double.parse(temp[1]) / 100;
     return currencies;
   }
 }

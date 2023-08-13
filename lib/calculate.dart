@@ -5,7 +5,7 @@ class Calculate {
     /*print('saflık: $purityRate');
     print('gram: $gram');
     print('işçilik: $laborCost');*/
-    double costPrice = (purityRate + laborCost) * GoldService.fGold * gram / 1000;
+    double costPrice = (purityRate + laborCost) * CurrencyService.fineGoldBuy * gram / 1000;
     //print('maliyet: $costPrice');
     return costPrice;
   }

@@ -36,7 +36,7 @@ Future<void> main() async {
   await BarcodeDbHelper().open();
   await GoldProductDbHelper().open();
   await DiamondProductDbHelper().open();
-  await GoldService.getGoldPrices();
+  await CurrencyService.getGoldPrices();
 
   var goldList = await GoldProductDbHelper().queryAllRows().then((value) => value);
   List<GoldProduct> goldProducts = [];

@@ -34,7 +34,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
 
   @override
   void initState() {
-    GoldService.getGoldPrices().then(
+    CurrencyService.getGoldPrices().then(
       (value) => setState(
         () {
           fineGoldBuy = value['fine_gold_buy']!;
@@ -423,7 +423,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  GoldService.getGoldPrices().then(
+                  CurrencyService.getGoldPrices().then(
                     (value) => setState(
                       () {
                         fineGoldBuy = value['fine_gold_buy']!;
