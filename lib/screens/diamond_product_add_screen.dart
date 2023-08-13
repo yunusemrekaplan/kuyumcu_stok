@@ -51,24 +51,34 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
 
   Padding buildBackButton(BuildContext context) {
     return Padding(
-          padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-          child: Row(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context,
-                      '/diamond-products-screen', (route) => false);
-                },
-                child: const Text(
-                  'Geri Dön',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                // Düğmeye basılırsa yeşil, aksi halde mavi döndür
+                if (states.contains(MaterialState.pressed)) {
+                  return Colors.green;
+                }
+                return Colors.blueGrey;
+              }),
+            ),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/diamond-products-screen', (route) => false);
+            },
+            child: const Text(
+              'Geri Dön',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
               ),
-            ],
+            ),
           ),
-        );
+        ],
+      ),
+    );
   }
 
   void onSaved() {
@@ -115,15 +125,15 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
         );
 
         DiamondProductDbHelper().insert(product.toJson()).then((value) => {
-          product.id = value,
-          DiamondProductDbHelper().products.add(product),
-          print(product.toJson()),
-          barcodeController.text = '',
-          nameController.text = '',
-          gramController.text = '',
-          priceController.text = '',
-          Navigator.of(context).pop(),
-        });
+              product.id = value,
+              DiamondProductDbHelper().products.add(product),
+              print(product.toJson()),
+              barcodeController.text = '',
+              nameController.text = '',
+              gramController.text = '',
+              priceController.text = '',
+              Navigator.of(context).pop(),
+            });
       }
     }
   }
