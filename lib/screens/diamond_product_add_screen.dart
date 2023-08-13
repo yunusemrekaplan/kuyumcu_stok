@@ -49,16 +49,16 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
     );
   }
 
-  Padding buildBackButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          ElevatedButton(
+  Row buildBackButton(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.resolveWith((states) {
                 // Düğmeye basılırsa yeşil, aksi halde mavi döndür
-                if (states.contains(MaterialState.pressed)) {
+                if (states.contains(MaterialState.hovered)) {
                   return Colors.green;
                 }
                 return Colors.blueGrey;
@@ -71,13 +71,13 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
             child: const Text(
               'Geri Dön',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 22,
                 color: Colors.white,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -255,11 +255,26 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                // Düğmeye basılırsa yeşil, aksi halde mavi döndür
+                if (states.contains(MaterialState.hovered)) {
+                  if (barcodeController.text.length != 13 || gramController.text.isEmpty || priceController.text.isEmpty) {
+                    return Colors.red;
+                  }
+                  else {
+                    return Colors.green;
+                  }
+                }
+                return Colors.blueGrey;
+              }),
+            ),
             onPressed: onSaved,
             child: const Text(
               'Kaydet',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 22,
+                color: Colors.white,
               ),
             ),
           ),

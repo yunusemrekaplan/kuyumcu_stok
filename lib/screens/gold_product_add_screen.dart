@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
@@ -23,7 +21,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late String barcodeNo;
 
   late TextEditingController nameController;
-  late TextEditingController caratController;
   late TextEditingController gramController;
   late TextEditingController costGramController;
   late TextEditingController purityRateController;
@@ -36,7 +33,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';
     nameController = TextEditingController();
-    //caratController = TextEditingController();
     gramController = TextEditingController();
     costGramController = TextEditingController();
     purityRateController = TextEditingController();
