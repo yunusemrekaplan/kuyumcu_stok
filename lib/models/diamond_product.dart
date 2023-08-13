@@ -1,7 +1,7 @@
 class DiamondProduct {
   late int id;
   late String barcodeText;
-  late String? name;
+  late String name;
   late double gram;
   late double price;
 
@@ -10,7 +10,7 @@ class DiamondProduct {
   DiamondProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     barcodeText = json['barcodeText'];
-    name = json['name'] ?? '';
+    name = json['name'];
     gram = json['gram'] * 1.0;
     price = json['price'] * 1.0;
   }
@@ -18,7 +18,7 @@ class DiamondProduct {
   Map<String, dynamic> toJson() {
     return {
       'barcodeText': barcodeText,
-      'name': name ?? '',
+      'name': name,
       'gram': gram,
       'price': price,
     };

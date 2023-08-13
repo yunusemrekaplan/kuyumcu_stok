@@ -96,7 +96,9 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
         ),
       );
     } else {
-      if (gramController.text.isEmpty || priceController.text.isEmpty) {
+      if (gramController.text.isEmpty ||
+          priceController.text.isEmpty ||
+          nameController.text.isEmpty) {
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
@@ -259,10 +261,12 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
               backgroundColor: MaterialStateProperty.resolveWith((states) {
                 // Düğmeye basılırsa yeşil, aksi halde mavi döndür
                 if (states.contains(MaterialState.hovered)) {
-                  if (barcodeController.text.length != 13 || gramController.text.isEmpty || priceController.text.isEmpty) {
+                  if (barcodeController.text.length != 13 ||
+                      gramController.text.isEmpty ||
+                      priceController.text.isEmpty ||
+                      nameController.text.isEmpty) {
                     return Colors.red;
-                  }
-                  else {
+                  } else {
                     return Colors.green;
                   }
                 }
