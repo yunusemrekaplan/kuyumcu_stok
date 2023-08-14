@@ -21,7 +21,6 @@ class GoldProductDbHelper {
     products = [];
     sqfliteFfiInit();
 
-    // Path to your database file
     String path = 'kuyumcu.db';
 
     _db = await databaseFactoryFfi.openDatabase(path);
@@ -45,7 +44,6 @@ class GoldProductDbHelper {
 
 
   Future<void> close() async {
-    // Close the database
     await _db!.close();
   }
 
