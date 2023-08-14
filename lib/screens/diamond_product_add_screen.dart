@@ -34,7 +34,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
       appBar: AppBar(
         backgroundColor: Colors.grey,
         iconTheme: const IconThemeData(
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
       drawer: const MyDrawer(),
@@ -214,7 +214,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
                 if (states.contains(MaterialState.hovered)) {
                   return Colors.green;
                 }
-                return Colors.blueGrey;
+                return Colors.grey;
               }),
             ),
             onPressed: () {
