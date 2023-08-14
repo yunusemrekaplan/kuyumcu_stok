@@ -93,128 +93,130 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
     final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.grey,
       ),
       drawer: const MyDrawer(),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height - 145,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    Expanded(
-                      child: DataTable(
-                        sortColumnIndex: _sortColumnIndex,
-                        sortAscending: _sortAscending,
-                        columnSpacing: 20,
-                        horizontalMargin: 10,
-                        showCheckboxColumn: false,
-                        border: const TableBorder(
-                          top: BorderSide(width: 1),
-                          left: BorderSide(width: 1),
-                          right: BorderSide(width: 1),
-                          bottom: BorderSide(width: 1),
-                          horizontalInside: BorderSide(width: 1),
-                          verticalInside: BorderSide(width: 1),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        columns: [
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'İsim',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, String),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'Gram',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'Karat',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'Saflık Oranı',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'İşçilik',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'Maliyet',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(''),
-                            ),
-                          ),
-                        ],
-                        rows: _rows,
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 25,
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height - 170,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const SizedBox(
+                        width: 30,
                       ),
-                    ),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                  ],
+                      Expanded(
+                        child: DataTable(
+                          sortColumnIndex: _sortColumnIndex,
+                          sortAscending: _sortAscending,
+                          columnSpacing: 20,
+                          horizontalMargin: 10,
+                          showCheckboxColumn: false,
+                          border: const TableBorder(
+                            top: BorderSide(width: 1),
+                            left: BorderSide(width: 1),
+                            right: BorderSide(width: 1),
+                            bottom: BorderSide(width: 1),
+                            horizontalInside: BorderSide(width: 1),
+                            verticalInside: BorderSide(width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          columns: [
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'İsim',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, String),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Gram',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Karat',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Saflık Oranı',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'İşçilik',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Maliyet',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(''),
+                              ),
+                            ),
+                          ],
+                          rows: _rows,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              //width: 1050,
-              height: 70,
-              child: Row(
+              Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 25.0),
+                    padding: const EdgeInsets.all(25.0),
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(context,
@@ -230,8 +232,8 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

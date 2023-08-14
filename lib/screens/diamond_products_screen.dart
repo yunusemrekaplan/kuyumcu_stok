@@ -75,109 +75,114 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.grey,
+      ),
       drawer: const MyDrawer(),
-      body: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height - 145,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: const BouncingScrollPhysics(),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                    child: DataTable(
-                      sortColumnIndex: _sortColumnIndex,
-                      sortAscending: _sortAscending,
-                      columnSpacing: 20,
-                      horizontalMargin: 10,
-                      showCheckboxColumn: false,
-                      border: const TableBorder(
-                        top: BorderSide(width: 1),
-                        left: BorderSide(width: 1),
-                        right: BorderSide(width: 1),
-                        bottom: BorderSide(width: 1),
-                        horizontalInside: BorderSide(width: 1),
-                        verticalInside: BorderSide(width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                      ),
-                      columns: [
-                        DataColumn(
-                          label: SizedBox(
-                            width: width * .1,
-                            child: const Text(
-                              'İsim',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, String),
-                        ),
-                        DataColumn(
-                          label: SizedBox(
-                            width: width * .1,
-                            child: const Text(
-                              'Gram',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                        ),
-                        DataColumn(
-                          label: SizedBox(
-                            width: width * .1,
-                            child: const Text(
-                              'Ücret',
-                              style: TextStyle(fontSize: 22),
-                            ),
-                          ),
-                          onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                        ),
-                        DataColumn(
-                          label: SizedBox(
-                            width: width * .1,
-                            child: const Text(''),
-                          ),
-                        ),
-                      ],
-                      rows: _rows,
+      body: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height - 170,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: const BouncingScrollPhysics(),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const SizedBox(
+                      width: 30,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                ],
+                    Expanded(
+                      child: DataTable(
+                        sortColumnIndex: _sortColumnIndex,
+                        sortAscending: _sortAscending,
+                        columnSpacing: 20,
+                        horizontalMargin: 10,
+                        showCheckboxColumn: false,
+                        border: const TableBorder(
+                          top: BorderSide(width: 1),
+                          left: BorderSide(width: 1),
+                          right: BorderSide(width: 1),
+                          bottom: BorderSide(width: 1),
+                          horizontalInside: BorderSide(width: 1),
+                          verticalInside: BorderSide(width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        columns: [
+                          DataColumn(
+                            label: SizedBox(
+                              width: width * .1,
+                              child: const Text(
+                                'İsim',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, String),
+                          ),
+                          DataColumn(
+                            label: SizedBox(
+                              width: width * .1,
+                              child: const Text(
+                                'Gram',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                          ),
+                          DataColumn(
+                            label: SizedBox(
+                              width: width * .1,
+                              child: const Text(
+                                'Ücret',
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
+                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
+                          ),
+                          DataColumn(
+                            label: SizedBox(
+                              width: width * .1,
+                              child: const Text(''),
+                            ),
+                          ),
+                        ],
+                        rows: _rows,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          const Expanded(
-            child: SizedBox(),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context,
-                        '/diamond-product-add-screen', (route) => false);
-                  },
-                  child: const Text(
-                    'Ürün Ekle',
-                    style: TextStyle(
-                      fontSize: 22,
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(context,
+                          '/diamond-product-add-screen', (route) => false);
+                    },
+                    child: const Text(
+                      'Ürün Ekle',
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
