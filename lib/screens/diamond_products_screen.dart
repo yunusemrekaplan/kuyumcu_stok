@@ -196,7 +196,7 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
                                 .contains(MaterialState.hovered)) {
                               return Colors.green;
                             }
-                            return Colors.grey;
+                            return Colors.grey[600];
                           },
                         ),
                       ),

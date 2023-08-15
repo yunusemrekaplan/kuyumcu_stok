@@ -185,7 +185,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
                     return Colors.green;
                   }
                 }
-                return Colors.blueGrey;
+                return Colors.grey[600];
               }),
             ),
             onPressed: onSaved,
@@ -214,7 +214,7 @@ class _DiamondProductAddScreenState extends State<DiamondProductAddScreen> {
                 if (states.contains(MaterialState.hovered)) {
                   return Colors.green;
                 }
-                return Colors.grey;
+                return Colors.grey[600];
               }),
             ),
             onPressed: () {
