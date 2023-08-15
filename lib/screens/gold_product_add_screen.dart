@@ -58,14 +58,24 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           buildGramRow(),
           buildCostPriceRow(),
           buildSaveButtonRow(),
-          const SizedBox(
-            height: 10,
+          const Expanded(
+            child: SizedBox(
+              height: 10,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
             child: Row(
               children: [
                 ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                      if (states.contains(MaterialState.hovered)) {
+                        return Colors.green;
+                      }
+                      return Colors.grey[600];
+                    }),
+                  ),
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/gold-products-screen', (route) => false);
@@ -74,6 +84,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                     'Geri Dön',
                     style: TextStyle(
                       fontSize: 20,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -91,11 +102,29 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.hovered)) {
+                  if (barcodeNo == '0000000000000' ||
+                      nameController.text.isEmpty ||
+                      purityRateController.text.isEmpty ||
+                      laborCostController.text.isEmpty ||
+                      gramController.text.isEmpty ||
+                      costPriceController.text.isEmpty) {
+                    return Colors.red;
+                  } else {
+                    return Colors.green;
+                  }
+                }
+                return Colors.grey[600];
+              }),
+            ),
             onPressed: onSavedFun,
             child: const Text(
               'Kaydet',
               style: TextStyle(
                 fontSize: 20,
+                color: Colors.white,
               ),
             ),
           ),
@@ -118,8 +147,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ],
         ),
       );
-    }
-    else if (nameController.text.isEmpty) {
+    } else if (nameController.text.isEmpty) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -132,8 +160,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ],
         ),
       );
-    }
-    else {
+    } else {
       if (NumberValidator.validate(gramController.text) != null ||
           NumberValidator.validate(purityRateController.text) != null ||
           NumberValidator.validate(laborCostController.text) != null ||
@@ -258,7 +285,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                   if (states.contains(MaterialState.hovered)) {
                     return Colors.green;
                   }
-                  return Colors.grey;
+                  return Colors.grey[600];
                 },
               ),
             ),
