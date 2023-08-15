@@ -1,8 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
-import 'package:kuyumcu_stok/services/gold_service.dart';
+import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class GoldSaleScreen extends StatefulWidget {
@@ -169,7 +170,21 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                   caratTxt = product!.carat.intDefinition.toString();
                   gramTxt = product!.gram.toStringAsFixed(0);
                   costTxt = product!.costPrice.toStringAsFixed(0);
-                  priceTxt = costTxt;
+                  double temp;
+                  CurrencyService.getGoldPrices().then((value) =>{
+                    print('girdi'),
+                    temp = double.parse(costTxt) * CurrencyService.fineGoldSale / 1000,
+                    setState(() {
+                      priceTxt = temp.toStringAsFixed(0);
+                      fineGoldBuy = value['fineGoldBuy']!.toString();
+                      fineGoldSale = value['fineGoldSale']!.toString();
+                      usdBuy = value['usdBuy']!.toString();
+                      usdSale = value['usdSale']!.toString();
+                      eurBuy = value['eurBuy']!.toString();
+                      eurSale = value['eurSale']!.toString();
+                    }),
+                  });
+
                 });
               }
             }
@@ -261,10 +276,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
           if (earningRate != null) {
             if (product != null) {
               setState(() {
-                priceTxt = (product!.costPrice +
-                        (product!.costPrice * earningRate) / 100)
-                    .toStringAsFixed(0);
-                saleTextEditingController.text = priceTxt;
+                saleTextEditingController.text = (int.parse(priceTxt) + (int.parse(priceTxt) * earningRate / 100)).toString();
               });
             }
           }
@@ -337,7 +349,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
           child: Row(
             children: [
               const Text(
-                'Son fiyat: ',
+                'Maliyet Fiyatı: ',
                 style: TextStyle(fontSize: 22),
               ),
               Text(

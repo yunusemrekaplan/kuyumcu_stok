@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
+import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/isbn_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
@@ -188,7 +190,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         costPrice: double.parse(costPriceController.text),
         purityRate: double.parse(purityRateController.text),
       ).toJson();
-
+      Barcode barcode;
       try {
         GoldProductDbHelper().insert(json).then(
               (value) => {
@@ -196,6 +198,29 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                       GoldProduct.fromJson(json, value),
                     ),
                 print('id: $value'),
+
+                IsbnService.generateBarcode(barcodeNo).then((value) => {
+                  barcode = value,
+                  BarcodeDbHelper().insert(barcode.toJson()).then(
+                        (value) => {
+                      print(barcode.toJson()),
+                      setState(
+                            () {
+                          barcodeNo = '0000000000000';
+                          nameController.text = '';
+                          gramController.text = '';
+                          costGramController.text = '';
+                          purityRateController.text = dropdownValue.purityRateDefinition.toString();
+                          costPriceController.text = '';
+                          laborCostController.text = '';
+
+                          Navigator.of(context).pop();
+                          //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
+                        },
+                      ),
+                    },
+                  ),
+                },),
                 setState(
                   () {
                     barcodeNo = '0000000000000';
@@ -211,29 +236,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                     //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
                   },
                 ),
-
-                /*IsbnService.generateBarcode(barcodeNo).then((value) => {
-                barcode = value,
-                BarcodeDbHelper().insert(barcode.toJson()).then(
-                      (value) => {
-                    print(barcode.toJson()),
-                    setState(
-                          () {
-                        barcodeNo = '0000000000000';
-                        nameController.text = '';
-                        gramController.text = '';
-                        costGramController.text = '';
-                        purityRateController.text = dropdownValue.purityRateDefinition.toString();
-                        costPriceController.text = '';
-                        laborCostController.text = '';
-
-                        Navigator.of(context).pop();
-                        //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
-                      },
-                    ),
-                  },
-                ),
-              },),*/
               },
             );
       } catch (e) {

@@ -12,7 +12,7 @@ import 'package:kuyumcu_stok/screens/gold_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_products_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_sale_screen.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/services/gold_service.dart';
+import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
