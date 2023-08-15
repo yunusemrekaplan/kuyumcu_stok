@@ -8,16 +8,16 @@ import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-class GoldProductScreen extends StatefulWidget {
+class GoldProductEditScreen extends StatefulWidget {
   late GoldProduct product;
-  GoldProductScreen({super.key, required this.product});
+  GoldProductEditScreen({super.key, required this.product});
 
   @override
-  State<GoldProductScreen> createState() =>
-      _GoldProductScreenState(product: product);
+  State<GoldProductEditScreen> createState() =>
+      _GoldProductEditScreenState(product: product);
 }
 
-class _GoldProductScreenState extends State<GoldProductScreen> {
+class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
   late GoldProduct product;
   late TextEditingController nameController;
   late TextEditingController caratController;
@@ -29,7 +29,7 @@ class _GoldProductScreenState extends State<GoldProductScreen> {
 
   late Carat dropdownValue;
 
-  _GoldProductScreenState({required this.product}) {
+  _GoldProductEditScreenState({required this.product}) {
     dropdownValue = product.carat;
     nameController = TextEditingController();
     gramController = TextEditingController();

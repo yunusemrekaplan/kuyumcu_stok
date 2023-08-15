@@ -5,7 +5,7 @@ class GoldProduct {
   late int id;
   late String barcodeText;
   late Barcode barcode;
-  late String? name;
+  late String name;
   late Carat carat; // x
   late double purityRate; // x => z
   late double laborCost; // k
@@ -27,7 +27,7 @@ class GoldProduct {
 
   GoldProduct.fromJson(Map<String, dynamic> json, this.id) {
     barcodeText = json['barcodeText'];
-    name = json['name'] ?? '';
+    name = json['name'];
     carat = toCarat(json['carat'])!;
     gram = json['gram']!.toDouble();
     purityRate = json['purityRate']!.toDouble();
@@ -38,7 +38,7 @@ class GoldProduct {
   Map<String, dynamic> toJson() {
     return {
       'barcodeText': barcodeText,
-      'name': name ?? '',
+      'name': name,
       'carat': carat.intDefinition,
       'gram': gram,
       'purityRate': purityRate,
