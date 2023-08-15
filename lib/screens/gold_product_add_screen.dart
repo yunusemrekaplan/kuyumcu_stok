@@ -44,7 +44,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.grey,
+      ),
       drawer: const MyDrawer(),
       body: Column(
         children: [
@@ -116,7 +118,22 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ],
         ),
       );
-    } else {
+    }
+    else if (nameController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Boş alanları doldurun!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    }
+    else {
       if (NumberValidator.validate(gramController.text) != null ||
           NumberValidator.validate(purityRateController.text) != null ||
           NumberValidator.validate(laborCostController.text) != null ||
@@ -235,6 +252,16 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             ),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.hovered)) {
+                    return Colors.green;
+                  }
+                  return Colors.grey;
+                },
+              ),
+            ),
             onPressed: () {
               barcodeNo = IsbnService.generateCode();
               setState(() {
@@ -245,6 +272,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               'Barkod Oluştur',
               style: TextStyle(
                 fontSize: 20,
+                color: Colors.white,
               ),
             ),
           )
@@ -411,10 +439,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                 print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
-                          double.parse(purityRateController.text),
-                          double.parse(gramController.text),
-                          double.parse(laborCostController.text))
-                      .toStringAsFixed(0);
+                    double.parse(purityRateController.text),
+                    double.parse(gramController.text),
+                    double.parse(laborCostController.text),
+                  ).toStringAsFixed(0);
                 });
               }
             },
@@ -454,10 +482,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                 print('girdi');
                 setState(() {
                   costPriceController.text = Calculate.calculateCostPrice(
-                          double.parse(purityRateController.text),
-                          double.parse(gramController.text),
-                          double.parse(laborCostController.text))
-                      .toStringAsFixed(0);
+                    double.parse(purityRateController.text),
+                    double.parse(gramController.text),
+                    double.parse(laborCostController.text),
+                  ).toStringAsFixed(0);
                 });
               }
             },
