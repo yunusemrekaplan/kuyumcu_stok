@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/diamond_product.dart';
-import 'package:kuyumcu_stok/screens/diamond_product_screen.dart';
+import 'package:kuyumcu_stok/screens/diamond_product_edit_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class DiamondProductsScreen extends StatefulWidget {
@@ -12,7 +12,6 @@ class DiamondProductsScreen extends StatefulWidget {
 }
 
 class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
-  late List<DataRow> _rows;
   late List<DiamondProduct> products;
 
   int _sortColumnIndex = 0;
@@ -20,55 +19,6 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
 
   _DiamondProductsScreenState() {
     products = DiamondProductDbHelper().products;
-
-    _rows = products
-        .map((e) => DataRow(
-              cells: [
-                DataCell(Text(
-                  e.name.toString(),
-                  style: const TextStyle(fontSize: 20),
-                )),
-                DataCell(Text(
-                  e.gram.toString(),
-                  style: const TextStyle(fontSize: 20),
-                )),
-                DataCell(Text(
-                  e.price.toString(),
-                  style: const TextStyle(fontSize: 20),
-                )),
-                DataCell(Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          DiamondProductDbHelper().products.remove(e);
-                          DiamondProductDbHelper().delete(e.id);
-                        });
-                      },
-                      icon: const Icon(Icons.delete),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          DiamondProductDbHelper().products.remove(e);
-                          DiamondProductDbHelper().delete(e.id);
-                        });
-                      },
-                      icon: const Icon(Icons.delete),
-                    ),
-                  ],
-                )),
-              ],
-              onSelectChanged: (selected) {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            DiamondProductScreen(product: e)),
-                        (route) => false);
-              },
-            ))
-        .toList();
   }
 
   @override
@@ -83,103 +33,188 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
         color: Colors.white,
         child: Column(
           children: [
-            const SizedBox(
+            Container(
               height: 25,
             ),
-            SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height - 170,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const BouncingScrollPhysics(),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    Expanded(
-                      child: DataTable(
-                        sortColumnIndex: _sortColumnIndex,
-                        sortAscending: _sortAscending,
-                        columnSpacing: 20,
-                        horizontalMargin: 10,
-                        showCheckboxColumn: false,
-                        border: const TableBorder(
-                          top: BorderSide(width: 1),
-                          left: BorderSide(width: 1),
-                          right: BorderSide(width: 1),
-                          bottom: BorderSide(width: 1),
-                          horizontalInside: BorderSide(width: 1),
-                          verticalInside: BorderSide(width: 1),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        columns: [
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'İsim',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, String),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'Gram',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(
-                                'Ücret',
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending, double),
-                          ),
-                          DataColumn(
-                            label: SizedBox(
-                              width: width * .1,
-                              child: const Text(''),
-                            ),
-                          ),
-                        ],
-                        rows: _rows,
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height - 145,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const SizedBox(
+                        width: 30,
                       ),
-                    ),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                  ],
+                      Expanded(
+                        child: DataTable(
+                          headingRowColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            return Colors.grey[400];
+                          }),
+                          sortColumnIndex: _sortColumnIndex,
+                          sortAscending: _sortAscending,
+                          columnSpacing: 20,
+                          horizontalMargin: 10,
+                          showCheckboxColumn: false,
+                          border: const TableBorder(
+                            top: BorderSide(width: 1),
+                            left: BorderSide(width: 1),
+                            right: BorderSide(width: 1),
+                            bottom: BorderSide(width: 1),
+                            horizontalInside: BorderSide(width: 1),
+                            verticalInside: BorderSide(width: 1),
+                            //borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          columns: [
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'İsim',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) =>
+                                  _sortData(columnIndex, ascending),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Gram',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) =>
+                                  _sortData(columnIndex, ascending),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Ücret',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) =>
+                                  _sortData(columnIndex, ascending),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(''),
+                              ),
+                            ),
+                          ],
+                          rows: products
+                              .map(
+                                (e) => DataRow(
+                                  color:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                      if (states.contains(MaterialState.hovered)) {
+                                        return Colors.grey[400];
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  cells: [
+                                    DataCell(Text(
+                                      e.name.toString(),
+                                      style: const TextStyle(fontSize: 20),
+                                    )),
+                                    DataCell(Text(
+                                      e.gram.toString(),
+                                      style: const TextStyle(fontSize: 20),
+                                    )),
+                                    DataCell(Text(
+                                      e.price.toString(),
+                                      style: const TextStyle(fontSize: 20),
+                                    )),
+                                    DataCell(Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              DiamondProductDbHelper()
+                                                  .products
+                                                  .remove(e);
+                                              DiamondProductDbHelper()
+                                                  .delete(e.id);
+                                            });
+                                          },
+                                          icon: const Icon(Icons.delete),
+                                          color: Colors.red[800],
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        DiamondProductEditScreen(
+                                                            product: e)),
+                                                (route) => false);
+                                          },
+                                          icon: const Icon(Icons.edit),
+                                        ),
+                                      ],
+                                    )),
+                                  ],
+                                  onSelectChanged: (selected) {},
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(context,
-                          '/diamond-product-add-screen', (route) => false);
-                    },
-                    child: const Text(
-                      'Ürün Ekle',
-                      style: TextStyle(
-                        fontSize: 22,
+            Container(
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 25.0, bottom: 15, top: 15),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                              (Set<MaterialState> states) {
+                            if (states
+                                .contains(MaterialState.hovered)) {
+                              return Colors.green;
+                            }
+                            return Colors.grey;
+                          },
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(context,
+                            '/diamond-product-add-screen', (route) => false);
+                      },
+                      child: const Text(
+                        'Ürün Ekle',
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -187,39 +222,31 @@ class _DiamondProductsScreenState extends State<DiamondProductsScreen> {
     );
   }
 
-  void _sortData(int columnIndex, bool ascending, dynamic) {
+  void _sortData(int columnIndex, bool ascending) {
     setState(() {
       _sortColumnIndex = columnIndex;
       _sortAscending = ascending;
 
-      if (dynamic == String) {
+      if (columnIndex == 0) {
+        // ürün adına göre sırala
         if (ascending) {
-          _rows.sort((a, b) => a.cells[columnIndex].child
-              .toString()
-              .compareTo(b.cells[columnIndex].child.toString()));
+          products.sort((a, b) => a.name.compareTo(b.name));
         } else {
-          _rows.sort((a, b) => b.cells[columnIndex].child
-              .toString()
-              .compareTo(a.cells[columnIndex].child.toString()));
+          products.sort((a, b) => b.name.compareTo(a.name));
         }
-      }
-      else {
+      } else if (columnIndex == 1) {
+        // ürün fiyatına göre sırala
         if (ascending) {
-          _rows.sort((a, b) {
-            Text aText = a.cells[columnIndex].child as Text;
-            Text bText = b.cells[columnIndex].child as Text;
-            double aDouble = double.parse(aText.data!.replaceAll(',', '.'));
-            double bDouble = double.parse(bText.data!.replaceAll(',', '.'));
-            return aDouble.compareTo(bDouble);
-          });
+          products.sort((a, b) => a.gram.compareTo(b.gram));
         } else {
-          _rows.sort((a, b) {
-            Text aText = a.cells[columnIndex].child as Text;
-            Text bText = b.cells[columnIndex].child as Text;
-            double aDouble = double.parse(aText.data!.replaceAll(',', '.'));
-            double bDouble = double.parse(bText.data!.replaceAll(',', '.'));
-            return bDouble.compareTo(aDouble);
-          });
+          products.sort((a, b) => b.gram.compareTo(a.gram));
+        }
+      } else if (columnIndex == 2) {
+        // ürün fiyatına göre sırala
+        if (ascending) {
+          products.sort((a, b) => a.price.compareTo(b.price));
+        } else {
+          products.sort((a, b) => b.price.compareTo(a.price));
         }
       }
     });

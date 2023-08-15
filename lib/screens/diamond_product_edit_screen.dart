@@ -7,28 +7,28 @@ import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-class DiamondProductScreen extends StatefulWidget {
+class DiamondProductEditScreen extends StatefulWidget {
   late DiamondProduct product;
-  DiamondProductScreen({super.key, required this.product});
+  DiamondProductEditScreen({super.key, required this.product});
 
   @override
-  State<DiamondProductScreen> createState() => _DiamondProductScreenState(product: product);
+  State<DiamondProductEditScreen> createState() => _DiamondProductEditScreenState(product: product);
 }
 
-class _DiamondProductScreenState extends State<DiamondProductScreen> {
+class _DiamondProductEditScreenState extends State<DiamondProductEditScreen> {
   late DiamondProduct product;
   late TextEditingController nameController;
   late TextEditingController gramController;
   late TextEditingController priceController;
 
-  _DiamondProductScreenState({required this.product}) {
+  _DiamondProductEditScreenState({required this.product}) {
     print(product.id);
     print(product.toJson());
     nameController = TextEditingController();
     gramController = TextEditingController();
     priceController = TextEditingController();
 
-    nameController.text = product.name!;
+    nameController.text = product.name;
     gramController.text = product.gram.toString();
     priceController.text = product.price.toString();
   }

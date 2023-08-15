@@ -10,8 +10,6 @@ class CurrencyService {
   static late double eurBuy;
   static late double eurSale;
 
-  //static String? sFGold;
-
   static var hakanAltin = Uri.parse("https://www.hakanaltin.com");
 
   static var url = Uri.parse("https://www.hasaltin.com/");
@@ -24,12 +22,12 @@ class CurrencyService {
     buildCurrencies(document);
 
     Map<String, double> currencies = {
-      'fineGoldBuy' : fineGoldBuy,
-      'fineGoldSale' : fineGoldSale,
-      'usdBuy' : usdBuy,
-      'usdSale' : usdSale,
-      'eurBuy' : eurBuy,
-      'eurSale' : eurSale,
+      'fineGoldBuy': fineGoldBuy,
+      'fineGoldSale': fineGoldSale,
+      'usdBuy': usdBuy,
+      'usdSale': usdSale,
+      'eurBuy': eurBuy,
+      'eurSale': eurSale,
     };
 
     return currencies;
