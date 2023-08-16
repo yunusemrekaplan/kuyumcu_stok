@@ -19,6 +19,7 @@ class GoldProduct {
 
   GoldProduct({
     required this.isSold,
+    required this.enteredDate,
     required this.barcodeText,
     required this.name,
     required this.carat,
@@ -42,6 +43,8 @@ class GoldProduct {
   Map<String, dynamic> toJson() {
     return {
       'isSold': isSold,
+      'enteredDate': enteredDate,
+      'soldDate': soldDate,
       'barcodeText': barcodeText,
       'name': name,
       'carat': carat.intDefinition,

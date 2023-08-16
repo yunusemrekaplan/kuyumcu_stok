@@ -459,6 +459,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
       Map<String, dynamic> json = GoldProduct(
         isSold: 0,
+        enteredDate: DateTime.now(),
         barcodeText: barcodeNo,
         name: nameController.text,
         carat: dropdownValue,
@@ -468,6 +469,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         purityRate: double.parse(purityRateController.text),
       ).toJson();
       Barcode barcode;
+
       try {
         await GoldProductDbHelper().insert(json).then(
               (value) => {
