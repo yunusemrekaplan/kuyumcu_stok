@@ -3,14 +3,17 @@ import 'package:kuyumcu_stok/enum_carat.dart';
 class GoldProduct {
   late int id;
   late int isSold;
+  late DateTime enteredDate;
+  late DateTime soldDate;
   late String barcodeText;
   late String name;
   late Carat carat; // x
   late double purityRate; // x => z
   late double laborCost; // k
   late double gram; // y
-  //late double costGram; // t
   late double costPrice; // s
+  late double soldPrice;
+  late double earnedProfit;
 
   // ((z + k) * g) * y
 
