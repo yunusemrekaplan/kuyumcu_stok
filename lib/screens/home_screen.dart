@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -45,19 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             TextButton(
               onPressed: () async {
-                List<Map<String, dynamic>> maps;
-                await GoldProductDbHelper().queryAllRows().then((value)
-                {
-                  maps = value;
-                  print(maps.length);
-                  maps.map((e) {
-                    print(e);
-
-                  });
+                await BarcodeService.generateBarcode(BarcodeService.generateCode()).then((value) => () {
+                  print(value.toJson());
                 });
-                //value.map((e) => print(e));
-                //products.add(Product.fromJson(e))
-                //print(products.length);
               },
               child: const Text(
                 'Altın',

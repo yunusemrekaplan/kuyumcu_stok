@@ -1,10 +1,8 @@
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/barcode.dart';
 
 class GoldProduct {
   late int id;
   late String barcodeText;
-  late Barcode barcode;
   late String name;
   late Carat carat; // x
   late double purityRate; // x => z

@@ -5,7 +5,7 @@ import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/barcode.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
-import 'package:kuyumcu_stok/services/isbn_service.dart';
+import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -40,7 +40,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     purityRateController = TextEditingController();
     costPriceController = TextEditingController();
     laborCostController = TextEditingController();
-    purityRateController.text = dropdownValue.purityRateDefinition.toString();
+    purityRateController.text = dropdownValue.purityRateDefinition.toStringAsFixed(0);
   }
 
   @override
@@ -71,7 +71,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    backgroundColor:
+                        MaterialStateProperty.resolveWith((states) {
                       if (states.contains(MaterialState.hovered)) {
                         return Colors.green;
                       }
@@ -135,7 +136,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     );
   }
 
-  void onSavedFun() {
+  void onSavedFun() async {
     if (barcodeNo == '0000000000000') {
       showDialog(
         context: context,
@@ -143,13 +144,17 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           title: const Text('Barkod oluşturun!'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
               child: const Text('Tamam'),
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         ),
       );
-    } else if (nameController.text.isEmpty) {
+    } else if (nameController.text.isEmpty ||
+        NumberValidator.validate(gramController.text) != null ||
+        NumberValidator.validate(purityRateController.text) != null ||
+        NumberValidator.validate(laborCostController.text) != null ||
+        NumberValidator.validate(costPriceController.text) != null) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -163,23 +168,12 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         ),
       );
     } else {
-      if (NumberValidator.validate(gramController.text) != null ||
-          NumberValidator.validate(purityRateController.text) != null ||
-          NumberValidator.validate(laborCostController.text) != null ||
-          NumberValidator.validate(costPriceController.text) != null) {
-        showDialog(
+      showDialog(
+          barrierDismissible: false,
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Boş alanları doldurun!'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Tamam'),
-              ),
-            ],
-          ),
-        );
-      }
+          builder: (context) {
+            return const Center(child: CircularProgressIndicator());
+          });
 
       Map<String, dynamic> json = GoldProduct(
         barcodeText: barcodeNo,
@@ -192,48 +186,35 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       ).toJson();
       Barcode barcode;
       try {
-        GoldProductDbHelper().insert(json).then(
+        await GoldProductDbHelper().insert(json).then(
               (value) => {
                 GoldProductDbHelper().products.add(
                       GoldProduct.fromJson(json, value),
                     ),
                 print('id: $value'),
+                BarcodeService.generateBarcode(barcodeNo).then(
+                  (value) => {
+                    barcode = value,
+                    BarcodeDbHelper().insert(barcode.toJson()).then(
+                          (value) => {
+                            print(barcode.toJson()),
+                            setState(
+                              () {
+                                barcodeNo = '0000000000000';
+                                nameController.text = '';
+                                gramController.text = '';
+                                costGramController.text = '';
+                                purityRateController.text = dropdownValue
+                                    .purityRateDefinition
+                                    .toString();
+                                costPriceController.text = '';
+                                laborCostController.text = '';
 
-                IsbnService.generateBarcode(barcodeNo).then((value) => {
-                  barcode = value,
-                  BarcodeDbHelper().insert(barcode.toJson()).then(
-                        (value) => {
-                      print(barcode.toJson()),
-                      setState(
-                            () {
-                          barcodeNo = '0000000000000';
-                          nameController.text = '';
-                          gramController.text = '';
-                          costGramController.text = '';
-                          purityRateController.text = dropdownValue.purityRateDefinition.toString();
-                          costPriceController.text = '';
-                          laborCostController.text = '';
-
-                          Navigator.of(context).pop();
-                          //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
-                        },
-                      ),
-                    },
-                  ),
-                },),
-                setState(
-                  () {
-                    barcodeNo = '0000000000000';
-                    nameController.text = '';
-                    gramController.text = '';
-                    costGramController.text = '';
-                    purityRateController.text =
-                        dropdownValue.purityRateDefinition.toString();
-                    costPriceController.text = '';
-                    laborCostController.text = '';
-
-                    Navigator.of(context).pop();
-                    //Navigator.of(context).popAndPushNamed('/gold-product-add-screen');
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          },
+                        ),
                   },
                 ),
               },
@@ -252,12 +233,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ),
         );
       }
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          });
     }
   }
 
@@ -292,7 +267,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               ),
             ),
             onPressed: () {
-              barcodeNo = IsbnService.generateCode();
+              barcodeNo = BarcodeService.generateCode();
               setState(() {
                 barcodeNo;
               });
