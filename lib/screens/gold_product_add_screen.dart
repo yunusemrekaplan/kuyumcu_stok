@@ -150,7 +150,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ],
         ),
       );
-    } else if (nameController.text.isEmpty ||
+    }
+    else if (nameController.text.isEmpty ||
         NumberValidator.validate(gramController.text) != null ||
         NumberValidator.validate(purityRateController.text) != null ||
         NumberValidator.validate(laborCostController.text) != null ||
@@ -167,7 +168,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ],
         ),
       );
-    } else {
+    }
+    else {
       showDialog(
           barrierDismissible: false,
           context: context,

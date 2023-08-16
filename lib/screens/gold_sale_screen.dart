@@ -412,7 +412,28 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 24, top: 80),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () async {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) {
+                return const Center(child: CircularProgressIndicator());
+              });
+          product!.isSold = 1;
+          GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) => {
+            Navigator.of(context).pop(),
+            print(product!.toJson()),
+            setState(() {
+              caratTxt = '..';
+              gramTxt = '..';
+              costTxt = '....';
+              priceTxt = '....';
+              barcodeTextEditingController.text = '';
+              earningRateTextEditingController.text = '';
+              saleTextEditingController.text = '';
+            }),
+          });
+        },
         child: const Text(
           'Satışı Onayla',
           style: TextStyle(
