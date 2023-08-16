@@ -8,6 +8,8 @@ import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:kuyumcu_stok/widgets/styles/button_styles.dart';
+import 'package:kuyumcu_stok/widgets/styles/decoration_styles.dart';
 
 import '../enum_carat.dart';
 
@@ -40,7 +42,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     purityRateController = TextEditingController();
     costPriceController = TextEditingController();
     laborCostController = TextEditingController();
-    purityRateController.text = dropdownValue.purityRateDefinition.toStringAsFixed(0);
+    purityRateController.text =
+        dropdownValue.purityRateDefinition.toStringAsFixed(0);
   }
 
   @override
@@ -65,178 +68,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               height: 10,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.hovered)) {
-                        return Colors.green;
-                      }
-                      return Colors.grey[600];
-                    }),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/gold-products-screen', (route) => false);
-                  },
-                  child: const Text(
-                    'Geri Dön',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          buildBackButtonRow(),
         ],
       ),
     );
-  }
-
-  Padding buildSaveButtonRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.hovered)) {
-                  if (barcodeNo == '0000000000000' ||
-                      nameController.text.isEmpty ||
-                      purityRateController.text.isEmpty ||
-                      laborCostController.text.isEmpty ||
-                      gramController.text.isEmpty ||
-                      costPriceController.text.isEmpty) {
-                    return Colors.red;
-                  } else {
-                    return Colors.green;
-                  }
-                }
-                return Colors.grey[600];
-              }),
-            ),
-            onPressed: onSavedFun,
-            child: const Text(
-              'Kaydet',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void onSavedFun() async {
-    if (barcodeNo == '0000000000000') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Barkod oluşturun!'),
-          actions: [
-            TextButton(
-              child: const Text('Tamam'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    }
-    else if (nameController.text.isEmpty ||
-        NumberValidator.validate(gramController.text) != null ||
-        NumberValidator.validate(purityRateController.text) != null ||
-        NumberValidator.validate(laborCostController.text) != null ||
-        NumberValidator.validate(costPriceController.text) != null) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Boş alanları doldurun!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Tamam'),
-            ),
-          ],
-        ),
-      );
-    }
-    else {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return const Center(child: CircularProgressIndicator());
-          });
-
-      Map<String, dynamic> json = GoldProduct(
-        isSold: 0,
-        barcodeText: barcodeNo,
-        name: nameController.text,
-        carat: dropdownValue,
-        gram: double.parse(gramController.text),
-        laborCost: double.parse(laborCostController.text),
-        costPrice: double.parse(costPriceController.text),
-        purityRate: double.parse(purityRateController.text),
-      ).toJson();
-      Barcode barcode;
-      try {
-        await GoldProductDbHelper().insert(json).then(
-              (value) => {
-                GoldProductDbHelper().products.add(
-                      GoldProduct.fromJson(json, value),
-                    ),
-                print('id: $value'),
-                BarcodeService.generateBarcode(barcodeNo).then(
-                  (value) => {
-                    barcode = value,
-                    BarcodeDbHelper().insert(barcode.toJson()).then(
-                          (value) => {
-                            print(barcode.toJson()),
-                            setState(
-                              () {
-                                barcodeNo = '0000000000000';
-                                nameController.text = '';
-                                gramController.text = '';
-                                costGramController.text = '';
-                                purityRateController.text = dropdownValue
-                                    .purityRateDefinition
-                                    .toString();
-                                costPriceController.text = '';
-                                laborCostController.text = '';
-
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          },
-                        ),
-                  },
-                ),
-              },
-            );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Tamam'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
   }
 
   Padding buildBarcodeRow() {
@@ -259,16 +94,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             ),
           ),
           ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Colors.green;
-                  }
-                  return Colors.grey[600];
-                },
-              ),
-            ),
+            style: ButtonStyleWidgets.buildBackButtonStyle(),
             onPressed: () {
               barcodeNo = BarcodeService.generateCode();
               setState(() {
@@ -306,7 +132,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
-            decoration: buildInputDecoration(const Size(150, 35)),
+            decoration: DecorationStyleWidgets.buildInputDecoration(const Size(150, 35)),
+            onChanged: (value) {
+              setState(() {});
+            },
           ),
         ],
       ),
@@ -332,7 +161,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               icon: const Icon(Icons.arrow_downward),
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                constraints: buildBoxConstraints(const Size(100, 120)),
+                constraints: DecorationStyleWidgets.buildBoxConstraints(const Size(100, 120)),
               ),
               items: Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
                 return DropdownMenuItem<Carat>(
@@ -395,8 +224,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: buildInputDecoration(const Size(100, 35)),
+            decoration: DecorationStyleWidgets.buildInputDecoration(const Size(100, 35)),
             onChanged: (value) {
+              setState(() {});
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
@@ -438,8 +268,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: buildInputDecoration(const Size(100, 35)),
+            decoration: DecorationStyleWidgets.buildInputDecoration(const Size(100, 35)),
             onChanged: (value) {
+              setState(() {});
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
@@ -481,8 +312,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: buildInputDecoration(const Size(100, 35)),
+            decoration: DecorationStyleWidgets.buildInputDecoration(const Size(100, 35)),
             onChanged: (value) {
+              setState(() {});
               if (purityRateController.text.isNotEmpty &&
                   gramController.text.isNotEmpty &&
                   laborCostController.text.isNotEmpty) {
@@ -496,35 +328,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                 });
               }
             },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding buildCostGramRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          const Text(
-            'Gram Maliyeti: ',
-            style: TextStyle(
-              fontSize: 24,
-            ),
-          ),
-          // ToDo validatörleri unutma!!!
-          TextFormField(
-            validator: NumberValidator.validate,
-            controller: costGramController,
-            style: const TextStyle(
-              fontSize: 18,
-              height: 1,
-            ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            decoration: buildInputDecoration(const Size(100, 35)),
           ),
         ],
       ),
@@ -553,21 +356,167 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: buildInputDecoration(const Size(125, 35)),
+            decoration: DecorationStyleWidgets.buildInputDecoration(const Size(125, 35)),
+            onChanged: (value) {
+              setState(() {});
+            },
           ),
         ],
       ),
     );
   }
 
-  BoxConstraints buildBoxConstraints(Size size) => BoxConstraints.tight(size);
-
-  InputDecoration buildInputDecoration(Size size) {
-    return InputDecoration(
-      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 20),
-      border: const OutlineInputBorder(),
-      constraints: buildBoxConstraints(size),
-      //hintText: '9789756249840',
+  Padding buildBackButtonRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          ElevatedButton(
+            style: ButtonStyleWidgets.buildBackButtonStyle(),
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/gold-products-screen', (route) => false);
+            },
+            child: const Text(
+              'Geri Dön',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
+
+  Padding buildSaveButtonRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          ElevatedButton(
+            style: ButtonStyleWidgets.buildSaveButtonStyle(
+              barcodeNo,
+              nameController.text,
+              purityRateController.text,
+              laborCostController.text,
+              gramController.text,
+              costPriceController.text,
+            ),
+            onPressed: onSavedFun,
+            child: const Text(
+              'Kaydet',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void onSavedFun() async {
+    if (barcodeNo == '0000000000000') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Barkod oluşturun!'),
+          actions: [
+            TextButton(
+              child: const Text('Tamam'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    } else if (nameController.text.isEmpty ||
+        NumberValidator.validate(gramController.text) != null ||
+        NumberValidator.validate(purityRateController.text) != null ||
+        NumberValidator.validate(laborCostController.text) != null ||
+        NumberValidator.validate(costPriceController.text) != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Boş alanları doldurun!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return const Center(child: CircularProgressIndicator());
+          });
+
+      Map<String, dynamic> json = GoldProduct(
+        isSold: 0,
+        barcodeText: barcodeNo,
+        name: nameController.text,
+        carat: dropdownValue,
+        gram: double.parse(gramController.text),
+        laborCost: double.parse(laborCostController.text),
+        costPrice: double.parse(costPriceController.text),
+        purityRate: double.parse(purityRateController.text),
+      ).toJson();
+      Barcode barcode;
+      try {
+        await GoldProductDbHelper().insert(json).then(
+              (value) => {
+            GoldProductDbHelper().products.add(
+              GoldProduct.fromJson(json, value),
+            ),
+            print('id: $value'),
+            BarcodeService.generateBarcode(barcodeNo).then(
+                  (value) => {
+                barcode = value,
+                BarcodeDbHelper().insert(barcode.toJson()).then(
+                      (value) => {
+                    print(barcode.toJson()),
+                    setState(
+                          () {
+                        barcodeNo = '0000000000000';
+                        nameController.text = '';
+                        gramController.text = '';
+                        costGramController.text = '';
+                        purityRateController.text = dropdownValue
+                            .purityRateDefinition
+                            .toString();
+                        costPriceController.text = '';
+                        laborCostController.text = '';
+
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  },
+                ),
+              },
+            ),
+          },
+        );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Tamam'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
 }
