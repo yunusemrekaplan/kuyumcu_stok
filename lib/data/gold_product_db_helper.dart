@@ -22,8 +22,8 @@ class GoldProductDbHelper {
     sqfliteFfiInit();
 
     String path = 'kuyumcu.db';
-
     _db = await databaseFactoryFfi.openDatabase(path);
+    //await _db!.execute('DROP TABLE product_golds');
     await _createTable();
   }
 
@@ -32,7 +32,8 @@ class GoldProductDbHelper {
       CREATE TABLE IF NOT EXISTS product_golds (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         barcodeText TEXT NOT NULL,
-        name TEXT,
+        name TEXT NOT NULL,
+        isSold INTEGER NOT NULL,
         carat INTEGER NOT NULL,
         purityRate DECIMAL NOT NULL,
         laborCost DECIMAL NOT NULL,

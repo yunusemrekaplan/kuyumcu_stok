@@ -176,6 +176,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           });
 
       Map<String, dynamic> json = GoldProduct(
+        isSold: 0,
         barcodeText: barcodeNo,
         name: nameController.text,
         carat: dropdownValue,
@@ -348,7 +349,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                 setState(() {
                   dropdownValue = newValue!;
                   purityRateController.text =
-                      dropdownValue.purityRateDefinition.toString();
+                      dropdownValue.purityRateDefinition.toStringAsFixed(0);
                 });
                 if (purityRateController.text.isNotEmpty &&
                     gramController.text.isNotEmpty &&

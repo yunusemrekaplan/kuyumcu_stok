@@ -2,6 +2,7 @@ import 'package:kuyumcu_stok/enum_carat.dart';
 
 class GoldProduct {
   late int id;
+  late int isSold;
   late String barcodeText;
   late String name;
   late Carat carat; // x
@@ -14,6 +15,7 @@ class GoldProduct {
   // ((z + k) * g) * y
 
   GoldProduct({
+    required this.isSold,
     required this.barcodeText,
     required this.name,
     required this.carat,
@@ -24,6 +26,7 @@ class GoldProduct {
   });
 
   GoldProduct.fromJson(Map<String, dynamic> json, this.id) {
+    isSold = json['isSold'];
     barcodeText = json['barcodeText'];
     name = json['name'];
     carat = toCarat(json['carat'])!;
@@ -35,6 +38,7 @@ class GoldProduct {
 
   Map<String, dynamic> toJson() {
     return {
+      'isSold': isSold,
       'barcodeText': barcodeText,
       'name': name,
       'carat': carat.intDefinition,
