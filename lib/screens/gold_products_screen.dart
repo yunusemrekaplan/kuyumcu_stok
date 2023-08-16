@@ -58,7 +58,7 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                         Expanded(
                           child: DataTable(
                             headingRowColor:
-                            MaterialStateProperty.resolveWith((states) {
+                                MaterialStateProperty.resolveWith((states) {
                               return Colors.grey[400];
                             }),
                             sortColumnIndex: _sortColumnIndex,
@@ -150,12 +150,16 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                               ),
                             ],
                             rows: products
+                                .where(
+                                  (e) => e.isSold == 0,
+                                )
                                 .map(
                                   (e) => DataRow(
-                                    color:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                          (Set<MaterialState> states) {
-                                        if (states.contains(MaterialState.hovered)) {
+                                    color: MaterialStateProperty.resolveWith<
+                                        Color?>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.hovered)) {
                                           return Colors.grey[400];
                                         }
                                         return null;
@@ -186,36 +190,41 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                                         e.costPrice.toString(),
                                         style: const TextStyle(fontSize: 20),
                                       )),
-                                      DataCell(Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                GoldProductDbHelper()
-                                                    .products
-                                                    .remove(e);
-                                                GoldProductDbHelper()
-                                                    .delete(e.id);
-                                              });
-                                            },
-                                            icon: const Icon(Icons.delete),
-                                            color: Colors.red[800],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
+                                      DataCell(
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(
+                                                  () {
+                                                    GoldProductDbHelper()
+                                                        .products
+                                                        .remove(e);
+                                                    GoldProductDbHelper()
+                                                        .delete(e.id);
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.delete),
+                                              color: Colors.red[800],
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
                                                       builder: (BuildContext
-                                                      context) =>
+                                                              context) =>
                                                           GoldProductEditScreen(
-                                                              product: e)),
-                                                      (route) => false);
-                                            },
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                        ],
-                                      )),
+                                                              product: e),
+                                                    ),
+                                                    (route) => false);
+                                              },
+                                              icon: const Icon(Icons.edit),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                     onSelectChanged: (selected) {},
                                   ),
@@ -236,13 +245,14 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                 child: Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 25.0, bottom: 15, top: 15),
+                      padding: const EdgeInsets.only(
+                          left: 25.0, bottom: 15, top: 15),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                              if (states
-                                  .contains(MaterialState.hovered)) {
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.hovered)) {
                                 return Colors.green;
                               }
                               return Colors.grey[600];

@@ -43,7 +43,6 @@ class GoldProductDbHelper {
     ''');
   }
 
-
   Future<void> close() async {
     await _db!.close();
   }
@@ -60,6 +59,22 @@ class GoldProductDbHelper {
     return await _db!.query(tableName);
   }
 
+  Future<List<Map<String, dynamic>>> querySoldRows() async {
+    return await _db!.query(
+      tableName,
+      where: 'isSold = ?',
+      whereArgs: [1],
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> queryNotSoldRows() async {
+    return await _db!.query(
+      tableName,
+      where: 'isSold = ?',
+      whereArgs: [0],
+    );
+  }
+
   Future<Map<String, dynamic>?> getProductById(int id) async {
     final List<Map<String, dynamic>> results = await _db!.query(
       tableName,
@@ -74,7 +89,8 @@ class GoldProductDbHelper {
     return null;
   }
 
-  Future<Map<String, dynamic>?> getProductByBarcodeText(String barcodeText) async {
+  Future<Map<String, dynamic>?> getProductByBarcodeText(
+      String barcodeText) async {
     final List<Map<String, dynamic>> results = await _db!.query(
       tableName,
       where: 'barcodeText = ?',
