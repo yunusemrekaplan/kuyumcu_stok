@@ -147,7 +147,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                   ),
                                   cells: [
                                     DataCell(Text(
-                                      DateFormat.yMd().format(e.soldDate!),
+                                      '${DateFormat.yMd().format(e.soldDate!)}  ${DateFormat.Hm().format(e.soldDate!)}' ,
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
