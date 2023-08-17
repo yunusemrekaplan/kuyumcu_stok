@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
@@ -33,28 +32,32 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
-  await BarcodeDbHelper().open();
-  await GoldProductDbHelper().open();
-  await DiamondProductDbHelper().open();
-  await CurrencyService.getGoldPrices();
-
-  var goldList = await GoldProductDbHelper().queryAllRows().then((value) => value);
+  BarcodeDbHelper().open();
   List<GoldProduct> goldProducts = [];
-
-  var diamondList = await DiamondProductDbHelper().queryAllRows().then((value) => value);
   List<DiamondProduct> diamondProducts = [];
 
-  for(int i=0; i<goldList.length; i++) {
-    goldProducts.add(GoldProduct.fromJson(goldList[i], goldList[i]['id']));
-  }
-  GoldProductDbHelper().products = goldProducts;
-
-  for(int i=0; i<diamondList.length; i++) {
-    diamondProducts.add(DiamondProduct.fromJson(diamondList[i]));
-  }
-  DiamondProductDbHelper().products = diamondProducts;
-
-  runApp(const MyApp());
+  CurrencyService.getGoldPrices().then((value) => {
+        GoldProductDbHelper().open().then((value) => {
+              GoldProductDbHelper().queryAllRows().then((value) => {
+                    for (int i = 0; i < value.length; i++)
+                      {
+                        goldProducts.add(
+                            GoldProduct.fromJson(value[i], value[i]['id'])),
+                      }
+                  }),
+            }),
+        DiamondProductDbHelper().open().then((value) => {
+              DiamondProductDbHelper().queryAllRows().then((value) => {
+                    for (int i = 0; i < value.length; i++)
+                      {
+                        diamondProducts.add(DiamondProduct.fromJson(value[i])),
+                      }
+                  }),
+            }),
+        GoldProductDbHelper().products = goldProducts,
+        DiamondProductDbHelper().products = diamondProducts,
+        runApp(const MyApp()),
+      });
 }
 
 class MyApp extends StatelessWidget {
@@ -63,6 +66,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+      return Center(
+        child: Text(
+          "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+          style: TextStyle(fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
+      );
+    };
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -71,12 +83,17 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (BuildContext context) => const HomeScreen(),
-        '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
-        '/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
-        '/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
+        '/gold-products-inventory-screen': (BuildContext context) =>
+            const GoldProductsInventoryScreen(),
+        '/gold-products-sold-screen': (BuildContext context) =>
+            const GoldProductsSoldScreen(),
+        '/diamond-products-screen': (BuildContext context) =>
+            const DiamondProductsScreen(),
         '/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
-        '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
-        '/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
+        '/gold-product-add-screen': (BuildContext context) =>
+            const GoldProductAddScreen(),
+        '/diamond-product-add-screen': (BuildContext context) =>
+            const DiamondProductAddScreen(),
       },
       initialRoute: '/',
     );

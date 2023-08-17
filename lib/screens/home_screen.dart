@@ -1,7 +1,5 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -34,6 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+      return const Center(
+        child: Text(
+          "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+          style: TextStyle(fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
+      );
+    };
     return Scaffold(
       appBar: AppBar(),
       drawer: const MyDrawer(),
@@ -59,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Text(
               gold,
-              style: TextStyle(fontSize: 50),
+              style: const TextStyle(fontSize: 50),
             ),
           ],
         ),
