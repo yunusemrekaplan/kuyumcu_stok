@@ -465,7 +465,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         carat: dropdownValue,
         gram: double.parse(gramController.text),
         laborCost: double.parse(laborCostController.text),
-        costPrice: double.parse(costPriceController.text),
+        cost: double.parse(costPriceController.text),
         purityRate: double.parse(purityRateController.text),
       ).toJson();
       Barcode barcode;

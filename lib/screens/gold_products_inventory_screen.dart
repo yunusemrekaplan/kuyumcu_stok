@@ -5,20 +5,20 @@ import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-class GoldProductsScreen extends StatefulWidget {
-  const GoldProductsScreen({super.key});
+class GoldProductsInventoryScreen extends StatefulWidget {
+  const GoldProductsInventoryScreen({super.key});
 
   @override
-  State<GoldProductsScreen> createState() => _GoldProductsScreenState();
+  State<GoldProductsInventoryScreen> createState() => _GoldProductsInventoryScreenState();
 }
 
-class _GoldProductsScreenState extends State<GoldProductsScreen> {
+class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScreen> {
   late List<GoldProduct> products;
 
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
 
-  _GoldProductsScreenState() {
+  _GoldProductsInventoryScreenState() {
     products = GoldProductDbHelper().products;
   }
 
@@ -187,7 +187,7 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(Text(
-                                        e.costPrice.toString(),
+                                        e.cost.toString(),
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(
@@ -321,9 +321,9 @@ class _GoldProductsScreenState extends State<GoldProductsScreen> {
         }
       } else if (columnIndex == 5) {
         if (ascending) {
-          products.sort((a, b) => a.costPrice.compareTo(b.costPrice));
+          products.sort((a, b) => a.cost.compareTo(b.cost));
         } else {
-          products.sort((a, b) => b.costPrice.compareTo(a.costPrice));
+          products.sort((a, b) => b.cost.compareTo(a.cost));
         }
       }
     });

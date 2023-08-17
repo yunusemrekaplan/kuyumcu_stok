@@ -169,7 +169,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                   product = GoldProductDbHelper().products[i];
                   caratTxt = product!.carat.intDefinition.toString();
                   gramTxt = product!.gram.toStringAsFixed(0);
-                  costTxt = product!.costPrice.toStringAsFixed(0);
+                  costTxt = product!.cost.toStringAsFixed(0);
                   double temp;
                   CurrencyService.getGoldPrices().then((value) =>{
                     print('girdi'),
@@ -421,6 +421,8 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
               });
           double earnedProfit = double.parse(saleTextEditingController.text) - double.parse(priceTxt);
           product!.isSold = 1;
+          product!.costPrice = double.parse(priceTxt);
+          product!.soldPrice = double.parse(saleTextEditingController.text);
           product!.soldDate = DateTime.now();
           product!.earnedProfit = earnedProfit;
           GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) => {

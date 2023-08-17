@@ -39,7 +39,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     nameController.text = product.name.toString();
     gramController.text = product.gram.toString();
     purityRateController.text = dropdownValue.purityRateDefinition.toString();
-    costPriceController.text = product.costPrice.toString();
+    costPriceController.text = product.cost.toString();
     laborCostController.text = product.laborCost.toString();
   }
 
@@ -134,7 +134,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     product.carat = dropdownValue;
     product.gram = double.parse(gramController.text);
     product.laborCost = double.parse(laborCostController.text);
-    product.costPrice = double.parse(costPriceController.text);
+    product.cost = double.parse(costPriceController.text);
     product.purityRate = double.parse(purityRateController.text);
 
     for (int i = 0; i < GoldProductDbHelper().products.length; i++) {

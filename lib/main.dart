@@ -9,7 +9,7 @@ import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_product_add_screen.dart';
-import 'package:kuyumcu_stok/screens/gold_products_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_products_inventory_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_sale_screen.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/': (BuildContext context) => const HomeScreen(),
-        '/gold-products-screen': (BuildContext context) => const GoldProductsScreen(),
+        '/gold-products-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
         '/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
         '/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
         '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),

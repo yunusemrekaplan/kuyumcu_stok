@@ -11,6 +11,7 @@ class GoldProduct {
   late double purityRate; // x => z
   late double laborCost; // k
   late double gram; // y
+  late double cost; // s
   late double costPrice; // s
   late double soldPrice;
   late double earnedProfit;
@@ -26,13 +27,15 @@ class GoldProduct {
     required this.gram,
     required this.purityRate,
     required this.laborCost,
-    required this.costPrice,
+    required this.cost,
   });
 
   GoldProduct.fromJson(Map<String, dynamic> json, this.id) {
     isSold = json['isSold'];
     if (isSold == 1) {
       soldDate = DateTime.tryParse(json['soldDate']);
+      costPrice = json['costPrice'];
+      soldPrice = json['soldPrice'];
       earnedProfit = json['earnedProfit'];
     }
     enteredDate = DateTime.parse(json['enteredDate']);
@@ -42,7 +45,7 @@ class GoldProduct {
     gram = json['gram']!.toDouble();
     purityRate = json['purityRate']!.toDouble();
     laborCost = json['laborCost']!.toDouble();
-    costPrice = json['costPrice']!.toDouble();
+    cost = json['cost']!.toDouble();
   }
 
   Map<String, dynamic> toJson() {
@@ -56,7 +59,7 @@ class GoldProduct {
         'gram': gram,
         'purityRate': purityRate,
         'laborCost': laborCost,
-        'costPrice': costPrice,
+        'cost': cost,
       };
     }
     else {
@@ -70,7 +73,9 @@ class GoldProduct {
         'gram': gram,
         'purityRate': purityRate,
         'laborCost': laborCost,
+        'cost': cost,
         'costPrice': costPrice,
+        'soldPrice': soldPrice,
         'earnedProfit': earnedProfit,
       };
     }

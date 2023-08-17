@@ -23,7 +23,7 @@ class GoldProductDbHelper {
 
     String path = 'kuyumcu.db';
     _db = await databaseFactoryFfi.openDatabase(path);
-    //await _db!.execute('DROP TABLE product_golds');
+    await _db!.execute('DROP TABLE product_golds');
     await _createTable();
   }
 
@@ -40,7 +40,9 @@ class GoldProductDbHelper {
         purityRate DECIMAL NOT NULL,
         laborCost DECIMAL NOT NULL,
         gram DECIMAL NOT NULL,
-        costPrice DECIMAL NOT NULL,
+        cost DECIMAL NOT NULL,
+        costPrice DECIMAL,
+        soldPrice DECIMAL,
         earnedProfit DECIMAL
       )
     ''');
