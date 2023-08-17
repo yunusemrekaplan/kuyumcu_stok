@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -74,10 +75,10 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                           columns: [
                             DataColumn(
                               label: SizedBox(
-                                width: width * .1,
+                                width: width * .09,
                                 child: const Text(
                                   'Satış Tarihi',
-                                  style: TextStyle(fontSize: 22),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                               ),
                               onSort: (columnIndex, ascending) =>
@@ -88,7 +89,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                 width: width * .1,
                                 child: const Text(
                                   'İsim',
-                                  style: TextStyle(fontSize: 22),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                               ),
                               onSort: (columnIndex, ascending) =>
@@ -96,10 +97,10 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                             ),
                             DataColumn(
                               label: SizedBox(
-                                width: width * .1,
+                                width: width * .11,
                                 child: const Text(
                                   'Maliyet Fiyat',
-                                  style: TextStyle(fontSize: 22),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                               ),
                               onSort: (columnIndex, ascending) =>
@@ -110,7 +111,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                 width: width * .1,
                                 child: const Text(
                                   'Satılan Fiyat',
-                                  style: TextStyle(fontSize: 22),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                               ),
                               onSort: (columnIndex, ascending) =>
@@ -118,10 +119,10 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                             ),
                             DataColumn(
                               label: SizedBox(
-                                width: width * .1,
+                                width: width * .05,
                                 child: const Text(
                                   'Kar',
-                                  style: TextStyle(fontSize: 22),
+                                  style: TextStyle(fontSize: 20),
                                 ),
                               ),
                               onSort: (columnIndex, ascending) =>
@@ -146,7 +147,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                   ),
                                   cells: [
                                     DataCell(Text(
-                                      e.soldDate!.toIso8601String(),
+                                      DateFormat.yMd().format(e.soldDate!),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
@@ -162,7 +163,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.earnedProfit.toString(),
+                                      e.earnedProfit.toStringAsFixed(0),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                   ],
