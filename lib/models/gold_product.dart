@@ -35,8 +35,8 @@ class GoldProduct {
     if (isSold == 1) {
       soldDate = DateTime.tryParse(json['soldDate']);
       costPrice = double.parse(json['costPrice'].toString());
-      soldPrice = json['soldPrice'];
-      earnedProfit = json['earnedProfit'];
+      soldPrice = double.parse(json['soldPrice'].toString());
+      earnedProfit = double.parse(json['earnedProfit'].toString());
     }
     enteredDate = DateTime.parse(json['enteredDate']);
     barcodeText = json['barcodeText'];
