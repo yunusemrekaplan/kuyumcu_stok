@@ -76,7 +76,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                               label: SizedBox(
                                 width: width * .1,
                                 child: const Text(
-                                  'Satıldığı Tarih',
+                                  'Satış Tarihi',
                                   style: TextStyle(fontSize: 22),
                                 ),
                               ),
@@ -88,6 +88,17 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                 width: width * .1,
                                 child: const Text(
                                   'İsim',
+                                  style: TextStyle(fontSize: 22),
+                                ),
+                              ),
+                              onSort: (columnIndex, ascending) =>
+                                  _sortData(columnIndex, ascending),
+                            ),
+                            DataColumn(
+                              label: SizedBox(
+                                width: width * .1,
+                                child: const Text(
+                                  'Maliyet Fiyat',
                                   style: TextStyle(fontSize: 22),
                                 ),
                               ),
@@ -110,39 +121,6 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                 width: width * .1,
                                 child: const Text(
                                   'Kar',
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .1,
-                                child: const Text(
-                                  'İşçilik',
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .1,
-                                child: const Text(
-                                  'Karat',
-                                  style: TextStyle(fontSize: 22),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .1,
-                                child: const Text(
-                                  'Gram',
                                   style: TextStyle(fontSize: 22),
                                 ),
                               ),
@@ -176,60 +154,17 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.cost,
+                                      e.costPrice.toStringAsFixed(0),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.carat.intDefinition.toString(),
+                                      e.soldPrice.toStringAsFixed(0),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.purityRate.toString(),
+                                      e.earnedProfit.toString(),
                                       style: const TextStyle(fontSize: 20),
                                     )),
-                                    DataCell(Text(
-                                      e.laborCost.toString(),
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                    DataCell(Text(
-                                      e.cost.toString(),
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                    DataCell(
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              setState(
-                                                () {
-                                                  GoldProductDbHelper()
-                                                      .products
-                                                      .remove(e);
-                                                  GoldProductDbHelper()
-                                                      .delete(e.id);
-                                                },
-                                              );
-                                            },
-                                            icon: const Icon(Icons.delete),
-                                            color: Colors.red[800],
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.pushAndRemoveUntil(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        GoldProductEditScreen(
-                                                            product: e),
-                                                  ),
-                                                  (route) => false);
-                                            },
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ],
                                   onSelectChanged: (selected) {},
                                 ),
@@ -245,44 +180,48 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                 ),
               ),
             ),
-            Container(
-              color: Colors.white,
-              child: Row(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 25.0, bottom: 15, top: 15),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.hovered)) {
-                              return Colors.green;
-                            }
-                            return Colors.grey[600];
-                          },
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(context,
-                            '/gold-product-add-screen', (route) => false);
-                      },
-                      child: const Text(
-                        'Ürün Ekle',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
     );
   }
+  void _sortData(int columnIndex, bool ascending) {
+    setState(() {
+      _sortColumnIndex = columnIndex;
+      _sortAscending = ascending;
+
+      if (columnIndex == 0) {
+        if (ascending) {
+          products.sort((a, b) => a.soldDate!.compareTo(b.soldDate!));
+        } else {
+          products.sort((a, b) => b.soldDate!.compareTo(a.soldDate!));
+        }
+      } else if (columnIndex == 1) {
+        if (ascending) {
+          products.sort((a, b) => a.name.compareTo(b.name));
+        } else {
+          products.sort((a, b) => b.name.compareTo(a.name));
+        }
+      } else if (columnIndex == 2) {
+        if (ascending) {
+          products.sort((a, b) => a.costPrice.compareTo(b.costPrice));
+        } else {
+          products.sort((a, b) => b.costPrice.compareTo(a.costPrice));
+        }
+      } else if (columnIndex == 3) {
+        if (ascending) {
+          products.sort((a, b) => a.soldPrice.compareTo(b.soldPrice));
+        } else {
+          products.sort((a, b) => b.soldPrice.compareTo(a.soldPrice));
+        }
+      } else if (columnIndex == 4) {
+        if (ascending) {
+          products.sort((a, b) => a.earnedProfit.compareTo(b.earnedProfit));
+        } else {
+          products.sort((a, b) => b.earnedProfit.compareTo(a.earnedProfit));
+        }
+      }
+    });
+  }
+
 }
