@@ -155,15 +155,15 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.costPrice.toStringAsFixed(0),
+                                        NumberFormat('#,##0.00', 'tr_TR').format(e.costPrice),//e.costPrice.toStringAsFixed(0),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.soldPrice.toStringAsFixed(0),
+                                      NumberFormat('#,##0.00', 'tr_TR').format(e.soldPrice),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      e.earnedProfit.toStringAsFixed(0),
+                                      NumberFormat('#,##0.00', 'tr_TR').format(e.earnedProfit),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                   ],
