@@ -27,7 +27,7 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('Altınlar'),
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-products-screen', (route) => false);
+                  context, '/gold-products-inventory-screen', (route) => false);
             },
           ),
           ListTile(
@@ -44,6 +44,13 @@ class _MyDrawerState extends State<MyDrawer> {
                   context, '/gold-sale-screen', (route) => false);
             },
           ),
+          ListTile(
+            title: const Text('Satılan Alınlar'),
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/gold-products-sold-screen', (route) => false);
+            },),
+
         ],
       ),
     );
