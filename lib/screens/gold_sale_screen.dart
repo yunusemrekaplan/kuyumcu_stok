@@ -419,7 +419,10 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
               builder: (context) {
                 return const Center(child: CircularProgressIndicator());
               });
+          double earnedProfit = double.parse(saleTextEditingController.text) - double.parse(priceTxt);
           product!.isSold = 1;
+          product!.soldDate = DateTime.now();
+          product!.earnedProfit = earnedProfit;
           GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) => {
             Navigator.of(context).pop(),
             print(product!.toJson()),

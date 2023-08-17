@@ -32,13 +32,16 @@ class GoldProductDbHelper {
       CREATE TABLE IF NOT EXISTS product_golds (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         barcodeText TEXT NOT NULL,
+        enteredDate TEXT NOT NULL,
+        soldDate TEXT,
         name TEXT NOT NULL,
         isSold INTEGER NOT NULL,
         carat INTEGER NOT NULL,
         purityRate DECIMAL NOT NULL,
         laborCost DECIMAL NOT NULL,
         gram DECIMAL NOT NULL,
-        costPrice DECIMAL NOT NULL
+        costPrice DECIMAL NOT NULL,
+        earnedProfit DECIMAL
       )
     ''');
   }

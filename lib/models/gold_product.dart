@@ -4,7 +4,7 @@ class GoldProduct {
   late int id;
   late int isSold;
   late DateTime enteredDate;
-  late DateTime soldDate;
+  DateTime? soldDate;
   late String barcodeText;
   late String name;
   late Carat carat; // x
@@ -31,6 +31,11 @@ class GoldProduct {
 
   GoldProduct.fromJson(Map<String, dynamic> json, this.id) {
     isSold = json['isSold'];
+    if (isSold == 1) {
+      soldDate = DateTime.tryParse(json['soldDate']);
+      earnedProfit = json['earnedProfit'];
+    }
+    enteredDate = DateTime.parse(json['enteredDate']);
     barcodeText = json['barcodeText'];
     name = json['name'];
     carat = toCarat(json['carat'])!;
@@ -41,17 +46,33 @@ class GoldProduct {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'isSold': isSold,
-      'enteredDate': enteredDate,
-      'soldDate': soldDate,
-      'barcodeText': barcodeText,
-      'name': name,
-      'carat': carat.intDefinition,
-      'gram': gram,
-      'purityRate': purityRate,
-      'laborCost': laborCost,
-      'costPrice': costPrice,
-    };
+    if (isSold == 0) {
+      return {
+        'isSold': isSold,
+        'enteredDate': enteredDate.toIso8601String(),
+        'barcodeText': barcodeText,
+        'name': name,
+        'carat': carat.intDefinition,
+        'gram': gram,
+        'purityRate': purityRate,
+        'laborCost': laborCost,
+        'costPrice': costPrice,
+      };
+    }
+    else {
+      return {
+        'isSold': isSold,
+        'enteredDate': enteredDate.toIso8601String(),
+        'soldDate': soldDate!.toIso8601String(),
+        'barcodeText': barcodeText,
+        'name': name,
+        'carat': carat.intDefinition,
+        'gram': gram,
+        'purityRate': purityRate,
+        'laborCost': laborCost,
+        'costPrice': costPrice,
+        'earnedProfit': earnedProfit,
+      };
+    }
   }
 }
