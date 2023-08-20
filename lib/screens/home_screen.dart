@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     gold = CurrencyService.fineGoldSale.toString();
-    CurrencyService.getGoldPrices().then(
+    CurrencyService.getCurrenciesOfHakanAltin().then(
       (value) => setState(
         () {
           gold = value['fineGoldSale']!.toString();
@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    /*ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
       return const Center(
         child: Text(
           "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           textAlign: TextAlign.center,
         ),
       );
-    };
+    };*/
     return Scaffold(
       appBar: AppBar(),
       drawer: const MyDrawer(),
@@ -53,10 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             TextButton(
               onPressed: () async {
-                await BarcodeService.generateBarcode(BarcodeService.generateCode()).then((value) => () {
-                  print(value.toJson());
-                });
-              },
+                await CurrencyService.getCurrenciesOfSaglamoglu().then((value) => print(value.toString()));
+                /*await BarcodeService.generateBarcode(BarcodeService.generateCode()).then((value) => () {
+                  print(value.toJson())});*/
+                },
               child: const Text(
                 'Altın',
                 style: TextStyle(

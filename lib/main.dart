@@ -36,7 +36,7 @@ Future<void> main() async {
   List<GoldProduct> goldProducts = [];
   List<DiamondProduct> diamondProducts = [];
 
-  CurrencyService.getGoldPrices().then((value) => {
+  CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
         GoldProductDbHelper().open().then((value) => {
               GoldProductDbHelper().queryAllRows().then((value) => {
                     for (int i = 0; i < value.length; i++)
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    /*ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
       return Center(
         child: Text(
           "Bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
       );
-    };
+    };*/
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(

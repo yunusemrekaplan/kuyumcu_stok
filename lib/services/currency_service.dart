@@ -12,14 +12,61 @@ class CurrencyService {
 
   static var hakanAltin = Uri.parse("https://www.hakanaltin.com");
 
-  static var url = Uri.parse("https://www.hasaltin.com/");
+  static var saglamogluUrl = Uri.parse("https://saglamoglualtin.com/sube");
 
-  static Future<Map<String, double>> getGoldPrices() async {
+  static Future getCurrenciesOfSaglamoglu() async {
+    var res = await http
+        .get(Uri.parse('https://canlidoviz.com/altin-fiyatlari/kapali-carsi'));
+    final body = res.body;
+    final document = parser.parse(body);
+
+    //buildCurrenciesOfHakanAltin(document);
+
+    /*Map<String, double> currencies = {
+      'fineGoldBuy': fineGoldBuy,
+      'fineGoldSale': fineGoldSale,
+      'usdBuy': usdBuy,
+      'usdSale': usdSale,
+      'eurBuy': eurBuy,
+      'eurSale': eurSale,
+    };*/
+
+
+    var temp = document
+        .querySelector(
+            'body > main > div > div.grid > section.content.col-12.col-lg-6')!
+        .children[0]
+        .children[0]
+        .children[0]
+        .children[1]
+        .children[0]
+        .children[1]
+        .children[9]
+        .children[1].text;
+
+    var temp1 = document
+        .querySelector(
+            'body > main > div > div.grid > section.content.col-12.col-lg-6')!
+        .children[0]
+        .children[0]
+        .children[0]
+        .children[1]
+        .children[0]
+        .children[1]
+        .children[9]
+        .children[3].text;
+
+
+
+    return temp1;
+  }
+
+  static Future<Map<String, double>> getCurrenciesOfHakanAltin() async {
     var res = await http.get(hakanAltin);
     final body = res.body;
     final document = parser.parse(body);
 
-    buildCurrencies(document);
+    buildCurrenciesOfHakanAltin(document);
 
     Map<String, double> currencies = {
       'fineGoldBuy': fineGoldBuy,
@@ -33,7 +80,7 @@ class CurrencyService {
     return currencies;
   }
 
-  static String buildCurrencies(Document document) {
+  static String buildCurrenciesOfHakanAltin(Document document) {
     var fineGoldBuyTemp = document
         .getElementById('fxdouble_main')!
         .children[0]

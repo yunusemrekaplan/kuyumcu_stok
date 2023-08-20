@@ -35,7 +35,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
 
   @override
   void initState() {
-    CurrencyService.getGoldPrices().then(
+    CurrencyService.getCurrenciesOfHakanAltin().then(
       (value) => setState(
         () {
           fineGoldBuy = value['fineGoldBuy']!.toString();
@@ -171,7 +171,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                   gramTxt = product!.gram.toStringAsFixed(0);
                   costTxt = product!.cost.toStringAsFixed(0);
                   double temp;
-                  CurrencyService.getGoldPrices().then((value) =>{
+                  CurrencyService.getCurrenciesOfHakanAltin().then((value) =>{
                     print('girdi'),
                     temp = double.parse(costTxt) * CurrencyService.fineGoldSale / 1000,
                     setState(() {
@@ -461,7 +461,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  CurrencyService.getGoldPrices().then(
+                  CurrencyService.getCurrenciesOfHakanAltin().then(
                     (value) => setState(
                       () {
                         fineGoldBuy = value['fineGoldBuy']!.toString();
