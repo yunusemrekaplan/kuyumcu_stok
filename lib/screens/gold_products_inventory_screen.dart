@@ -4,6 +4,7 @@ import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:kuyumcu_stok/widgets/styles/decoration_styles.dart';
 
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
@@ -14,12 +15,16 @@ class GoldProductsInventoryScreen extends StatefulWidget {
 
 class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScreen> {
   late List<GoldProduct> products;
+  late TextEditingController searchController;
 
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
 
+
+
   _GoldProductsInventoryScreenState() {
     products = GoldProductDbHelper().products;
+    searchController = TextEditingController();
   }
 
   @override
@@ -143,9 +148,32 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                                     _sortData(columnIndex, ascending),
                               ),
                               DataColumn(
-                                label: SizedBox(
-                                  width: width * .1,
-                                  child: const Text(''),
+                                label: Container(
+                                  width: width * .12,
+                                  color: Colors.white,
+                                  child: TextFormField(
+                                    controller: searchController,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      height: 1,
+                                      color: Colors.black,
+                                    ),
+                                    decoration: DecorationStyleWidgets.buildInputDecoration(const Size(100, 35)),
+                                    onChanged: (value) {
+                                      if (value.isEmpty) {
+                                        products = GoldProductDbHelper().products
+                                            .where(
+                                              (e) => e.isSold == 0,
+                                        ).toList();
+                                      }
+                                      setState(() {
+                                        products = products
+                                            .where(
+                                              (e) => e.name.contains(value),
+                                        ).toList();
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
