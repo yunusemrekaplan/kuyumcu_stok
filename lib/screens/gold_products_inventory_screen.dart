@@ -161,15 +161,22 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                                     decoration: DecorationStyleWidgets.buildInputDecoration(const Size(100, 35)),
                                     onChanged: (value) {
                                       if (value.isEmpty) {
+                                        setState(() {
+                                          products = GoldProductDbHelper().products
+                                              .where(
+                                                (e) => e.isSold == 0,
+                                          ).toList();
+                                        });
+                                      }
+                                      setState(() {
                                         products = GoldProductDbHelper().products
                                             .where(
                                               (e) => e.isSold == 0,
                                         ).toList();
-                                      }
-                                      setState(() {
+                                        print(value);
                                         products = products
                                             .where(
-                                              (e) => e.name.contains(value),
+                                              (e) => e.name.toLowerCase().contains(value.toLowerCase()),
                                         ).toList();
                                       });
                                     },
