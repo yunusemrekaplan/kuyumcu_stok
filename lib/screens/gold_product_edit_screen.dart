@@ -79,7 +79,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/gold-products-screen', (route) => false);
+                        context, '/gold-products-inventory-screen', (route) => false);
                   },
                   child: const Text(
                     'Geri Dön',
