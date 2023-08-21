@@ -73,24 +73,24 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
 
   Padding buildBackButton(BuildContext context) {
     return Padding(
-            padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/gold-products-inventory-screen', (route) => false);
-                  },
-                  child: const Text(
-                    'Geri Dön',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ],
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/gold-products-inventory-screen', (route) => false);
+            },
+            child: const Text(
+              'Geri Dön',
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
-          );
+          ),
+        ],
+      ),
+    );
   }
 
   Padding buildUpdateButtonRow() {
