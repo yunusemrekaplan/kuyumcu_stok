@@ -34,4 +34,23 @@ class ButtonStyleWidgets {
       ),
     );
   }
+
+
+  static ButtonStyle buildUpdateButtonStyle(int satete) {
+    return ButtonStyle(
+      backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+          if (states.contains(MaterialState.hovered)) {
+            if (satete == 2) {
+              return Colors.green;
+            } else {
+              return Colors.red;
+            }
+          }
+          return Colors.grey[600];
+        },
+      ),
+    );
+  }
+
 }
