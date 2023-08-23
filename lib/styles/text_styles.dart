@@ -16,7 +16,7 @@ class TextStyles {
 
   static TextStyle buildTextFormFieldTextStyle() {
     return const TextStyle(
-      fontSize: 23,
+      fontSize: 24,
       height: 1,
     );
   }

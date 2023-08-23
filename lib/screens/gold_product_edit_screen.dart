@@ -7,11 +7,11 @@ import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/styles/button_styles.dart';
+import 'package:kuyumcu_stok/styles/decoration_styles.dart';
+import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
-import 'package:kuyumcu_stok/widgets/styles/button_styles.dart';
-import 'package:kuyumcu_stok/widgets/styles/decoration_styles.dart';
-import 'package:kuyumcu_stok/widgets/styles/text_styles.dart';
 
 class GoldProductEditScreen extends StatefulWidget {
   late GoldProduct product;
@@ -29,7 +29,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
   late TextEditingController caratController;
   late TextEditingController gramController;
   late TextEditingController purityRateController;
-  late TextEditingController costPriceController;
+  late TextEditingController costController;
   late TextEditingController laborCostController;
 
   _GoldProductEditScreenState({required this.product}) {
@@ -37,7 +37,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     nameController = TextEditingController();
     gramController = TextEditingController();
     purityRateController = TextEditingController();
-    costPriceController = TextEditingController();
+    costController = TextEditingController();
     laborCostController = TextEditingController();
     String text1 = dropdownValue.purityRateDefinition.toString();
     String text2 = product.laborCost.toString();
@@ -47,7 +47,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     purityRateController.text = text1.replaceAll(".", ",");
     laborCostController.text = text2.replaceAll(".", ",");
     gramController.text = text3.replaceAll(".", ",");
-    costPriceController.text = text4.replaceAll(".", ",");
+    costController.text = text4.replaceAll(".", ",");
   }
 
   @override
@@ -64,7 +64,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           buildPurityRateRow(),
           buildLaborCostRow(),
           buildGramRow(),
-          buildCostPriceRow(),
+          buildCostRow(),
           buildUpdateButtonRow(),
           const Expanded(
             child: SizedBox(),
@@ -237,7 +237,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     );
   }
 
-  Padding buildCostPriceRow() {
+  Padding buildCostRow() {
     return Padding(
       padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
       child: Row(
@@ -248,7 +248,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           ),
           TextFormField(
             validator: NumberValidator.validate,
-            controller: costPriceController,
+            controller: costController,
             style: TextStyles.buildTextFormFieldTextStyle(),
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
@@ -257,7 +257,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             ],
             onChanged: (value) {
               setState(() {
-                costPriceController;
+                costController;
               });
             },
           ),
@@ -310,7 +310,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         gramController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
-        costPriceController.text = Calculate.calculateCostPrice(
+        costController.text = Calculate.calculateCostPrice(
           double.parse(purityRateController.text.replaceAll(",", ".")),
           double.parse(gramController.text.replaceAll(",", ".")),
           double.parse(laborCostController.text.replaceAll(",", ".")),
@@ -353,7 +353,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       product.laborCost =
           double.parse(laborCostController.text.replaceAll(',', '.'));
       product.cost =
-          double.parse(costPriceController.text.replaceAll(',', '.'));
+          double.parse(costController.text.replaceAll(',', '.'));
       product.purityRate =
           double.parse(purityRateController.text.replaceAll(',', '.'));
 
@@ -381,7 +381,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         purityRateController.text.isEmpty ||
         laborCostController.text.isEmpty ||
         gramController.text.isEmpty ||
-        costPriceController.text.isEmpty) {
+        costController.text.isEmpty) {
       return 0;
     }
     if (double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
@@ -389,7 +389,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
             null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
-        double.tryParse(costPriceController.text.replaceAll(",", ".")) ==
+        double.tryParse(costController.text.replaceAll(",", ".")) ==
             null) {
       return 1;
     }
