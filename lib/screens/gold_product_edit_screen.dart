@@ -245,7 +245,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildUpdateButtonStyle(isUpdatetable()),
+            style: ButtonStyles.buildUpdateButtonStyle(isUpdatable()),
             onPressed: onUpdateFun,
             child: Text(
               'Güncelle',
@@ -293,7 +293,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
   }
 
   void onUpdateFun() {
-    if (isUpdatetable() == 0) {
+    if (isUpdatable() == 0) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -306,7 +306,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           ],
         ),
       );
-    } else if (isUpdatetable() == 1) {
+    } else if (isUpdatable() == 1) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -346,7 +346,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     }
   }
 
-  int isUpdatetable() {
+  int isUpdatable() {
     if (nameController.text.isEmpty ||
         purityRateController.text.isEmpty ||
         laborCostController.text.isEmpty ||
