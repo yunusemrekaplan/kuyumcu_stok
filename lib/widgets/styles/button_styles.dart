@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ButtonStyleWidgets {
+class ButtonStyles {
   static ButtonStyle buildBackButtonStyle() {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith((states) {

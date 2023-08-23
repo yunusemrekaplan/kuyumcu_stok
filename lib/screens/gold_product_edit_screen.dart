@@ -9,6 +9,7 @@ import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:kuyumcu_stok/widgets/styles/button_styles.dart';
 import 'package:kuyumcu_stok/widgets/styles/decoration_styles.dart';
+import 'package:kuyumcu_stok/widgets/styles/text_styles.dart';
 
 class GoldProductEditScreen extends StatefulWidget {
   late GoldProduct product;
@@ -76,12 +77,12 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         children: [
           Text(
             'İsim: ',
-            style: buildTextStyle(),
+            style: TextStyles.buildTextStyle(),
           ),
           TextFormField(
             controller: nameController,
-            style: buildTextFormFieldTextStyle(),
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(150, 38)),
             onChanged: (value) {
               setState(() {
@@ -103,14 +104,14 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           children: [
             Text(
               'Karat: ',
-              style: buildTextStyle(),
+              style: TextStyles.buildTextStyle(),
             ),
             DropdownButtonFormField(
               alignment: Alignment.centerLeft,
               value: dropdownValue,
               icon: const Icon(Icons.arrow_downward),
               decoration: InputDecoration(
-                constraints: DecorationStyleWidgets.buildBoxConstraints(
+                constraints: DecorationStyles.buildBoxConstraints(
                     const Size(100, 38)),
                 contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 3),
               ),
@@ -137,14 +138,14 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         children: [
           Text(
             'Saflık Oranı: ',
-            style: buildTextStyle(),
+            style: TextStyles.buildTextStyle(),
           ),
           // ToDo validatörleri unutma!!!
           TextFormField(
             validator: NumberValidator.validate,
             controller: purityRateController,
-            style: buildTextFormFieldTextStyle(),
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(100, 38)),
             onChanged: (value) {
               setState(() {
@@ -165,13 +166,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         children: [
           Text(
             'İşçilik: ',
-            style: buildTextStyle(),
+            style: TextStyles.buildTextStyle(),
           ),
           TextFormField(
             validator: NumberValidator.validate,
             controller: laborCostController,
-            style: buildTextFormFieldTextStyle(),
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(100, 38)),
             onChanged: (value) {
               setState(() {
@@ -192,13 +193,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         children: [
           Text(
             'Gram: ',
-            style: buildTextStyle(),
+            style: TextStyles.buildTextStyle(),
           ),
           TextFormField(
             validator: NumberValidator.validate,
             controller: gramController,
-            style: buildTextFormFieldTextStyle(),
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(100, 38)),
             onChanged: (value) {
               setState(() {
@@ -219,13 +220,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         children: [
           Text(
             'Maliyet: ',
-            style: buildTextStyle(),
+            style: TextStyles.buildTextStyle(),
           ),
           TextFormField(
             validator: NumberValidator.validate,
             controller: costPriceController,
-            style: buildTextFormFieldTextStyle(),
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(125, 38)),
             onChanged: (value) {
               setState(() {
@@ -244,11 +245,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyleWidgets.buildUpdateButtonStyle(isUpdatetable()),
+            style: ButtonStyles.buildUpdateButtonStyle(isUpdatetable()),
             onPressed: onUpdateFun,
             child: Text(
               'Güncelle',
-              style: buildButtonTextStyle(),
+              style: TextStyles.buildButtonTextStyle(),
             ),
           ),
         ],
@@ -262,14 +263,14 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyleWidgets.buildBackButtonStyle(),
+            style: ButtonStyles.buildBackButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/gold-products-inventory-screen', (route) => false);
             },
             child: Text(
               'Geri Dön',
-              style: buildButtonTextStyle(),
+              style: TextStyles.buildButtonTextStyle(),
             ),
           ),
         ],
@@ -369,30 +370,10 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         value: value,
         child: Text(
           value.intDefinition.toString(),
-          style: buildTextFormFieldTextStyle(),
+          style: TextStyles.buildTextFormFieldTextStyle(),
           textAlign: TextAlign.right,
         ),
       );
     }).toList();
-  }
-
-  TextStyle buildTextStyle() {
-    return const TextStyle(
-      fontSize: 30,
-    );
-  }
-
-  TextStyle buildButtonTextStyle() {
-    return const TextStyle(
-      fontSize: 20,
-      color: Colors.white,
-    );
-  }
-
-  TextStyle buildTextFormFieldTextStyle() {
-    return const TextStyle(
-      fontSize: 23,
-      height: 1,
-    );
   }
 }

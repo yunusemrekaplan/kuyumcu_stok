@@ -158,7 +158,7 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                                       height: 1,
                                       color: Colors.black,
                                     ),
-                                    decoration: DecorationStyleWidgets.buildInputDecoration(const Size(100, 35)),
+                                    decoration: DecorationStyles.buildInputDecoration(const Size(100, 35)),
                                     onChanged: (value) {
                                       if (value.isEmpty) {
                                         setState(() {

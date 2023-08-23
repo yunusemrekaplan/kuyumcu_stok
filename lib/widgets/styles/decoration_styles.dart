@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DecorationStyleWidgets {
+class DecorationStyles {
   static BoxConstraints buildBoxConstraints(Size size) => BoxConstraints.tight(size);
 
   static InputDecoration buildInputDecoration(Size size) {

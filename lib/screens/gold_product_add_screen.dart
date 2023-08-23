@@ -100,7 +100,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   ElevatedButton buildBarcodeGeneratorButton() {
     return ElevatedButton(
-      style: ButtonStyleWidgets.buildBackButtonStyle(),
+      style: ButtonStyles.buildBackButtonStyle(),
       onPressed: () {
         barcodeNo = BarcodeService.generateCode();
         setState(() {
@@ -135,7 +135,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               fontSize: 18,
               height: 1,
             ),
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(150, 35)),
             onChanged: (value) {
               setState(() {});
@@ -165,7 +165,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               icon: const Icon(Icons.arrow_downward),
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                constraints: DecorationStyleWidgets.buildBoxConstraints(
+                constraints: DecorationStyles.buildBoxConstraints(
                     const Size(100, 120)),
               ),
               items: Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
@@ -229,7 +229,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(100, 35)),
             onChanged: (value) {
               setState(() {});
@@ -274,7 +274,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(100, 35)),
             onChanged: (value) {
               setState(() {});
@@ -319,7 +319,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(100, 35)),
             onChanged: (value) {
               setState(() {});
@@ -364,7 +364,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],
-            decoration: DecorationStyleWidgets.buildInputDecoration(
+            decoration: DecorationStyles.buildInputDecoration(
                 const Size(125, 35)),
             onChanged: (value) {
               setState(() {});
@@ -381,7 +381,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyleWidgets.buildBackButtonStyle(),
+            style: ButtonStyles.buildBackButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/gold-products-inventory-screen', (route) => false);
@@ -405,7 +405,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyleWidgets.buildSaveButtonStyle(
+            style: ButtonStyles.buildSaveButtonStyle(
               barcodeNo,
               nameController.text,
               purityRateController.text,
