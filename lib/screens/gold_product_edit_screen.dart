@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, no_logic_in_create_state
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
@@ -22,14 +23,13 @@ class GoldProductEditScreen extends StatefulWidget {
 
 class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
   late GoldProduct product;
+  late Carat dropdownValue;
   late TextEditingController nameController;
   late TextEditingController caratController;
   late TextEditingController gramController;
   late TextEditingController purityRateController;
   late TextEditingController costPriceController;
   late TextEditingController laborCostController;
-
-  late Carat dropdownValue;
 
   _GoldProductEditScreenState({required this.product}) {
     dropdownValue = product.carat;
@@ -38,11 +38,15 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     purityRateController = TextEditingController();
     costPriceController = TextEditingController();
     laborCostController = TextEditingController();
+    String text1 = dropdownValue.purityRateDefinition.toString();
+    String text2 = product.laborCost.toString();
+    String text3 = product.gram.toString();
+    String text4 = product.cost.toString();
     nameController.text = product.name.toString();
-    gramController.text = product.gram.toString();
-    purityRateController.text = dropdownValue.purityRateDefinition.toString();
-    costPriceController.text = product.cost.toString();
-    laborCostController.text = product.laborCost.toString();
+    purityRateController.text = text1.replaceAll(".", ",");
+    laborCostController.text = text2.replaceAll(".", ",");
+    gramController.text = text3.replaceAll(".", ",");
+    costPriceController.text = text4.replaceAll(".", ",");
   }
 
   @override
@@ -82,8 +86,8 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           TextFormField(
             controller: nameController,
             style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration: DecorationStyles.buildInputDecoration(
-                const Size(150, 38)),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(150, 38)),
             onChanged: (value) {
               setState(() {
                 nameController;
@@ -110,17 +114,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
               alignment: Alignment.centerLeft,
               value: dropdownValue,
               icon: const Icon(Icons.arrow_downward),
-              decoration: InputDecoration(
-                constraints: DecorationStyles.buildBoxConstraints(
-                    const Size(100, 38)),
-                contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 3),
-              ),
+              decoration: DecorationStyles.buildDropdownButtonInputDecoration(),
               items: buildDropdownMenuItemList(),
               onChanged: (Carat? newValue) {
+                dropdownValue = newValue!;
+                String temp = dropdownValue.purityRateDefinition.toString();
                 setState(() {
-                  dropdownValue = newValue!;
-                  purityRateController.text =
-                      dropdownValue.purityRateDefinition.toString();
+                  purityRateController.text = temp.replaceAll('.', ',');
                 });
                 buildCalculate();
               },
@@ -140,13 +140,25 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             'Saflık Oranı: ',
             style: TextStyles.buildTextStyle(),
           ),
-          // ToDo validatörleri unutma!!!
           TextFormField(
             validator: NumberValidator.validate,
             controller: purityRateController,
             style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration: DecorationStyles.buildInputDecoration(
-                const Size(100, 38)),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(100, 38)),
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+              /*TextInputFormatter.withFunction((oldValue, newValue) {
+                if (newValue.text.isEmpty) {
+                  return newValue.copyWith(text: '');
+                } else {
+                  final n = NumberFormat('#,##0.0', 'tr_TR');
+                  final number = n.parse(newValue.text);
+                  return newValue.copyWith(
+                      text: n.format(number), selection: updateCursorPosition(newValue));
+                }
+              })*/
+            ],
             onChanged: (value) {
               setState(() {
                 purityRateController;
@@ -158,6 +170,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       ),
     );
   }
+
+  /*TextSelection updateCursorPosition(TextEditingValue value) {
+    final int offset = value.text.length;
+    return TextSelection.fromPosition(TextPosition(offset: offset));
+  }*/
 
   Padding buildLaborCostRow() {
     return Padding(
@@ -172,8 +189,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             validator: NumberValidator.validate,
             controller: laborCostController,
             style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration: DecorationStyles.buildInputDecoration(
-                const Size(100, 38)),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(100, 38)),
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+            ],
             onChanged: (value) {
               setState(() {
                 laborCostController;
@@ -199,8 +219,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             validator: NumberValidator.validate,
             controller: gramController,
             style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration: DecorationStyles.buildInputDecoration(
-                const Size(100, 38)),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(100, 38)),
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+            ],
             onChanged: (value) {
               setState(() {
                 gramController;
@@ -226,8 +249,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             validator: NumberValidator.validate,
             controller: costPriceController,
             style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration: DecorationStyles.buildInputDecoration(
-                const Size(125, 38)),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(125, 38)),
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+            ],
             onChanged: (value) {
               setState(() {
                 costPriceController;
@@ -284,10 +310,10 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         laborCostController.text.isNotEmpty) {
       setState(() {
         costPriceController.text = Calculate.calculateCostPrice(
-            double.parse(purityRateController.text),
-            double.parse(gramController.text),
-            double.parse(laborCostController.text))
-            .toStringAsFixed(0);
+          double.parse(purityRateController.text.replaceAll(",", ".")),
+          double.parse(gramController.text.replaceAll(",", ".")),
+          double.parse(laborCostController.text.replaceAll(",", ".")),
+        ).toStringAsFixed(0);
       });
     }
   }
@@ -322,10 +348,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     } else {
       product.name = nameController.text;
       product.carat = dropdownValue;
-      product.gram = double.parse(gramController.text);
-      product.laborCost = double.parse(laborCostController.text);
-      product.cost = double.parse(costPriceController.text);
-      product.purityRate = double.parse(purityRateController.text);
+      product.gram = double.parse(gramController.text.replaceAll(',', '.'));
+      product.laborCost =
+          double.parse(laborCostController.text.replaceAll(',', '.'));
+      product.cost =
+          double.parse(costPriceController.text.replaceAll(',', '.'));
+      product.purityRate =
+          double.parse(purityRateController.text.replaceAll(',', '.'));
 
       for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
         if (GoldProductDbHelper().products[i].id == product.id) {
@@ -354,10 +383,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         costPriceController.text.isEmpty) {
       return 0;
     }
-    if (double.tryParse(purityRateController.text) == null ||
-        double.tryParse(laborCostController.text) == null ||
-        double.tryParse(gramController.text) == null ||
-        double.tryParse(costPriceController.text) == null) {
+    if (double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
+            null ||
+        double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
+            null ||
+        double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
+        double.tryParse(costPriceController.text.replaceAll(",", ".")) ==
+            null) {
       return 1;
     }
     return 2;

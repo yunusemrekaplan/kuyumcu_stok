@@ -11,4 +11,11 @@ class DecorationStyles {
       //hintText: '9789756249840',
     );
   }
+
+  static InputDecoration buildDropdownButtonInputDecoration() {
+    return InputDecoration(
+      constraints: DecorationStyles.buildBoxConstraints(const Size(100, 38)),
+      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 3),
+    );
+  }
 }
