@@ -78,12 +78,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             'İsim: ',
             style: buildTextStyle(),
           ),
-          // ToDo validatörleri unutma!!!
           TextFormField(
             controller: nameController,
             style: buildTextFormFieldTextStyle(),
             decoration: DecorationStyleWidgets.buildInputDecoration(
-                const Size(150, 35)),
+                const Size(150, 38)),
             onChanged: (value) {
               setState(() {
                 nameController;
@@ -111,23 +110,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
               value: dropdownValue,
               icon: const Icon(Icons.arrow_downward),
               decoration: InputDecoration(
-                border: const OutlineInputBorder(),
                 constraints: DecorationStyleWidgets.buildBoxConstraints(
-                    const Size(100, 120)),
+                    const Size(100, 38)),
+                contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 3),
               ),
-              items: Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
-                return DropdownMenuItem<Carat>(
-                  alignment: AlignmentDirectional.center,
-                  value: value,
-                  child: Text(
-                    value.intDefinition.toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                );
-              }).toList(),
+              items: buildDropdownMenuItemList(),
               onChanged: (Carat? newValue) {
                 setState(() {
                   dropdownValue = newValue!;
@@ -158,7 +145,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             controller: purityRateController,
             style: buildTextFormFieldTextStyle(),
             decoration: DecorationStyleWidgets.buildInputDecoration(
-                const Size(100, 35)),
+                const Size(100, 38)),
             onChanged: (value) {
               setState(() {
                 purityRateController;
@@ -185,7 +172,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             controller: laborCostController,
             style: buildTextFormFieldTextStyle(),
             decoration: DecorationStyleWidgets.buildInputDecoration(
-                const Size(100, 35)),
+                const Size(100, 38)),
             onChanged: (value) {
               setState(() {
                 laborCostController;
@@ -212,7 +199,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             controller: gramController,
             style: buildTextFormFieldTextStyle(),
             decoration: DecorationStyleWidgets.buildInputDecoration(
-                const Size(100, 35)),
+                const Size(100, 38)),
             onChanged: (value) {
               setState(() {
                 gramController;
@@ -225,27 +212,13 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     );
   }
 
-  void buildCalculate() {
-    if (purityRateController.text.isNotEmpty &&
-        gramController.text.isNotEmpty &&
-        laborCostController.text.isNotEmpty) {
-      setState(() {
-        costPriceController.text = Calculate.calculateCostPrice(
-                double.parse(purityRateController.text),
-                double.parse(gramController.text),
-                double.parse(laborCostController.text))
-            .toStringAsFixed(0);
-      });
-    }
-  }
-
   Padding buildCostPriceRow() {
     return Padding(
       padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
       child: Row(
         children: [
           Text(
-            'Maliyet Fiyatı: ',
+            'Maliyet: ',
             style: buildTextStyle(),
           ),
           TextFormField(
@@ -253,7 +226,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             controller: costPriceController,
             style: buildTextFormFieldTextStyle(),
             decoration: DecorationStyleWidgets.buildInputDecoration(
-                const Size(125, 35)),
+                const Size(125, 38)),
             onChanged: (value) {
               setState(() {
                 costPriceController;
@@ -302,6 +275,20 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         ],
       ),
     );
+  }
+
+  void buildCalculate() {
+    if (purityRateController.text.isNotEmpty &&
+        gramController.text.isNotEmpty &&
+        laborCostController.text.isNotEmpty) {
+      setState(() {
+        costPriceController.text = Calculate.calculateCostPrice(
+            double.parse(purityRateController.text),
+            double.parse(gramController.text),
+            double.parse(laborCostController.text))
+            .toStringAsFixed(0);
+      });
+    }
   }
 
   void onUpdateFun() {
@@ -375,9 +362,23 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     return 2;
   }
 
+  List<DropdownMenuItem<Carat>> buildDropdownMenuItemList() {
+    return Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
+      return DropdownMenuItem<Carat>(
+        alignment: AlignmentDirectional.center,
+        value: value,
+        child: Text(
+          value.intDefinition.toString(),
+          style: buildTextFormFieldTextStyle(),
+          textAlign: TextAlign.right,
+        ),
+      );
+    }).toList();
+  }
+
   TextStyle buildTextStyle() {
     return const TextStyle(
-      fontSize: 24,
+      fontSize: 30,
     );
   }
 
@@ -390,7 +391,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
 
   TextStyle buildTextFormFieldTextStyle() {
     return const TextStyle(
-      fontSize: 20,
+      fontSize: 23,
       height: 1,
     );
   }
