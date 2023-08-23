@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
@@ -206,7 +207,7 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(Text(
-                                        e.gram.toString(),
+                                          NumberFormat('#,##0.0', 'tr_TR').format(e.gram),
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(Text(
@@ -214,15 +215,15 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(Text(
-                                        e.purityRate.toString(),
+                                       NumberFormat('#,##0.0', 'tr_TR').format(e.purityRate),
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(Text(
-                                        e.laborCost.toString(),
+                                          NumberFormat('#,##0.0', 'tr_TR').format(e.laborCost),
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(Text(
-                                        e.cost.toString(),
+                                          NumberFormat('#,##0.0', 'tr_TR').format(e.cost),
                                         style: const TextStyle(fontSize: 20),
                                       )),
                                       DataCell(

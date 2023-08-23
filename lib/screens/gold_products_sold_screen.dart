@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class GoldProductsSoldScreen extends StatefulWidget {
   const GoldProductsSoldScreen({super.key});
@@ -19,6 +20,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
 
   _GoldProductsSoldScreenState() {
     products = GoldProductDbHelper().products;
+    initializeDateFormatting('tr_TR', null);
   }
 
   @override
@@ -147,7 +149,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                   ),
                                   cells: [
                                     DataCell(Text(
-                                      '${DateFormat.yMd().format(e.soldDate!)}  ${DateFormat.Hm().format(e.soldDate!)}' ,
+                                      '${DateFormat.yMd('tr-Tr').format(e.soldDate!)}  ${DateFormat.Hm().format(e.soldDate!)}' ,
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
@@ -155,15 +157,15 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                        NumberFormat('#,##0.00', 'tr_TR').format(e.costPrice),//e.costPrice.toStringAsFixed(0),
+                                        NumberFormat('#,##0.0', 'tr_TR').format(e.costPrice),//e.costPrice.toStringAsFixed(0),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      NumberFormat('#,##0.00', 'tr_TR').format(e.soldPrice),
+                                      NumberFormat('#,##0.0', 'tr_TR').format(e.soldPrice),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                     DataCell(Text(
-                                      NumberFormat('#,##0.00', 'tr_TR').format(e.earnedProfit),
+                                      NumberFormat('#,##0.0', 'tr_TR').format(e.earnedProfit),
                                       style: const TextStyle(fontSize: 20),
                                     )),
                                   ],
