@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
+import 'package:kuyumcu_stok/localizations/input_formatters.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -147,7 +148,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+              InputFormatters.inputOnlyDigits(),
               /*TextInputFormatter.withFunction((oldValue, newValue) {
                 if (newValue.text.isEmpty) {
                   return newValue.copyWith(text: '');
@@ -192,7 +193,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+              InputFormatters.inputOnlyDigits(),
             ],
             onChanged: (value) {
               setState(() {
@@ -222,7 +223,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+              InputFormatters.inputOnlyDigits(),
             ],
             onChanged: (value) {
               setState(() {
@@ -252,7 +253,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+              InputFormatters.inputOnlyDigits(),
             ],
             onChanged: (value) {
               setState(() {
