@@ -292,8 +292,8 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           ElevatedButton(
             style: ButtonStyles.buildBackButtonStyle(),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-products-inventory-screen', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context,
+                  '/gold-products-inventory-screen', (route) => false);
             },
             child: Text(
               'Geri Dön',
@@ -357,13 +357,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       product.purityRate =
           double.parse(purityRateController.text.replaceAll(',', '.'));
 
-      for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
-        if (GoldProductDbHelper().products[i].id == product.id) {
-          GoldProductDbHelper().products[i] = product;
-          print(product.name);
-          break;
-        }
-      }
+
       GoldProductDbHelper()
           .update(product.toJson(), product.id)
           .then((value) => {

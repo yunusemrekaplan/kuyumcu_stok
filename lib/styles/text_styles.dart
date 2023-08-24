@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TextStyles {
   static TextStyle buildTextStyle() {
     return const TextStyle(
-      fontSize: 30,
+      fontSize: 28,
     );
   }
 
