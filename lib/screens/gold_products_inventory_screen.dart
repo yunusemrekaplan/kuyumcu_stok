@@ -258,6 +258,10 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                                               },
                                               icon: const Icon(Icons.edit),
                                             ),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(Icons.print),
+                                            ),
                                           ],
                                         ),
                                       ),
