@@ -107,7 +107,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   ElevatedButton buildBarcodeGeneratorButton() {
     return ElevatedButton(
-      style: ButtonStyles.buildBackButtonStyle(),
+      style: ButtonStyles.buildBasicButtonStyle(),
       onPressed: () {
         barcodeNo = BarcodeService.generateCode();
         setState(() {
@@ -331,7 +331,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildBackButtonStyle(),
+            style: ButtonStyles.buildBasicButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/gold-products-inventory-screen', (route) => false);

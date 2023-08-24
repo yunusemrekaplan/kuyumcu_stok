@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ButtonStyles {
-  static ButtonStyle buildBackButtonStyle() {
+  static ButtonStyle buildBasicButtonStyle() {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.hovered)) {

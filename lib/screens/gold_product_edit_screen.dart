@@ -290,7 +290,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildBackButtonStyle(),
+            style: ButtonStyles.buildBasicButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context,
                   '/gold-products-inventory-screen', (route) => false);
