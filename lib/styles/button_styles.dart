@@ -12,18 +12,12 @@ class ButtonStyles {
     );
   }
 
-  static ButtonStyle buildSaveButtonStyle(String barcodeNo, String name,
-      String purityRate, String laborCost, String gram, String costPrice) {
+  static ButtonStyle buildSaveButtonStyle(bool state) {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
         (Set<MaterialState> states) {
           if (states.contains(MaterialState.hovered)) {
-            if (barcodeNo == '0000000000000' ||
-                name.isEmpty ||
-                purityRate.isEmpty ||
-                laborCost.isEmpty ||
-                gram.isEmpty ||
-                costPrice.isEmpty) {
+            if (state) {
               return Colors.red;
             } else {
               return Colors.green;
@@ -36,12 +30,12 @@ class ButtonStyles {
   }
 
 
-  static ButtonStyle buildUpdateButtonStyle(int satete) {
+  static ButtonStyle buildUpdateButtonStyle(int state) {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) {
           if (states.contains(MaterialState.hovered)) {
-            if (satete == 2) {
+            if (state == 2) {
               return Colors.green;
             } else {
               return Colors.red;

@@ -5,6 +5,7 @@ import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
+import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -32,7 +33,7 @@ class _GoldProductsInventoryScreenState
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width - 60;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -60,47 +61,20 @@ class _GoldProductsInventoryScreenState
                       children: [
                         buildTableWidthPaddingBox(),
                         Expanded(
-                          child: DataTable(
-                            headingRowColor:
-                                MaterialStateProperty.resolveWith((states) {
-                              return Colors.grey[400];
-                            }),
-                            sortColumnIndex: _sortColumnIndex,
-                            sortAscending: _sortAscending,
-                            columnSpacing: 20,
-                            horizontalMargin: 10,
-                            showCheckboxColumn: false,
-                            border: const TableBorder(
-                              top: BorderSide(width: 1),
-                              left: BorderSide(width: 1),
-                              right: BorderSide(width: 1),
-                              bottom: BorderSide(width: 1),
-                              horizontalInside: BorderSide(width: 1),
-                              verticalInside: BorderSide(width: 1),
-                              //borderRadius: BorderRadius.all(Radius.circular(20)),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              headingRowColor:
+                                  DataTableStyles.buildHeadingRowColor(),
+                              sortColumnIndex: _sortColumnIndex,
+                              sortAscending: _sortAscending,
+                              columnSpacing: 35,
+                              horizontalMargin: 10,
+                              showCheckboxColumn: false,
+                              border: DataTableStyles.buildTableBorder(),
+                              columns: buildDataColumns(width),
+                              rows: buildRowList(context).toList(),
                             ),
-                            columns: buildDataColumns(width),
-                            rows: products
-                                .where(
-                                  (e) => e.isSold == 0,
-                                )
-                                .map(
-                                  (e) => DataRow(
-                                    color: MaterialStateProperty.resolveWith<
-                                        Color?>(
-                                      (Set<MaterialState> states) {
-                                        if (states
-                                            .contains(MaterialState.hovered)) {
-                                          return Colors.grey[400];
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    cells: buildDataCells(e, context),
-                                    onSelectChanged: (selected) {},
-                                  ),
-                                )
-                                .toList(),
                           ),
                         ),
                         buildTableWidthPaddingBox(),
@@ -120,6 +94,7 @@ class _GoldProductsInventoryScreenState
 
   List<DataColumn> buildDataColumns(double width) {
     return [
+      buildBarcodeDataColumn(width),
       buildNameDataColumn(width),
       buildGramDataColumn(width),
       buildCaratDataColumn(width),
@@ -130,12 +105,25 @@ class _GoldProductsInventoryScreenState
     ];
   }
 
+  DataColumn buildBarcodeDataColumn(double width) {
+    return DataColumn(
+      label: const SizedBox(
+        //width: width * .22,
+        child: Text(
+          'Barkod',
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
   DataColumn buildNameDataColumn(double width) {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
-          'İsim',
+      label: const SizedBox(
+        //width: width * .22,
+        child: Text(
+          'Name',
           style: TextStyle(fontSize: 22),
         ),
       ),
@@ -145,9 +133,9 @@ class _GoldProductsInventoryScreenState
 
   DataColumn buildGramDataColumn(double width) {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
+      label: const SizedBox(
+        //width: width * .13,
+        child: Text(
           'Gram',
           style: TextStyle(fontSize: 22),
         ),
@@ -158,9 +146,9 @@ class _GoldProductsInventoryScreenState
 
   DataColumn buildCaratDataColumn(double width) {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
+      label: const SizedBox(
+        //width: width * .13,
+        child: Text(
           'Karat',
           style: TextStyle(fontSize: 22),
         ),
@@ -171,10 +159,10 @@ class _GoldProductsInventoryScreenState
 
   DataColumn buildPurityRateDataColumn(double width) {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
-          'Saflık Oranı',
+      label: const SizedBox(
+        //width: width * .13,
+        child: Text(
+          'Saflık',
           style: TextStyle(fontSize: 22),
         ),
       ),
@@ -184,9 +172,9 @@ class _GoldProductsInventoryScreenState
 
   DataColumn buildLaborCostDataColumn(double width) {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
+      label: const SizedBox(
+        //width: width * .13,
+        child: Text(
           'İşçilik',
           style: TextStyle(fontSize: 22),
         ),
@@ -197,9 +185,9 @@ class _GoldProductsInventoryScreenState
 
   DataColumn buildCostDataColumn(double width) {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
+      label: const SizedBox(
+        //width: width * .13,
+        child: Text(
           'Maliyet',
           style: TextStyle(fontSize: 22),
         ),
@@ -211,7 +199,7 @@ class _GoldProductsInventoryScreenState
   DataColumn buildActionsDataColumn(double width) {
     return DataColumn(
       label: Container(
-        width: width * .12,
+        //width: width * .13,
         color: Colors.white,
         child: TextFormField(
           controller: searchController,
@@ -220,33 +208,12 @@ class _GoldProductsInventoryScreenState
             height: 1,
             color: Colors.black,
           ),
-          decoration: DecorationStyles.buildInputDecoration(const Size(100, 35)),
-          onChanged: (value) {
-            if (value.isEmpty) {
-              setState(() {
-                products = GoldProductDbHelper()
-                    .products
-                    .where(
-                      (e) => e.isSold == 0,
-                    )
-                    .toList();
-              });
-            }
-            setState(() {
-              products = GoldProductDbHelper()
-                  .products
-                  .where(
-                    (e) => e.isSold == 0,
-                  )
-                  .toList();
-              print(value);
-              products = products
-                  .where(
-                    (e) => e.name.toLowerCase().contains(value.toLowerCase()),
-                  )
-                  .toList();
-            });
-          },
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+            constraints:
+                DecorationStyles.buildBoxConstraints(const Size(180, 35)),
+          ),
+          onChanged: onSearch,
         ),
       ),
     );
@@ -264,32 +231,23 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  Container buildProductAddButton(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0, bottom: 10),
-            child: ElevatedButton(
-              style: ButtonStyles.buildBasicButtonStyle(),
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/gold-product-add-screen', (route) => false);
-              },
-              child: Text(
-                'Ürün Ekle',
-                style: TextStyles.buildButtonTextStyle(),
-              ),
-            ),
+  Iterable<DataRow> buildRowList(BuildContext context) {
+    return products
+        .where(
+          (e) => e.isSold == 0,
+        )
+        .map(
+          (e) => DataRow(
+            color: DataTableStyles.buildDataRowColor(),
+            cells: buildDataCells(e, context),
+            onSelectChanged: (selected) {},
           ),
-        ],
-      ),
-    );
+        );
   }
 
   List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
     return [
+      buildBarkodDataCell(e),
       buildNameDataCell(e),
       buildGramDataCell(e),
       buildCaratDataCell(e),
@@ -298,6 +256,13 @@ class _GoldProductsInventoryScreenState
       buildCostDataCell(e),
       buildActionsDataCell(context, e),
     ];
+  }
+
+  DataCell buildBarkodDataCell(GoldProduct e) {
+    return DataCell(Text(
+      e.barcodeText,
+      style: const TextStyle(fontSize: 20),
+    ));
   }
 
   DataCell buildNameDataCell(GoldProduct e) {
@@ -346,59 +311,98 @@ class _GoldProductsInventoryScreenState
     return DataCell(
       Row(
         children: [
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text('Ürünü silmek istediğinize emin misiniz?'),
-                  actions: [
-                    TextButton(
-                      child: const Text(
-                        'Evet',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      onPressed: () {
-                        setState(
-                          () {
-                            GoldProductDbHelper().products.remove(e);
-                            GoldProductDbHelper().delete(e.id);
-                          },
-                        );
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: const Text(
-                        'Hayır',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
+          buildDeleteButton(context, e),
+          buildEditButton(context, e),
+          buildPrinterButton(),
+        ],
+      ),
+    );
+  }
+
+  IconButton buildDeleteButton(BuildContext context, GoldProduct e) {
+    return IconButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Ürünü silmek istediğinize emin misiniz?'),
+            actions: [
+              TextButton(
+                child: const Text(
+                  'Evet',
+                  style: TextStyle(fontSize: 20),
                 ),
-              );
-            },
-            icon: const Icon(Icons.delete),
-            color: Colors.red[800],
+                onPressed: () {
+                  setState(
+                    () {
+                      GoldProductDbHelper().products.remove(e);
+                      GoldProductDbHelper().delete(e.id);
+                    },
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text(
+                  'Hayır',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        GoldProductEditScreen(product: e),
-                  ),
-                  (route) => false);
-            },
-            icon: const Icon(Icons.edit),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.print),
+        );
+      },
+      icon: const Icon(Icons.delete),
+      color: Colors.red[600],
+      iconSize: 26,
+    );
+  }
+
+  IconButton buildEditButton(BuildContext context, GoldProduct e) {
+    return IconButton(
+      onPressed: () {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  GoldProductEditScreen(product: e),
+            ),
+            (route) => false);
+      },
+      icon: const Icon(Icons.edit),
+      iconSize: 26,
+    );
+  }
+
+  IconButton buildPrinterButton() {
+    return IconButton(
+      onPressed: () {},
+      icon: const Icon(Icons.print),
+      iconSize: 26,
+    );
+  }
+
+  Container buildProductAddButton(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0, bottom: 10),
+            child: ElevatedButton(
+              style: ButtonStyles.buildBasicButtonStyle(),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/gold-product-add-screen', (route) => false);
+              },
+              child: Text(
+                'Ürün Ekle',
+                style: TextStyles.buildButtonTextStyle(),
+              ),
+            ),
           ),
         ],
       ),
@@ -449,6 +453,33 @@ class _GoldProductsInventoryScreenState
           products.sort((a, b) => b.cost.compareTo(a.cost));
         }
       }
+    });
+  }
+
+  void onSearch(value) {
+    if (value.isEmpty) {
+      setState(() {
+        products = GoldProductDbHelper()
+            .products
+            .where(
+              (e) => e.isSold == 0,
+            )
+            .toList();
+      });
+    }
+    setState(() {
+      products = GoldProductDbHelper()
+          .products
+          .where(
+            (e) => e.isSold == 0,
+          )
+          .toList();
+      //print(value);
+      products = products
+          .where(
+            (e) => e.barcodeText.contains(value),
+          )
+          .toList();
     });
   }
 }

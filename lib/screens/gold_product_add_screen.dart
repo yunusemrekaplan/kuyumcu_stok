@@ -306,14 +306,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildSaveButtonStyle(
-              barcodeNo,
-              nameController.text,
-              purityRateController.text,
-              laborCostController.text,
-              gramController.text,
-              costController.text,
-            ),
+            style: ButtonStyles.buildSaveButtonStyle((isVariablesEmpty() ||
+                isCorrectFormat() ||
+                barcodeNo == '0000000000000')),
             onPressed: onSaved,
             child: Text(
               'Kaydet',
