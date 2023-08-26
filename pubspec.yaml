@@ -45,6 +45,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.0
   numberpicker: ^2.1.2
   intl: ^0.18.1
+  adaptive_scrollbar: ^2.1.2
 
 dev_dependencies:
   flutter_test:

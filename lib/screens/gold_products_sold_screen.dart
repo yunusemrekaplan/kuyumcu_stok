@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -25,7 +26,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width - 60;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -37,149 +38,36 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
         color: Colors.white,
         child: Column(
           children: [
-            Container(
-              height: 25,
-            ),
+            buildTableHeightPaddingBox(),
             Expanded(
               child: Container(
                 color: Colors.white,
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height - 170,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTableWidthPaddingBox(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        physics: const BouncingScrollPhysics(),
                         child: DataTable(
                           headingRowColor:
-                              MaterialStateProperty.resolveWith((states) {
-                            return Colors.grey[400];
-                          }),
+                              DataTableStyles.buildHeadingRowColor(),
                           sortColumnIndex: _sortColumnIndex,
                           sortAscending: _sortAscending,
                           columnSpacing: 20,
                           horizontalMargin: 10,
                           showCheckboxColumn: false,
-                          border: const TableBorder(
-                            top: BorderSide(width: 1),
-                            left: BorderSide(width: 1),
-                            right: BorderSide(width: 1),
-                            bottom: BorderSide(width: 1),
-                            horizontalInside: BorderSide(width: 1),
-                            verticalInside: BorderSide(width: 1),
-                            //borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          columns: [
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .09,
-                                child: const Text(
-                                  'Satış Tarihi',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .1,
-                                child: const Text(
-                                  'İsim',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .11,
-                                child: const Text(
-                                  'Maliyet Fiyat',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .1,
-                                child: const Text(
-                                  'Satılan Fiyat',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                            DataColumn(
-                              label: SizedBox(
-                                width: width * .05,
-                                child: const Text(
-                                  'Kar',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              onSort: (columnIndex, ascending) =>
-                                  _sortData(columnIndex, ascending),
-                            ),
-                          ],
-                          rows: products
-                              .where(
-                                (e) => e.isSold == 1,
-                              )
-                              .map(
-                                (e) => DataRow(
-                                  color:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                    (Set<MaterialState> states) {
-                                      if (states
-                                          .contains(MaterialState.hovered)) {
-                                        return Colors.grey[400];
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  cells: [
-                                    DataCell(Text(
-                                      '${DateFormat.yMd('tr-Tr').format(e.soldDate!)}  ${DateFormat.Hm().format(e.soldDate!)}' ,
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                    DataCell(Text(
-                                      e.name,
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                    DataCell(Text(
-                                        NumberFormat('#,##0.0', 'tr_TR').format(e.costPrice),//e.costPrice.toStringAsFixed(0),
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                    DataCell(Text(
-                                      NumberFormat('#,##0.0', 'tr_TR').format(e.soldPrice),
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                    DataCell(Text(
-                                      NumberFormat('#,##0.0', 'tr_TR').format(e.earnedProfit),
-                                      style: const TextStyle(fontSize: 20),
-                                    )),
-                                  ],
-                                  onSelectChanged: (selected) {},
-                                ),
-                              )
-                              .toList(),
+                          border: DataTableStyles.buildTableBorder(),
+                          columns: buildDataColumns(width),
+                          rows: buildRowList().toList(),
                         ),
                       ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                    ],
-                  ),
+                    ),
+                    buildTableWidthPaddingBox(),
+                  ],
                 ),
               ),
             ),
@@ -188,6 +76,154 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
       ),
     );
   }
+
+  List<DataColumn> buildDataColumns(double width) {
+    return [
+      buildSoldDateDataColumn(width),
+      buildNameDataColumn(width),
+      buildCostPriceDataColumn(width),
+      buildSoldPriceDataColumn(width),
+      buildEarnedProfitDataColumn(width),
+    ];
+  }
+
+  DataColumn buildSoldDateDataColumn(double width) {
+    return DataColumn(
+      label: SizedBox(
+        width: width * .09,
+        child: const Text(
+          'Satış Tarihi',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  DataColumn buildNameDataColumn(double width) {
+    return DataColumn(
+      label: SizedBox(
+        width: width * .1,
+        child: const Text(
+          'İsim',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  DataColumn buildCostPriceDataColumn(double width) {
+    return DataColumn(
+      label: SizedBox(
+        width: width * .11,
+        child: const Text(
+          'Maliyet Fiyat',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  DataColumn buildSoldPriceDataColumn(double width) {
+    return DataColumn(
+      label: SizedBox(
+        width: width * .1,
+        child: const Text(
+          'Satılan Fiyat',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  DataColumn buildEarnedProfitDataColumn(double width) {
+    return DataColumn(
+      label: SizedBox(
+        width: width * .05,
+        child: const Text(
+          'Kar',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  SizedBox buildTableWidthPaddingBox() {
+    return const SizedBox(
+      width: 30,
+    );
+  }
+
+  SizedBox buildTableHeightPaddingBox() {
+    return const SizedBox(
+      height: 30,
+    );
+  }
+
+  Iterable<DataRow> buildRowList() {
+    return products
+        .where(
+          (e) => e.isSold == 1,
+    )
+        .map(
+          (e) => DataRow(
+        color: DataTableStyles.buildDataRowColor(),
+        cells: buildDataCells(e),
+        onSelectChanged: (selected) {},
+      ),
+    );
+  }
+
+  List<DataCell> buildDataCells(GoldProduct e) {
+    return [
+      buildSoldDateDataCell(e),
+      buildNameDataCell(e),
+      buildCostPriceDataCell(e),
+      buildSoldPriceDataCell(e),
+      buildEarnedProfitDataCell(e),
+    ];
+  }
+
+  DataCell buildSoldDateDataCell(GoldProduct e) {
+    return DataCell(Text(
+      '${DateFormat.yMd('tr-Tr').format(e.soldDate!)}  ${DateFormat.Hm().format(e.soldDate!)}',
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildNameDataCell(GoldProduct e) {
+    return DataCell(Text(
+      e.name,
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildCostPriceDataCell(GoldProduct e) {
+    return DataCell(Text(
+      NumberFormat('#,##0.0', 'tr_TR')
+          .format(e.costPrice), //e.costPrice.toStringAsFixed(0),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildSoldPriceDataCell(GoldProduct e) {
+    return DataCell(Text(
+      NumberFormat('#,##0.0', 'tr_TR').format(e.soldPrice),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildEarnedProfitDataCell(GoldProduct e) {
+    return DataCell(Text(
+      NumberFormat('#,##0.0', 'tr_TR').format(e.earnedProfit),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
   void _sortData(int columnIndex, bool ascending) {
     setState(() {
       _sortColumnIndex = columnIndex;
@@ -226,5 +262,4 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
       }
     });
   }
-
 }

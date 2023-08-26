@@ -9,6 +9,7 @@ import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
@@ -33,7 +34,11 @@ class _GoldProductsInventoryScreenState
 
   @override
   Widget build(BuildContext context) {
+    final verticalScrollController = ScrollController();
+    final horizontalScrollController = ScrollController();
+
     final double width = MediaQuery.of(context).size.width - 60;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -43,50 +48,43 @@ class _GoldProductsInventoryScreenState
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            children: [
-              buildTableHeightPaddingBox(),
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height - 170,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        buildTableWidthPaddingBox(),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              headingRowColor:
-                                  DataTableStyles.buildHeadingRowColor(),
-                              sortColumnIndex: _sortColumnIndex,
-                              sortAscending: _sortAscending,
-                              columnSpacing: 35,
-                              horizontalMargin: 10,
-                              showCheckboxColumn: false,
-                              border: DataTableStyles.buildTableBorder(),
-                              columns: buildDataColumns(width),
-                              rows: buildRowList(context).toList(),
-                            ),
-                          ),
+        child: Column(
+          children: [
+            buildTableHeightPaddingBox(),
+            Container(
+              color: Colors.white,
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height - 170,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20.0),
+                      child: SingleChildScrollView(
+                        controller: verticalScrollController,
+                        scrollDirection: Axis.vertical,
+                        child: DataTable(
+                          headingRowColor:
+                              DataTableStyles.buildHeadingRowColor(),
+                          sortColumnIndex: _sortColumnIndex,
+                          sortAscending: _sortAscending,
+                          columnSpacing: 35,
+                          horizontalMargin: 10,
+                          showCheckboxColumn: false,
+                          border: DataTableStyles.buildTableBorder(),
+                          columns: buildDataColumns(width),
+                          rows: buildRowList(context).toList(),
                         ),
-                        buildTableWidthPaddingBox(),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-              buildTableHeightPaddingBox(),
-              buildProductAddButton(context),
-            ],
-          ),
+            ),
+            buildTableHeightPaddingBox(),
+            Expanded(child: buildProductAddButton(context)),
+          ],
         ),
       ),
     );
@@ -102,6 +100,19 @@ class _GoldProductsInventoryScreenState
       buildLaborCostDataColumn(width),
       buildCostDataColumn(width),
       buildActionsDataColumn(width),
+    ];
+  }
+
+  List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
+    return [
+      buildBarkodDataCell(e),
+      buildNameDataCell(e),
+      buildGramDataCell(e),
+      buildCaratDataCell(e),
+      buildPurityRateDataCell(e),
+      buildLaborCostDataCell(e),
+      buildCostDataCell(e),
+      buildActionsDataCell(context, e),
     ];
   }
 
@@ -204,11 +215,15 @@ class _GoldProductsInventoryScreenState
         child: TextFormField(
           controller: searchController,
           style: const TextStyle(
-            fontSize: 22,
+            fontSize: 20,
             height: 1,
             color: Colors.black,
           ),
           decoration: InputDecoration(
+            hintText: '9784753492558',
+            hintStyle: const TextStyle(
+              fontSize: 20,
+            ),
             contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
             constraints:
                 DecorationStyles.buildBoxConstraints(const Size(180, 35)),
@@ -243,19 +258,6 @@ class _GoldProductsInventoryScreenState
             onSelectChanged: (selected) {},
           ),
         );
-  }
-
-  List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
-    return [
-      buildBarkodDataCell(e),
-      buildNameDataCell(e),
-      buildGramDataCell(e),
-      buildCaratDataCell(e),
-      buildPurityRateDataCell(e),
-      buildLaborCostDataCell(e),
-      buildCostDataCell(e),
-      buildActionsDataCell(context, e),
-    ];
   }
 
   DataCell buildBarkodDataCell(GoldProduct e) {
