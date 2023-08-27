@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/diamond_product.dart';
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_products_sold_screen.dart';
@@ -11,6 +11,7 @@ import 'package:kuyumcu_stok/screens/gold_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_products_inventory_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_sale_screen.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
+import 'package:kuyumcu_stok/screens/stock_gold_products_screen.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -32,13 +33,13 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
-  BarcodeDbHelper().open();
+  /*BarcodeDbHelper().open();
   List<StockGoldProduct> goldProducts = [];
   List<DiamondProduct> diamondProducts = [];
 
   CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
-        GoldProductDbHelper().open().then((value) => {
-              GoldProductDbHelper().queryAllRows().then((value) => {
+        StockGoldProductDbHelper().open().then((value) => {
+              StockGoldProductDbHelper().queryAllRows().then((value) => {
                     for (int i = 0; i < value.length; i++)
                       {
                         goldProducts.add(
@@ -54,10 +55,23 @@ Future<void> main() async {
                       }
                   }),
             }),
-        GoldProductDbHelper().products = goldProducts,
+        StockGoldProductDbHelper().stockProducts = goldProducts,
         DiamondProductDbHelper().products = diamondProducts,
-        runApp(const MyApp()),
+
+      });*/
+  List<GoldProduct> goldProducts = [];
+  GoldProductDbHelper().open().then((value) => {
+        GoldProductDbHelper().queryAllRows().then((value) => {
+              for (int i = 0; i < value.length; i++)
+                {
+                  goldProducts
+                      .add(GoldProduct.fromJson(value[i], value[i]['id'])),
+                },
+              runApp(const MyApp()),
+            })
       });
+
+  //runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -81,7 +95,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
       ),
-      routes: {
+      home: GoldProductsInventoryScreen(),
+      /*routes: {
         '/': (BuildContext context) => const HomeScreen(),
         '/gold-products-inventory-screen': (BuildContext context) =>
             const GoldProductsInventoryScreen(),
@@ -94,8 +109,10 @@ class MyApp extends StatelessWidget {
             const GoldProductAddScreen(),
         '/diamond-product-add-screen': (BuildContext context) =>
             const DiamondProductAddScreen(),
+        '/stock-gold-products-screen': (BuildContext context) =>
+            const StockGoldProductsScreen(),
       },
-      initialRoute: '/',
+      initialRoute: '/stock-gold-products-screen',*/
     );
   }
 }

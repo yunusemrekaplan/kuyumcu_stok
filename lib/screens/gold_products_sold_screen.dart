@@ -1,7 +1,8 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -20,7 +21,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
   bool _sortAscending = true;
 
   _GoldProductsSoldScreenState() {
-    products = GoldProductDbHelper().products;
+    products = StockGoldProductDbHelper().stockProducts;
     initializeDateFormatting('tr_TR', null);
   }
 
@@ -263,3 +264,4 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
     });
   }
 }
+*/

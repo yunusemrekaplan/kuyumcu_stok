@@ -1,10 +1,11 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
@@ -389,7 +390,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             return const Center(child: CircularProgressIndicator());
           });
 
-      Map<String, dynamic> json = StockGoldProduct(
+      Map<String, dynamic> json = GoldProduct(
         barcodeText: barcodeNo,
         name: nameController.text,
         carat: dropdownValue,
@@ -404,7 +405,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         GoldProductDbHelper().insert(json).then(
               (value) => {
                 GoldProductDbHelper().products.add(
-                      StockGoldProduct.fromJson(json, value),
+                      GoldProduct.fromJson(json, value),
                     ),
                 setState(
                   () {
@@ -438,7 +439,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         );
       }
 
-      /*Barcode barcode;
+      */
+/*Barcode barcode;
 
       try {
         GoldProductDbHelper().insert(json).then(
@@ -483,7 +485,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             ],
           ),
         );
-      }*/
+      }*//*
+
     }
   }
 
@@ -532,3 +535,4 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     }).toList();
   }
 }
+*/

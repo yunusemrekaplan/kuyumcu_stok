@@ -1,8 +1,9 @@
+/*
 
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -162,11 +163,11 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
         ),
         onChanged: (value) {
           if (value.length == 13) {
-            for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
-              if (GoldProductDbHelper().products[i].barcodeText == value) {
+            for (int i = 0; i < StockGoldProductDbHelper().stockProducts.length; i++) {
+              if (StockGoldProductDbHelper().stockProducts[i].barcodeText == value) {
                 print('ürün bulundu');
                 setState(() {
-                  product = GoldProductDbHelper().products[i];
+                  product = StockGoldProductDbHelper().stockProducts[i];
                   caratTxt = product!.carat.intDefinition.toString();
                   gramTxt = product!.gram.toStringAsFixed(0);
                   costTxt = product!.cost.toStringAsFixed(0);
@@ -188,7 +189,8 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                 });
               }
             }
-            /*ProductGoldDbHelper().getProductByBarcodeText(value).then((value) => {
+            */
+/*ProductGoldDbHelper().getProductByBarcodeText(value).then((value) => {
                     if (value == null)
                       {}
                     else
@@ -201,7 +203,8 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                           priceTxt = costTxt;
                         }),
                       }
-                  },);*/
+                  },);*//*
+
           }
         },
       ),
@@ -425,7 +428,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
           product!.soldPrice = double.parse(saleTextEditingController.text);
           product!.soldDate = DateTime.now();
           product!.earnedProfit = earnedProfit;
-          GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) => {
+          StockGoldProductDbHelper().update(product!.toJson(), product!.id).then((value) => {
             Navigator.of(context).pop(),
             print(product!.toJson()),
             setState(() {
@@ -611,3 +614,4 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
     );
   }
 }
+*/

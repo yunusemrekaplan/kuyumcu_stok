@@ -1,4 +1,4 @@
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -13,9 +13,9 @@ class GoldProductDbHelper {
 
   Database? _db;
 
-  late List<StockGoldProduct> products;
+  late List<GoldProduct> products;
 
-  String tableName = "product_golds";
+  String tableName = "gold_products";
 
   Future<void> open() async {
     products = [];
@@ -29,21 +29,17 @@ class GoldProductDbHelper {
 
   Future<void> _createTable() async {
     await _db!.execute('''
-      CREATE TABLE IF NOT EXISTS product_golds (
+      CREATE TABLE IF NOT EXISTS gold_products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         barcodeText TEXT NOT NULL,
-        enteredDate TEXT NOT NULL,
-        soldDate TEXT,
+        piece INTEGER NOT NULL,
         name TEXT NOT NULL,
-        isSold INTEGER NOT NULL,
         carat INTEGER NOT NULL,
         purityRate DECIMAL NOT NULL,
         laborCost DECIMAL NOT NULL,
         gram DECIMAL NOT NULL,
         cost DECIMAL NOT NULL,
-        costPrice DECIMAL,
-        soldPrice DECIMAL,
-        earnedProfit DECIMAL
+        salesGrams DECIMAL NOT NULL
       )
     ''');
   }

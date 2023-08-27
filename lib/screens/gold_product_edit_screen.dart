@@ -6,7 +6,7 @@ import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
@@ -14,7 +14,7 @@ import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class GoldProductEditScreen extends StatefulWidget {
-  late StockGoldProduct product;
+  late GoldProduct product;
   GoldProductEditScreen({super.key, required this.product});
 
   @override
@@ -23,7 +23,7 @@ class GoldProductEditScreen extends StatefulWidget {
 }
 
 class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
-  late StockGoldProduct product;
+  late GoldProduct product;
   late Carat dropdownValue;
   late TextEditingController nameController;
   late TextEditingController caratController;

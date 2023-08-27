@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/stock_gold_product.dart';
+import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
-import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
@@ -21,7 +20,7 @@ class GoldProductsInventoryScreen extends StatefulWidget {
 
 class _GoldProductsInventoryScreenState
     extends State<GoldProductsInventoryScreen> {
-  late List<StockGoldProduct> products;
+  late List<GoldProduct> products;
   late TextEditingController searchController;
 
   int _sortColumnIndex = 0;
@@ -35,7 +34,7 @@ class _GoldProductsInventoryScreenState
   @override
   Widget build(BuildContext context) {
     final verticalScrollController = ScrollController();
-    final horizontalScrollController = ScrollController();
+    //final horizontalScrollController = ScrollController();
 
     final double width = MediaQuery.of(context).size.width - 60;
 
@@ -93,26 +92,15 @@ class _GoldProductsInventoryScreenState
   List<DataColumn> buildDataColumns(double width) {
     return [
       buildBarcodeDataColumn(width),
+      buildPieceDataColumn(width),
       buildNameDataColumn(width),
-      buildGramDataColumn(width),
       buildCaratDataColumn(width),
       buildPurityRateDataColumn(width),
       buildLaborCostDataColumn(width),
+      buildGramDataColumn(width),
+      buildSalesGramDataColumn(width),
       buildCostDataColumn(width),
       buildActionsDataColumn(width),
-    ];
-  }
-
-  List<DataCell> buildDataCells(StockGoldProduct e, BuildContext context) {
-    return [
-      buildBarkodDataCell(e),
-      buildNameDataCell(e),
-      buildGramDataCell(e),
-      buildCaratDataCell(e),
-      buildPurityRateDataCell(e),
-      buildLaborCostDataCell(e),
-      buildCostDataCell(e),
-      buildActionsDataCell(context, e),
     ];
   }
 
@@ -122,6 +110,19 @@ class _GoldProductsInventoryScreenState
         //width: width * .22,
         child: Text(
           'Barkod',
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  DataColumn buildPieceDataColumn(double width) {
+    return DataColumn(
+      label: const SizedBox(
+        //width: width * .22,
+        child: Text(
+          'Adet',
           style: TextStyle(fontSize: 22),
         ),
       ),
@@ -148,6 +149,19 @@ class _GoldProductsInventoryScreenState
         //width: width * .13,
         child: Text(
           'Gram',
+          style: TextStyle(fontSize: 22),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
+  }
+
+  DataColumn buildSalesGramDataColumn(double width) {
+    return DataColumn(
+      label: const SizedBox(
+        //width: width * .13,
+        child: Text(
+          'Satış Gramı',
           style: TextStyle(fontSize: 22),
         ),
       ),
@@ -249,7 +263,7 @@ class _GoldProductsInventoryScreenState
   Iterable<DataRow> buildRowList(BuildContext context) {
     return products
         .where(
-          (e) => e.isSold == 0,
+          (e) => e.piece > 0,
         )
         .map(
           (e) => DataRow(
@@ -260,56 +274,85 @@ class _GoldProductsInventoryScreenState
         );
   }
 
-  DataCell buildBarkodDataCell(StockGoldProduct e) {
+  List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
+    return [
+      buildBarkodDataCell(e),
+      buildPieceDataCell(e),
+      buildNameDataCell(e),
+      buildCaratDataCell(e),
+      buildPurityRateDataCell(e),
+      buildLaborCostDataCell(e),
+      buildGramDataCell(e),
+      buildCostDataCell(e),
+      buildSalesGramsDataCell(e),
+      buildActionsDataCell(context, e),
+    ];
+  }
+
+  DataCell buildBarkodDataCell(GoldProduct e) {
     return DataCell(Text(
       e.barcodeText,
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildNameDataCell(StockGoldProduct e) {
+  DataCell buildPieceDataCell(GoldProduct e) {
+    return DataCell(Text(
+      e.piece.toString(),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildNameDataCell(GoldProduct e) {
     return DataCell(Text(
       e.name,
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildGramDataCell(StockGoldProduct e) {
-    return DataCell(Text(
-      NumberFormat('#,##0.0', 'tr_TR').format(e.gram),
-      style: const TextStyle(fontSize: 20),
-    ));
-  }
-
-  DataCell buildCaratDataCell(StockGoldProduct e) {
+  DataCell buildCaratDataCell(GoldProduct e) {
     return DataCell(Text(
       e.carat.intDefinition.toString(),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildPurityRateDataCell(StockGoldProduct e) {
+  DataCell buildPurityRateDataCell(GoldProduct e) {
     return DataCell(Text(
       NumberFormat('#,##0.0', 'tr_TR').format(e.purityRate),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildLaborCostDataCell(StockGoldProduct e) {
+  DataCell buildLaborCostDataCell(GoldProduct e) {
     return DataCell(Text(
       NumberFormat('#,##0.0', 'tr_TR').format(e.laborCost),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildCostDataCell(StockGoldProduct e) {
+  DataCell buildGramDataCell(GoldProduct e) {
+    return DataCell(Text(
+      NumberFormat('#,##0.0', 'tr_TR').format(e.gram),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildCostDataCell(GoldProduct e) {
     return DataCell(Text(
       NumberFormat('#,##0.0', 'tr_TR').format(e.cost),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildActionsDataCell(BuildContext context, StockGoldProduct e) {
+  DataCell buildSalesGramsDataCell(GoldProduct e) {
+    return DataCell(Text(
+      NumberFormat('#,##0.0', 'tr_TR').format(e.salesGrams),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildActionsDataCell(BuildContext context, GoldProduct e) {
     return DataCell(
       Row(
         children: [
@@ -321,7 +364,7 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  IconButton buildDeleteButton(BuildContext context, StockGoldProduct e) {
+  IconButton buildDeleteButton(BuildContext context, GoldProduct e) {
     return IconButton(
       onPressed: () {
         showDialog(
@@ -363,7 +406,7 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  IconButton buildEditButton(BuildContext context, StockGoldProduct e) {
+  IconButton buildEditButton(BuildContext context, GoldProduct e) {
     return IconButton(
       onPressed: () {
         Navigator.pushAndRemoveUntil(
@@ -464,7 +507,7 @@ class _GoldProductsInventoryScreenState
         products = GoldProductDbHelper()
             .products
             .where(
-              (e) => e.isSold == 0,
+              (e) => e.piece > 0,
             )
             .toList();
       });
@@ -473,7 +516,7 @@ class _GoldProductsInventoryScreenState
       products = GoldProductDbHelper()
           .products
           .where(
-            (e) => e.isSold == 0,
+            (e) => e.piece > 0,
           )
           .toList();
       //print(value);
