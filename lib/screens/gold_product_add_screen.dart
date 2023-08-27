@@ -7,6 +7,7 @@ import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/product_entry.dart';
 import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
@@ -31,6 +32,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late TextEditingController purityRateController;
   late TextEditingController costController;
   late TextEditingController laborCostController;
+  late TextEditingController salesGramsController;
 
   _GoldProductAddScreenState() {
     initializeDateFormatting('tr_TR', null);
@@ -43,6 +45,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     purityRateController = TextEditingController();
     costController = TextEditingController();
     laborCostController = TextEditingController();
+    salesGramsController = TextEditingController();
     String text1 = dropdownValue.purityRateDefinition.toString();
     purityRateController.text = text1.replaceAll(".", ",");
   }
@@ -64,6 +67,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           buildLaborCostRow(),
           buildGramRow(),
           buildCostRow(),
+          buildSalesGramsRow(),
           buildSaveButton(),
           const Expanded(
             child: SizedBox(
@@ -78,7 +82,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildBarcodeRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 0, bottom: 16),
+      padding: const EdgeInsets.only(left: 32.0, top: 0, bottom: 12),
       child: Row(
         children: [
           Container(
@@ -131,7 +135,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildPieceRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: Row(
         children: [
           Text(
@@ -143,6 +147,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             style: TextStyles.buildTextFormFieldTextStyle(),
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(150, 38)),
+            inputFormatters: <TextInputFormatter>[
+              InputFormatters.inputOnlyDigits(),
+            ],
             onChanged: (value) {
               setState(() {
                 pieceController;
@@ -156,7 +163,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildNameRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: Row(
         children: [
           Text(
@@ -181,7 +188,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildCaratRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: SizedBox(
         height: 56,
         child: Row(
@@ -213,7 +220,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildPurityRateRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: Row(
         children: [
           Text(
@@ -227,7 +234,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {
@@ -243,7 +250,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildLaborCostRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: Row(
         children: [
           Text(
@@ -257,7 +264,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {
@@ -273,7 +280,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildGramRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: Row(
         children: [
           Text(
@@ -287,7 +294,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {
@@ -303,7 +310,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   Padding buildCostRow() {
     return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      padding: buildEdgeInsets(),
       child: Row(
         children: [
           Text(
@@ -317,7 +324,36 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
+            ],
+            onChanged: (value) {
+              setState(() {
+                costController;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildSalesGramsRow() {
+    return Padding(
+      padding: buildEdgeInsets(),
+      child: Row(
+        children: [
+          Text(
+            'Satış Gramı: ',
+            style: TextStyles.buildTextStyle(),
+          ),
+          TextFormField(
+            validator: NumberValidator.validate,
+            controller: salesGramsController,
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(125, 38)),
+            inputFormatters: <TextInputFormatter>[
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {
@@ -418,34 +454,42 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           builder: (context) {
             return const Center(child: CircularProgressIndicator());
           });
+      //Navigator.of(context).pop();
 
-      /*Map<String, dynamic> json = GoldProduct(
+      Map<String, dynamic> goldProductJson = GoldProduct(
         barcodeText: barcodeNo,
+        piece: int.parse(pieceController.text),
         name: nameController.text,
         carat: dropdownValue,
         gram: double.parse(gramController.text.replaceAll(',', '.')),
+        purityRate: double.parse(purityRateController.text.replaceAll(",", ".")),
         laborCost: double.parse(laborCostController.text.replaceAll(',', '.')),
         cost: double.parse(costController.text.replaceAll(',', '.')),
-        purityRate:
-            double.parse(purityRateController.text.replaceAll(",", ".")),
+        salesGrams: double.parse(salesGramsController.text.replaceAll(',', '.')),
       ).toJson();
 
+      Map<String, dynamic> productEntryJson;
+
       try {
-        GoldProductDbHelper().insert(json).then(
+        GoldProductDbHelper().insert(goldProductJson).then(
               (value) => {
                 GoldProductDbHelper().products.add(
-                      GoldProduct.fromJson(json, value),
+                      GoldProduct.fromJson(goldProductJson, value),
                     ),
+
+                productEntryJson = ProductEntry(productId: value, enteredDate: DateTime.now(), piece: int.parse(pieceController.text)).toJson(),
+
                 setState(
                   () {
                     barcodeNo = '0000000000000';
+                    pieceController.text = '';
                     nameController.text = '';
-                    gramController.text = '';
-                    costGramController.text = '';
-                    purityRateController.text =
-                        dropdownValue.purityRateDefinition.toStringAsFixed(0);
-                    costController.text = '';
+                    dropdownValue = Carat.twentyFour;
+                    purityRateController.text = dropdownValue.purityRateDefinition.toString();
                     laborCostController.text = '';
+                    gramController.text = '';
+                    costController.text = '';
+                    salesGramsController.text = '';
 
                     Navigator.of(context).pop();
                   },
@@ -466,7 +510,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             ],
           ),
         );
-      }*/
+      }
 
       /*Barcode barcode;
 
@@ -519,20 +563,22 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   }
 
   bool isVariablesEmpty() {
-    return nameController.text.isEmpty ||
-        gramController.text.isEmpty ||
+    return pieceController.text.isEmpty ||
+        nameController.text.isEmpty ||
         purityRateController.text.isEmpty ||
         laborCostController.text.isEmpty ||
-        costController.text.isEmpty;
+        gramController.text.isEmpty ||
+        costController.text.isEmpty ||
+        salesGramsController.text.isEmpty;
   }
 
   bool isCorrectFormat() {
-    return double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
-            null ||
-        double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
-            null ||
+    return double.tryParse(purityRateController.text.replaceAll(",", ".")) == null ||
+        double.tryParse(pieceController.text.replaceAll(",", ".")) == null ||
+        double.tryParse(laborCostController.text.replaceAll(",", ".")) == null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
-        double.tryParse(costController.text.replaceAll(",", ".")) == null;
+        double.tryParse(costController.text.replaceAll(",", ".")) == null ||
+        double.tryParse(salesGramsController.text.replaceAll(",", ".")) == null;
   }
 
   void buildCalculate() {
@@ -540,8 +586,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         gramController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
-        costController.text = NumberFormat('#,##0', 'tr_TR')
-            .format(Calculate.calculateCostPrice(
+        costController.text =
+            NumberFormat('#,##0', 'tr_TR').format(Calculate.calculateCostPrice(
           double.parse(purityRateController.text.replaceAll(",", ".")),
           double.parse(gramController.text.replaceAll(",", ".")),
           double.parse(laborCostController.text.replaceAll(",", ".")),
@@ -563,4 +609,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       );
     }).toList();
   }
+
+  EdgeInsets buildEdgeInsets() =>
+      const EdgeInsets.only(left: 32.0, top: 12, bottom: 12);
 }

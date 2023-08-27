@@ -148,7 +148,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
               /*TextInputFormatter.withFunction((oldValue, newValue) {
                 if (newValue.text.isEmpty) {
                   return newValue.copyWith(text: '');
@@ -193,7 +193,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {
@@ -223,7 +223,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {
@@ -253,7 +253,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              InputFormatters.inputDouble(),
             ],
             onChanged: (value) {
               setState(() {

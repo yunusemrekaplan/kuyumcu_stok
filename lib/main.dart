@@ -21,9 +21,11 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
+    title: 'Kuyumcu Stok Takibi',
     size: Size(1120, 740),
     minimumSize: Size(1120, 740),
     center: true,
+    //fullScreen: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.normal,
@@ -96,7 +98,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        '/': (BuildContext context) => const HomeScreen(),
+        //'/': (BuildContext context) => const HomeScreen(),
         '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
         '/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
