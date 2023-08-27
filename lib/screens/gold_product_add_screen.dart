@@ -4,7 +4,7 @@ import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
-import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/stock_gold_product.dart';
 import 'package:kuyumcu_stok/services/barcode_service.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
@@ -389,9 +389,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             return const Center(child: CircularProgressIndicator());
           });
 
-      Map<String, dynamic> json = GoldProduct(
-        isSold: 0,
-        enteredDate: DateTime.now(),
+      Map<String, dynamic> json = StockGoldProduct(
         barcodeText: barcodeNo,
         name: nameController.text,
         carat: dropdownValue,
@@ -406,7 +404,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         GoldProductDbHelper().insert(json).then(
               (value) => {
                 GoldProductDbHelper().products.add(
-                      GoldProduct.fromJson(json, value),
+                      StockGoldProduct.fromJson(json, value),
                     ),
                 setState(
                   () {
@@ -462,7 +460,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                         purityRateController.text = dropdownValue
                             .purityRateDefinition
                             .toStringAsFixed(0);
-                        costPriceController.text = '';
                         laborCostController.text = '';
 
                         Navigator.of(context).pop();

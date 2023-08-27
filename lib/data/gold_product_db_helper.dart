@@ -1,4 +1,4 @@
-import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/stock_gold_product.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -13,7 +13,7 @@ class GoldProductDbHelper {
 
   Database? _db;
 
-  late List<GoldProduct> products;
+  late List<StockGoldProduct> products;
 
   String tableName = "product_golds";
 

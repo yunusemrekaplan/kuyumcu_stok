@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/stock_gold_product.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,7 +14,7 @@ class GoldProductsSoldScreen extends StatefulWidget {
 }
 
 class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
-  late List<GoldProduct> products;
+  late List<StockGoldProduct> products;
 
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
@@ -178,7 +178,7 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
     );
   }
 
-  List<DataCell> buildDataCells(GoldProduct e) {
+  List<DataCell> buildDataCells(StockGoldProduct e) {
     return [
       buildSoldDateDataCell(e),
       buildNameDataCell(e),
@@ -188,21 +188,21 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
     ];
   }
 
-  DataCell buildSoldDateDataCell(GoldProduct e) {
+  DataCell buildSoldDateDataCell(StockGoldProduct e) {
     return DataCell(Text(
       '${DateFormat.yMd('tr-Tr').format(e.soldDate!)}  ${DateFormat.Hm().format(e.soldDate!)}',
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildNameDataCell(GoldProduct e) {
+  DataCell buildNameDataCell(StockGoldProduct e) {
     return DataCell(Text(
       e.name,
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildCostPriceDataCell(GoldProduct e) {
+  DataCell buildCostPriceDataCell(StockGoldProduct e) {
     return DataCell(Text(
       NumberFormat('#,##0.0', 'tr_TR')
           .format(e.costPrice), //e.costPrice.toStringAsFixed(0),
@@ -210,14 +210,14 @@ class _GoldProductsSoldScreenState extends State<GoldProductsSoldScreen> {
     ));
   }
 
-  DataCell buildSoldPriceDataCell(GoldProduct e) {
+  DataCell buildSoldPriceDataCell(StockGoldProduct e) {
     return DataCell(Text(
       NumberFormat('#,##0.0', 'tr_TR').format(e.soldPrice),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
-  DataCell buildEarnedProfitDataCell(GoldProduct e) {
+  DataCell buildEarnedProfitDataCell(StockGoldProduct e) {
     return DataCell(Text(
       NumberFormat('#,##0.0', 'tr_TR').format(e.earnedProfit),
       style: const TextStyle(fontSize: 20),

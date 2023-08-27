@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/models/diamond_product.dart';
-import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/stock_gold_product.dart';
 import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_products_sold_screen.dart';
@@ -33,7 +33,7 @@ Future<void> main() async {
   });
 
   BarcodeDbHelper().open();
-  List<GoldProduct> goldProducts = [];
+  List<StockGoldProduct> goldProducts = [];
   List<DiamondProduct> diamondProducts = [];
 
   CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
@@ -42,7 +42,7 @@ Future<void> main() async {
                     for (int i = 0; i < value.length; i++)
                       {
                         goldProducts.add(
-                            GoldProduct.fromJson(value[i], value[i]['id'])),
+                            StockGoldProduct.fromJson(value[i], value[i]['id'])),
                       }
                   }),
             }),

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
-import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/stock_gold_product.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -26,7 +26,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
   String costTxt = '....';
   String priceTxt = '....';
 
-  GoldProduct? product;
+  StockGoldProduct? product;
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
