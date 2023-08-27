@@ -73,7 +73,7 @@ class _GoldProductsInventoryScreenState
                           showCheckboxColumn: false,
                           border: DataTableStyles.buildTableBorder(),
                           columns: buildDataColumns(width),
-                          rows: buildRowList(context).toList(),
+                          rows: buildRowList(context),
                         ),
                       ),
                     ),
@@ -260,18 +260,31 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  Iterable<DataRow> buildRowList(BuildContext context) {
-    return products
-        .where(
-          (e) => e.piece > 0,
-        )
-        .map(
-          (e) => DataRow(
-            color: DataTableStyles.buildDataRowColor(),
-            cells: buildDataCells(e, context),
-            onSelectChanged: (selected) {},
-          ),
-        );
+  List<DataRow> buildRowList(BuildContext context) {
+     List<DataRow> res = products
+         .where(
+           (e) => e.piece > 0,
+     )
+         .map(
+           (e) => DataRow(
+         color: DataTableStyles.buildDataRowColor(),
+         cells: buildDataCells(e, context),
+         onSelectChanged: (selected) {},
+       ),
+     ).toList();
+     /*res.add(DataRow(cells: [
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+       DataCell(Text('')),
+     ]));*/
+    return res;
   }
 
   List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {

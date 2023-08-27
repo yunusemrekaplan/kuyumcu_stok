@@ -95,24 +95,19 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
       ),
-      home: GoldProductsInventoryScreen(),
-      /*routes: {
+      routes: {
         '/': (BuildContext context) => const HomeScreen(),
-        '/gold-products-inventory-screen': (BuildContext context) =>
-            const GoldProductsInventoryScreen(),
-        '/gold-products-sold-screen': (BuildContext context) =>
-            const GoldProductsSoldScreen(),
-        '/diamond-products-screen': (BuildContext context) =>
-            const DiamondProductsScreen(),
-        '/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
+        '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
+        //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
+        '/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
+        //'/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
         '/gold-product-add-screen': (BuildContext context) =>
             const GoldProductAddScreen(),
         '/diamond-product-add-screen': (BuildContext context) =>
             const DiamondProductAddScreen(),
-        '/stock-gold-products-screen': (BuildContext context) =>
-            const StockGoldProductsScreen(),
+        //'/stock-gold-products-screen': (BuildContext context) => const StockGoldProductsScreen(),
       },
-      initialRoute: '/stock-gold-products-screen',*/
+      initialRoute: '/gold-products-inventory-screen',
     );
   }
 }

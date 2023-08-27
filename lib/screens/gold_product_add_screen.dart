@@ -1,6 +1,7 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
@@ -19,11 +20,11 @@ class GoldProductAddScreen extends StatefulWidget {
   @override
   State<GoldProductAddScreen> createState() => _GoldProductAddScreenState();
 }
-// ToDo validatörleri unutma!!!
 
 class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late String barcodeNo;
   late Carat dropdownValue;
+  late TextEditingController pieceController;
   late TextEditingController nameController;
   late TextEditingController gramController;
   late TextEditingController costGramController;
@@ -32,8 +33,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late TextEditingController laborCostController;
 
   _GoldProductAddScreenState() {
+    initializeDateFormatting('tr_TR', null);
     dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';
+    pieceController = TextEditingController();
     nameController = TextEditingController();
     gramController = TextEditingController();
     costGramController = TextEditingController();
@@ -54,6 +57,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       body: Column(
         children: [
           buildBarcodeRow(),
+          buildPieceRow(),
           buildNameRow(),
           buildCaratRow(),
           buildPurityRateRow(),
@@ -121,6 +125,31 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           fontSize: 20,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+
+  Padding buildPieceRow() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+      child: Row(
+        children: [
+          Text(
+            'Adet: ',
+            style: TextStyles.buildTextStyle(),
+          ),
+          TextFormField(
+            controller: pieceController,
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration:
+                DecorationStyles.buildInputDecoration(const Size(150, 38)),
+            onChanged: (value) {
+              setState(() {
+                pieceController;
+              });
+            },
+          ),
+        ],
       ),
     );
   }
@@ -218,7 +247,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           Text(
-            'İşçilik: ',
+            'Milyem: ',
             style: TextStyles.buildTextStyle(),
           ),
           TextFormField(
@@ -390,7 +419,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             return const Center(child: CircularProgressIndicator());
           });
 
-      Map<String, dynamic> json = GoldProduct(
+      /*Map<String, dynamic> json = GoldProduct(
         barcodeText: barcodeNo,
         name: nameController.text,
         carat: dropdownValue,
@@ -437,10 +466,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             ],
           ),
         );
-      }
+      }*/
 
-      */
-/*Barcode barcode;
+      /*Barcode barcode;
 
       try {
         GoldProductDbHelper().insert(json).then(
@@ -485,8 +513,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             ],
           ),
         );
-      }*//*
-
+      }
+*/
     }
   }
 
@@ -512,11 +540,12 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         gramController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
-        costController.text = Calculate.calculateCostPrice(
+        costController.text = NumberFormat('#,##0', 'tr_TR')
+            .format(Calculate.calculateCostPrice(
           double.parse(purityRateController.text.replaceAll(",", ".")),
           double.parse(gramController.text.replaceAll(",", ".")),
           double.parse(laborCostController.text.replaceAll(",", ".")),
-        ).toStringAsFixed(0);
+        ));
       });
     }
   }
@@ -535,4 +564,3 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     }).toList();
   }
 }
-*/
