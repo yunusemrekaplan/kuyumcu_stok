@@ -12,14 +12,14 @@ class ProductEntry {
 
   ProductEntry.fromJson(Map<String, dynamic> json, this.id) {
     productId = json['productId'];
-    enteredDate = json['enteredDate'];
+    enteredDate = DateTime.parse(json['enteredDate']);
     piece = json['piece'];
   }
 
   Map<String, dynamic> toJson() {
     return {
       'productId': productId,
-      'enteredDate': enteredDate,
+      'enteredDate': enteredDate.toIso8601String(),
       'piece': piece,
     };
   }

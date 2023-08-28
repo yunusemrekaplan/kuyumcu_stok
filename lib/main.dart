@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/product_entry.dart';
 import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_products_sold_screen.dart';
@@ -22,8 +24,8 @@ Future<void> main() async {
 
   WindowOptions windowOptions = const WindowOptions(
     title: 'Kuyumcu Stok Takibi',
-    size: Size(1120, 740),
-    minimumSize: Size(1120, 740),
+    size: Size(1500, 740),
+    minimumSize: Size(1500, 740),
     center: true,
     //fullScreen: true,
     backgroundColor: Colors.transparent,
@@ -61,19 +63,23 @@ Future<void> main() async {
         DiamondProductDbHelper().products = diamondProducts,
 
       });*/
-  List<GoldProduct> goldProducts = [];
-  GoldProductDbHelper().open().then((value) => {
-        GoldProductDbHelper().queryAllRows().then((value) => {
-              for (int i = 0; i < value.length; i++)
-                {
-                  goldProducts
-                      .add(GoldProduct.fromJson(value[i], value[i]['id'])),
-                },
-              runApp(const MyApp()),
-            })
-      });
 
-  //runApp(const MyApp());
+  GoldProductDbHelper().open().then((value) {
+    GoldProductDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i < value.length; i++) {
+        GoldProductDbHelper().products.add(GoldProduct.fromJson(value[i], value[i]['id']));
+      }
+      ProductEntryDbHelper().open().then((value) {
+        ProductEntryDbHelper().queryAllRows().then((value) {
+          for (int i = 0; i < value.length; i++) {
+            ProductEntryDbHelper().entries.add(ProductEntry.fromJson(value[i], value[i]['id']));
+          }
+          runApp(const MyApp());
+        });
+      });
+    });
+  });
+
 }
 
 class MyApp extends StatelessWidget {
@@ -99,9 +105,11 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         //'/': (BuildContext context) => const HomeScreen(),
-        '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
+        '/gold-products-inventory-screen': (BuildContext context) =>
+            const GoldProductsInventoryScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
-        '/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
+        '/diamond-products-screen': (BuildContext context) =>
+            const DiamondProductsScreen(),
         //'/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
         '/gold-product-add-screen': (BuildContext context) =>
             const GoldProductAddScreen(),

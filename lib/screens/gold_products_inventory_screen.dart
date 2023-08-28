@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/screens/gold_product_edit_screen.dart';
@@ -73,7 +74,18 @@ class _GoldProductsInventoryScreenState
                           showCheckboxColumn: false,
                           border: DataTableStyles.buildTableBorder(),
                           columns: buildDataColumns(width),
-                          rows: buildRowList(context),
+                          rows: products
+                              .where(
+                                (e) => e.piece > 0,
+                              )
+                              .map(
+                                (e) => DataRow(
+                                  color: DataTableStyles.buildDataRowColor(),
+                                  cells: buildDataCells(e, context),
+                                  onSelectChanged: (selected) {},
+                                ),
+                              )
+                              .toList(),
                         ),
                       ),
                     ),
@@ -261,18 +273,19 @@ class _GoldProductsInventoryScreenState
   }
 
   List<DataRow> buildRowList(BuildContext context) {
-     List<DataRow> res = products
-         .where(
-           (e) => e.piece > 0,
-     )
-         .map(
-           (e) => DataRow(
-         color: DataTableStyles.buildDataRowColor(),
-         cells: buildDataCells(e, context),
-         onSelectChanged: (selected) {},
-       ),
-     ).toList();
-     /*res.add(DataRow(cells: [
+    List<DataRow> res = products
+        .where(
+          (e) => e.piece > 0,
+        )
+        .map(
+          (e) => DataRow(
+            color: DataTableStyles.buildDataRowColor(),
+            cells: buildDataCells(e, context),
+            onSelectChanged: (selected) {},
+          ),
+        )
+        .toList();
+    /*res.add(DataRow(cells: [
        DataCell(Text('')),
        DataCell(Text('')),
        DataCell(Text('')),

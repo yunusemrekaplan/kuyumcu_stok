@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
@@ -448,13 +449,12 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         ),
       );
     } else {
-      showDialog(
+      /*showDialog(
           barrierDismissible: false,
           context: context,
           builder: (context) {
             return const Center(child: CircularProgressIndicator());
-          });
-      //Navigator.of(context).pop();
+          });*/
 
       Map<String, dynamic> goldProductJson = GoldProduct(
         barcodeText: barcodeNo,
@@ -462,10 +462,12 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         name: nameController.text,
         carat: dropdownValue,
         gram: double.parse(gramController.text.replaceAll(',', '.')),
-        purityRate: double.parse(purityRateController.text.replaceAll(",", ".")),
+        purityRate:
+            double.parse(purityRateController.text.replaceAll(",", ".")),
         laborCost: double.parse(laborCostController.text.replaceAll(',', '.')),
         cost: double.parse(costController.text.replaceAll(',', '.')),
-        salesGrams: double.parse(salesGramsController.text.replaceAll(',', '.')),
+        salesGrams:
+            double.parse(salesGramsController.text.replaceAll(',', '.')),
       ).toJson();
 
       Map<String, dynamic> productEntryJson;
@@ -476,24 +478,19 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
                 GoldProductDbHelper().products.add(
                       GoldProduct.fromJson(goldProductJson, value),
                     ),
-
-                productEntryJson = ProductEntry(productId: value, enteredDate: DateTime.now(), piece: int.parse(pieceController.text)).toJson(),
-
-                setState(
-                  () {
-                    barcodeNo = '0000000000000';
-                    pieceController.text = '';
-                    nameController.text = '';
-                    dropdownValue = Carat.twentyFour;
-                    purityRateController.text = dropdownValue.purityRateDefinition.toString();
-                    laborCostController.text = '';
-                    gramController.text = '';
-                    costController.text = '';
-                    salesGramsController.text = '';
-
-                    Navigator.of(context).pop();
-                  },
-                ),
+                productEntryJson = ProductEntry(
+                  productId: value,
+                  enteredDate: DateTime.now(),
+                  piece: int.parse(pieceController.text),
+                ).toJson(),
+                ProductEntryDbHelper()
+                    .insert(productEntryJson)
+                    .then((value) => {
+                          ProductEntryDbHelper().entries.add(
+                              ProductEntry.fromJson(productEntryJson, value)),
+                          onRefresh(),
+                          //Navigator.of(context).pop(),
+                        }),
               },
             );
       } catch (e) {
@@ -562,6 +559,23 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     }
   }
 
+  void onRefresh() {
+    return setState(
+      () {
+        barcodeNo = '0000000000000';
+        pieceController.text = '';
+        nameController.text = '';
+        dropdownValue = Carat.twentyFour;
+        purityRateController.text =
+            dropdownValue.purityRateDefinition.toString();
+        laborCostController.text = '';
+        gramController.text = '';
+        costController.text = '';
+        salesGramsController.text = '';
+      },
+    );
+  }
+
   bool isVariablesEmpty() {
     return pieceController.text.isEmpty ||
         nameController.text.isEmpty ||
@@ -573,9 +587,11 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   }
 
   bool isCorrectFormat() {
-    return double.tryParse(purityRateController.text.replaceAll(",", ".")) == null ||
+    return double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
+            null ||
         double.tryParse(pieceController.text.replaceAll(",", ".")) == null ||
-        double.tryParse(laborCostController.text.replaceAll(",", ".")) == null ||
+        double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
+            null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
         double.tryParse(costController.text.replaceAll(",", ".")) == null ||
         double.tryParse(salesGramsController.text.replaceAll(",", ".")) == null;

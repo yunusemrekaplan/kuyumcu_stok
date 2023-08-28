@@ -1,4 +1,5 @@
 import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/product_entry.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -13,12 +14,12 @@ class ProductEntryDbHelper {
 
   Database? _db;
 
-  late List<GoldProduct> products;
+  late List<ProductEntry> entries;
 
   String tableName = "product_entries";
 
   Future<void> open() async {
-    products = [];
+    entries = [];
     sqfliteFfiInit();
 
     String path = 'kuyumcu.db';
