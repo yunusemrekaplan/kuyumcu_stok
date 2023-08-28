@@ -74,18 +74,7 @@ class _GoldProductsInventoryScreenState
                           showCheckboxColumn: false,
                           border: DataTableStyles.buildTableBorder(),
                           columns: buildDataColumns(width),
-                          rows: products
-                              .where(
-                                (e) => e.piece > 0,
-                              )
-                              .map(
-                                (e) => DataRow(
-                                  color: DataTableStyles.buildDataRowColor(),
-                                  cells: buildDataCells(e, context),
-                                  onSelectChanged: (selected) {},
-                                ),
-                              )
-                              .toList(),
+                          rows: buildRowList(context),
                         ),
                       ),
                     ),
@@ -94,7 +83,7 @@ class _GoldProductsInventoryScreenState
               ),
             ),
             buildTableHeightPaddingBox(),
-            Expanded(child: buildProductAddButton(context)),
+            Expanded(child: buildStockAddButton(context)),
           ],
         ),
       ),
@@ -309,8 +298,8 @@ class _GoldProductsInventoryScreenState
       buildPurityRateDataCell(e),
       buildLaborCostDataCell(e),
       buildGramDataCell(e),
-      buildCostDataCell(e),
       buildSalesGramsDataCell(e),
+      buildCostDataCell(e),
       buildActionsDataCell(context, e),
     ];
   }
@@ -345,35 +334,35 @@ class _GoldProductsInventoryScreenState
 
   DataCell buildPurityRateDataCell(GoldProduct e) {
     return DataCell(Text(
-      NumberFormat('#,##0.0', 'tr_TR').format(e.purityRate),
+      e.purityRate.toString().replaceAll('.', ','),//NumberFormat('#,##0.0', 'tr_TR').format(e.purityRate),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
   DataCell buildLaborCostDataCell(GoldProduct e) {
     return DataCell(Text(
-      NumberFormat('#,##0.0', 'tr_TR').format(e.laborCost),
+      e.laborCost.toString().replaceAll('.', ','),//NumberFormat('#,##0.0', 'tr_TR').format(e.laborCost),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
   DataCell buildGramDataCell(GoldProduct e) {
     return DataCell(Text(
-      NumberFormat('#,##0.0', 'tr_TR').format(e.gram),
-      style: const TextStyle(fontSize: 20),
-    ));
-  }
-
-  DataCell buildCostDataCell(GoldProduct e) {
-    return DataCell(Text(
-      NumberFormat('#,##0.0', 'tr_TR').format(e.cost),
+      e.gram.toString().replaceAll('.', ','),//NumberFormat('#,##0.0', 'tr_TR').format(e.gram),
       style: const TextStyle(fontSize: 20),
     ));
   }
 
   DataCell buildSalesGramsDataCell(GoldProduct e) {
     return DataCell(Text(
-      NumberFormat('#,##0.0', 'tr_TR').format(e.salesGrams),
+      e.salesGrams.toString().replaceAll('.', ','),//NumberFormat('#,##0.0', 'tr_TR').format(e.salesGrams),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
+  DataCell buildCostDataCell(GoldProduct e) {
+    return DataCell(Text(
+        e.cost.toString().replaceAll('.', ','),//NumberFormat('#,##0.0', 'tr_TR').format(e.cost),
       style: const TextStyle(fontSize: 20),
     ));
   }
@@ -385,6 +374,7 @@ class _GoldProductsInventoryScreenState
           buildDeleteButton(context, e),
           buildEditButton(context, e),
           buildPrinterButton(),
+          buildAddButton(),
         ],
       ),
     );
@@ -456,7 +446,15 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  Container buildProductAddButton(BuildContext context) {
+  IconButton buildAddButton() {
+    return IconButton(
+      onPressed: () {},
+      icon: const Icon(Icons.add_box_outlined),
+      iconSize: 26,
+    );
+  }
+
+  Container buildStockAddButton(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Row(
@@ -470,7 +468,7 @@ class _GoldProductsInventoryScreenState
                     context, '/gold-product-add-screen', (route) => false);
               },
               child: Text(
-                'Ürün Ekle',
+                'Stok Ekle',
                 style: TextStyles.buildButtonTextStyle(),
               ),
             ),
@@ -487,43 +485,70 @@ class _GoldProductsInventoryScreenState
 
       if (columnIndex == 0) {
         if (ascending) {
-          products.sort((a, b) => a.name.compareTo(b.name));
+          products.sort((a, b) => a.barcodeText.compareTo(b.barcodeText));
         } else {
-          products.sort((a, b) => b.name.compareTo(a.name));
+          products.sort((a, b) => b.barcodeText.compareTo(a.barcodeText));
         }
-      } else if (columnIndex == 1) {
+      }
+      else if (columnIndex == 1) {
         if (ascending) {
-          products.sort((a, b) => a.gram.compareTo(b.gram));
+          products.sort((a, b) => a.piece.compareTo(b.piece));
         } else {
-          products.sort((a, b) => b.gram.compareTo(a.gram));
+          products.sort((a, b) => b.piece.compareTo(a.piece));
         }
-      } else if (columnIndex == 2) {
+      }
+      else if (columnIndex == 2) {
         if (ascending) {
           products.sort(
-              (a, b) => a.carat.intDefinition.compareTo(b.carat.intDefinition));
+              (a, b) => a.name.compareTo(b.name));
         } else {
           products.sort(
-              (a, b) => b.carat.intDefinition.compareTo(a.carat.intDefinition));
+              (a, b) => b.name.compareTo(a.name));
         }
-      } else if (columnIndex == 3) {
+      }
+      else if (columnIndex == 3) {
+        if (ascending) {
+          products.sort((a, b) => a.carat.intDefinition.compareTo(b.carat.intDefinition));
+        } else {
+          products.sort((a, b) => b.carat.intDefinition.compareTo(a.carat.intDefinition));
+        }
+      }
+      else if (columnIndex == 4) {
         if (ascending) {
           products.sort((a, b) => a.purityRate.compareTo(b.purityRate));
         } else {
           products.sort((a, b) => b.purityRate.compareTo(a.purityRate));
         }
-      } else if (columnIndex == 4) {
+      }
+      else if (columnIndex == 5) {
         if (ascending) {
           products.sort((a, b) => a.laborCost.compareTo(b.laborCost));
         } else {
           products.sort((a, b) => b.laborCost.compareTo(a.laborCost));
         }
-      } else if (columnIndex == 5) {
+      }
+      else if (columnIndex == 6) {
+        if (ascending) {
+          products.sort((a, b) => a.gram.compareTo(b.gram));
+        } else {
+          products.sort((a, b) => b.gram.compareTo(a.gram));
+        }
+      }
+      else if (columnIndex == 7) {
+        if (ascending) {
+          products.sort((a, b) => a.salesGrams.compareTo(b.salesGrams));
+        } else {
+          products.sort((a, b) => b.salesGrams.compareTo(a.salesGrams));
+        }
+      }
+      else if (columnIndex == 8) {
         if (ascending) {
           products.sort((a, b) => a.cost.compareTo(b.cost));
         } else {
           products.sort((a, b) => b.cost.compareTo(a.cost));
         }
       }
+
     });
   }
 

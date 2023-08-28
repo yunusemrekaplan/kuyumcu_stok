@@ -105,16 +105,12 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         //'/': (BuildContext context) => const HomeScreen(),
-        '/gold-products-inventory-screen': (BuildContext context) =>
-            const GoldProductsInventoryScreen(),
+        '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
-        '/diamond-products-screen': (BuildContext context) =>
-            const DiamondProductsScreen(),
+        //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
         //'/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
-        '/gold-product-add-screen': (BuildContext context) =>
-            const GoldProductAddScreen(),
-        '/diamond-product-add-screen': (BuildContext context) =>
-            const DiamondProductAddScreen(),
+        '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
+        //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
         //'/stock-gold-products-screen': (BuildContext context) => const StockGoldProductsScreen(),
       },
       initialRoute: '/gold-products-inventory-screen',
