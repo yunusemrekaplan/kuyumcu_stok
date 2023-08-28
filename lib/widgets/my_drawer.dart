@@ -50,6 +50,12 @@ class _MyDrawerState extends State<MyDrawer> {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/gold-products-sold-screen', (route) => false);
             },),
+          ListTile(
+            title: const Text('Girilen Altınlar'),
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/gold-product-entries-screen', (route) => false);
+            },),
 
         ],
       ),

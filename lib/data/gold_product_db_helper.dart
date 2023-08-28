@@ -23,7 +23,7 @@ class GoldProductDbHelper {
 
     String path = 'kuyumcu.db';
     _db = await databaseFactoryFfi.openDatabase(path);
-    //await _db!.execute('DROP TABLE product_golds');
+    //await _db!.execute('DROP TABLE gold_products');
     await _createTable();
   }
 

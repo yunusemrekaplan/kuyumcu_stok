@@ -24,6 +24,7 @@ class ProductEntryDbHelper {
 
     String path = 'kuyumcu.db';
     _db = await databaseFactoryFfi.openDatabase(path);
+    //await _db!.execute('DROP TABLE product_entries');
     await _createTable();
   }
 
