@@ -4,7 +4,7 @@ import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
-import 'package:kuyumcu_stok/screens/gold_product_edit_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';

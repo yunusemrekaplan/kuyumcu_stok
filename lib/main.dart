@@ -5,15 +5,11 @@ import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/models/product_entry.dart';
-import 'package:kuyumcu_stok/screens/diamond_product_add_screen.dart';
-import 'package:kuyumcu_stok/screens/diamond_products_screen.dart';
-import 'package:kuyumcu_stok/screens/gold_products_sold_screen.dart';
+import 'package:kuyumcu_stok/screens/diamond_screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
-import 'package:kuyumcu_stok/screens/gold_product_add_screen.dart';
-import 'package:kuyumcu_stok/screens/gold_products_inventory_screen.dart';
-import 'package:kuyumcu_stok/screens/gold_sale_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen.dart';
 import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/screens/stock_gold_products_screen.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -106,12 +102,11 @@ class MyApp extends StatelessWidget {
       routes: {
         //'/': (BuildContext context) => const HomeScreen(),
         '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
+        '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
         //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
         //'/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
-        '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
         //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
-        //'/stock-gold-products-screen': (BuildContext context) => const StockGoldProductsScreen(),
       },
       initialRoute: '/gold-products-inventory-screen',
     );

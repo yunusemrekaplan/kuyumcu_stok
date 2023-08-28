@@ -2,7 +2,7 @@ import 'package:kuyumcu_stok/models/gold_product.dart';
 
 class ProductSale {
   late int id;
-  late int productId;
+  late Map product;
   late DateTime soldDate;
   late int piece;
   late double costPrice; // s
@@ -12,7 +12,7 @@ class ProductSale {
   late double earnedProfitGram;
 
   ProductSale({
-    required this.productId,
+    required this.product,
     required this.soldDate,
     required this.piece,
     required this.costPrice,
@@ -23,7 +23,7 @@ class ProductSale {
   });
 
   ProductSale.fromJson(Map<String, dynamic> json, this.id) {
-    productId = json['productId'];
+    product = json['product'];
     soldDate = json['soldDate'];
     piece = json['piece'];
     costPrice = json['costPrice'];
@@ -35,7 +35,7 @@ class ProductSale {
 
   Map<String, dynamic> toJson() {
     return {
-      'productId': productId,
+      'product': product,
       'soldDate': soldDate,
       'piece': piece,
       'costPrice': costPrice,
