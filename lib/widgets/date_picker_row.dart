@@ -28,6 +28,7 @@ class _DatePickerRowState extends State<DatePickerRow> {
 
   @override
   void initState() {
+    super.initState();
     initializeDateFormatting('tr_TR', null);
     dateController = TextEditingController();
     dateController.text = DateFormat.yMd('tr-Tr').format(widget.initialTime);
