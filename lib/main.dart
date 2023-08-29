@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
-import 'package:kuyumcu_stok/models/diamond_product.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/models/product_entry.dart';
-import 'package:kuyumcu_stok/screens/diamond_screens/diamond_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_entries_screen.dart';
-import 'package:kuyumcu_stok/screens/home_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_screens/gold_sale_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen.dart';
-import 'package:kuyumcu_stok/data/barcode_db_helper.dart';
-import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
@@ -105,9 +100,9 @@ class MyApp extends StatelessWidget {
         '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
         '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
         '/gold-product-entries-screen': (BuildContext context) => const GoldProductEntriesScreen(),
+        '/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
         //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
-        //'/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
         //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
       },
       initialRoute: '/gold-products-inventory-screen',

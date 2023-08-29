@@ -194,7 +194,7 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
       label: SizedBox(
         width: width * .1,
         child: const Text(
-          'Adet',
+          'Girilen Adet',
           style: TextStyle(fontSize: 20),
         ),
       ),

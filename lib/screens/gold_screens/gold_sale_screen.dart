@@ -1,9 +1,9 @@
-/*
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/models/product_sale.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -25,9 +25,9 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
   String caratTxt = '..';
   String gramTxt = '..';
   String costTxt = '....';
-  String priceTxt = '....';
+  String costPriceTxt = '....';
 
-  StockGoldProduct? product;
+  GoldProduct? product;
 
   TextEditingController barcodeTextEditingController = TextEditingController();
   TextEditingController earningRateTextEditingController =
@@ -39,12 +39,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
     CurrencyService.getCurrenciesOfHakanAltin().then(
       (value) => setState(
         () {
-          fineGoldBuy = value['fineGoldBuy']!.toString();
-          fineGoldSale = value['fineGoldSale']!.toString();
-          usdBuy = value['usdBuy']!.toString();
-          usdSale = value['usdSale']!.toString();
-          eurBuy = value['eurBuy']!.toString();
-          eurSale = value['eurSale']!.toString();
+          buildCurrencies(value);
         },
       ),
     );
@@ -161,52 +156,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
           fontSize: 20,
           height: 1,
         ),
-        onChanged: (value) {
-          if (value.length == 13) {
-            for (int i = 0; i < StockGoldProductDbHelper().stockProducts.length; i++) {
-              if (StockGoldProductDbHelper().stockProducts[i].barcodeText == value) {
-                print('ürün bulundu');
-                setState(() {
-                  product = StockGoldProductDbHelper().stockProducts[i];
-                  caratTxt = product!.carat.intDefinition.toString();
-                  gramTxt = product!.gram.toStringAsFixed(0);
-                  costTxt = product!.cost.toStringAsFixed(0);
-                  double temp;
-                  CurrencyService.getCurrenciesOfHakanAltin().then((value) =>{
-                    print('girdi'),
-                    temp = double.parse(costTxt) * CurrencyService.fineGoldSale / 1000,
-                    setState(() {
-                      priceTxt = temp.toStringAsFixed(0);
-                      fineGoldBuy = value['fineGoldBuy']!.toString();
-                      fineGoldSale = value['fineGoldSale']!.toString();
-                      usdBuy = value['usdBuy']!.toString();
-                      usdSale = value['usdSale']!.toString();
-                      eurBuy = value['eurBuy']!.toString();
-                      eurSale = value['eurSale']!.toString();
-                    }),
-                  });
-
-                });
-              }
-            }
-            */
-/*ProductGoldDbHelper().getProductByBarcodeText(value).then((value) => {
-                    if (value == null)
-                      {}
-                    else
-                      {
-                        setState(() {
-                          product = ProductGold.fromJson(value, value['id']);
-                          caratTxt = product!.carat.intDefinition.toString();
-                          gramTxt = product!.gram.toStringAsFixed(0);
-                          costTxt = product!.costPrice.toStringAsFixed(0);
-                          priceTxt = costTxt;
-                        }),
-                      }
-                  },);*//*
-
-          }
-        },
+        onChanged: onSearch,
       ),
     );
   }
@@ -265,6 +215,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
           fontSize: 20,
           height: 1,
         ),
+        onFieldSubmitted: (value) => onCalculateProfit(),
       ),
     );
   }
@@ -273,17 +224,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0),
       child: ElevatedButton(
-        onPressed: () {
-          int? earningRate =
-              int.tryParse(earningRateTextEditingController.text);
-          if (earningRate != null) {
-            if (product != null) {
-              setState(() {
-                saleTextEditingController.text = (int.parse(priceTxt) + (int.parse(priceTxt) * earningRate / 100)).toString();
-              });
-            }
-          }
-        },
+        onPressed: onCalculateProfit,
         child: const Text(
           'Hesapla',
           style: TextStyle(
@@ -293,6 +234,23 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
         ),
       ),
     );
+  }
+
+  void onCalculateProfit() {
+    int? earningRate = int.tryParse(earningRateTextEditingController.text);
+    if (earningRate != null) {
+      if (product != null) {
+        setState(() {
+          saleTextEditingController
+              .text = NumberFormat('#,##0.0', 'tr_TR').format((double.parse(
+                  (product!.cost * CurrencyService.fineGoldSale).toString()) +
+              (double.parse((product!.cost * CurrencyService.fineGoldSale)
+                      .toString()) *
+                  earningRate /
+                  100)));
+        });
+      }
+    }
   }
 
   Row _buildProductInformationRow() {
@@ -356,7 +314,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                 style: TextStyle(fontSize: 22),
               ),
               Text(
-                priceTxt,
+                costPriceTxt,
                 style: const TextStyle(fontSize: 22),
               ),
             ],
@@ -415,33 +373,7 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 24, top: 80),
       child: ElevatedButton(
-        onPressed: () async {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return const Center(child: CircularProgressIndicator());
-              });
-          double earnedProfit = double.parse(saleTextEditingController.text) - double.parse(priceTxt);
-          product!.isSold = 1;
-          product!.costPrice = double.parse(priceTxt);
-          product!.soldPrice = double.parse(saleTextEditingController.text);
-          product!.soldDate = DateTime.now();
-          product!.earnedProfit = earnedProfit;
-          StockGoldProductDbHelper().update(product!.toJson(), product!.id).then((value) => {
-            Navigator.of(context).pop(),
-            print(product!.toJson()),
-            setState(() {
-              caratTxt = '..';
-              gramTxt = '..';
-              costTxt = '....';
-              priceTxt = '....';
-              barcodeTextEditingController.text = '';
-              earningRateTextEditingController.text = '';
-              saleTextEditingController.text = '';
-            }),
-          });
-        },
+        onPressed: onSale,
         child: const Text(
           'Satışı Onayla',
           style: TextStyle(
@@ -450,6 +382,32 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
         ),
       ),
     );
+  }
+
+  void onSale() async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(child: CircularProgressIndicator());
+        });
+    product!.piece -= 1;
+    GoldProductDbHelper()
+        .update(product!.toJson(), product!.id)
+        .then((value) => {
+          ProductSale(product: product!.toJson(), soldDate: DateTime.now(), piece: int.parse(pieceController.text), costPrice: costPrice, soldPrice: soldPrice, soldGram: soldGram, earnedProfitTL: earnedProfitTL, earnedProfitGram: earnedProfitGram)
+              Navigator.of(context).pop(),
+              print(product!.toJson()),
+              setState(() {
+                caratTxt = '..';
+                gramTxt = '..';
+                costTxt = '....';
+                costPriceTxt = '....';
+                barcodeTextEditingController.text = '';
+                earningRateTextEditingController.text = '';
+                saleTextEditingController.text = '';
+              }),
+            });
   }
 
   Flexible _buildRefreshButton() {
@@ -467,19 +425,14 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
                   CurrencyService.getCurrenciesOfHakanAltin().then(
                     (value) => setState(
                       () {
-                        fineGoldBuy = value['fineGoldBuy']!.toString();
-                        fineGoldSale = value['fineGoldSale']!.toString();
-                        usdBuy = value['usdBuy']!.toString();
-                        usdSale = value['usdSale']!.toString();
-                        eurBuy = value['eurBuy']!.toString();
-                        eurSale = value['eurSale']!.toString();
+                        buildCurrencies(value);
                       },
                     ),
                   );
                   caratTxt = '..';
                   gramTxt = '..';
                   costTxt = '....';
-                  priceTxt = '....';
+                  costPriceTxt = '....';
                   barcodeTextEditingController.text = '';
                   earningRateTextEditingController.text = '';
                   saleTextEditingController.text = '';
@@ -613,5 +566,48 @@ class _GoldSaleScreenState extends State<GoldSaleScreen> {
       ),
     );
   }
+
+  void onSearch(value) {
+    if (value.length == 13) {
+      for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
+        if (GoldProductDbHelper().products[i].barcodeText == value) {
+          print('ürün bulundu');
+          setState(() {
+            product = GoldProductDbHelper().products[i];
+            caratTxt = product!.carat.intDefinition.toString();
+            gramTxt = product!.gram.toString();
+            costTxt = product!.cost.toString().split('')[0];
+            // + product!.cost.toString().split('')[1].substring(0, 1)
+            CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
+                  setState(() {
+                    costPriceTxt =
+                        '${NumberFormat('#,##0.0', 'tr_TR').format(product!.cost * CurrencyService.fineGoldSale)} TL';
+                    buildCurrencies(value);
+                  }),
+                });
+          });
+        }
+      }
+      for (var element in GoldProductDbHelper().products) {
+        if (element.barcodeText == value) {
+          setState(() {
+            product = element;
+            caratTxt = product!.carat.intDefinition.toString();
+            gramTxt = product!.gram.toString().replaceAll('.', ',');
+            costTxt = product!.cost.toString().replaceAll('.', ',');
+          });
+          break;
+        }
+      }
+    }
+  }
+
+  void buildCurrencies(Map<String, double> value) {
+    fineGoldBuy = value['fineGoldBuy']!.toString();
+    fineGoldSale = value['fineGoldSale']!.toString();
+    usdBuy = value['usdBuy']!.toString();
+    usdSale = value['usdSale']!.toString();
+    eurBuy = value['eurBuy']!.toString();
+    eurSale = value['eurSale']!.toString();
+  }
 }
-*/
