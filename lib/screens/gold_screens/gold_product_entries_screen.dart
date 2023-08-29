@@ -6,6 +6,7 @@ import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/models/product_entry.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
+import 'package:kuyumcu_stok/widgets/date_picker_row.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class GoldProductEntriesScreen extends StatefulWidget {
@@ -20,6 +21,10 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
   late List<ProductEntry> entries;
   late List<GoldProduct> products;
 
+  DateTime timeRange = DateTime(DateTime.now().year, DateTime.now().month - 3);
+  DateTime endTime = DateTime.now();
+  late DateTime startTime;
+
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
 
@@ -27,6 +32,8 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     entries = ProductEntryDbHelper().entries;
     products = GoldProductDbHelper().products;
     initializeDateFormatting('tr_TR', null);
+    startTime = timeRange;
+    //print(startTime);
   }
 
   @override
@@ -35,6 +42,20 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     products = GoldProductDbHelper().products;
     final double width = MediaQuery.of(context).size.width - 60;
     final verticalScrollController = ScrollController();
+
+    DatePickerRow startDatePickerRow = DatePickerRow(
+      label: 'Başlangıç Tarihi:',
+      startTime: startTime,
+      endTime: endTime,
+      initialTime: startTime,
+    );
+
+    DatePickerRow endDatePickerRow = DatePickerRow(
+      label: 'Bitiş Tarihi:',
+      startTime: startTime,
+      endTime: endTime,
+      initialTime: endTime,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -47,6 +68,32 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
         color: Colors.white,
         child: Column(
           children: [
+            buildTableHeightPaddingBox(),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: startDatePickerRow,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: endDatePickerRow,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: ElevatedButton(
+                    child: const Text('Tarihi Onayla'),
+                    onPressed: () {
+                      startTime = startDatePickerRow.initialTime;
+                      endTime = endDatePickerRow.initialTime;
+                      setState(() {
+                        entries;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
             buildTableHeightPaddingBox(),
             Container(
               color: Colors.white,
@@ -89,7 +136,30 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     return [
       buildEntryDateDataColumn(width),
       buildNameDataColumn(width),
-      //buildPieceDataColumn(width),
+      buildPieceDataColumn(width),
+    ];
+  }
+
+  List<DataRow> buildRowList(BuildContext context) {
+    return entries
+        .where((element) =>
+            (element.enteredDate.compareTo(startTime) >= 0) &&
+            (element.enteredDate.compareTo(endTime) <= 0))
+        .map(
+          (e) => DataRow(
+            color: DataTableStyles.buildDataRowColor(),
+            cells: buildDataCells(e, context),
+            onSelectChanged: (selected) {},
+          ),
+        )
+        .toList();
+  }
+
+  List<DataCell> buildDataCells(ProductEntry e, BuildContext context) {
+    return [
+      buildEntryDateDataCell(e),
+      buildNameDataCell(e),
+      buildPieceDataCell(e),
     ];
   }
 
@@ -119,23 +189,17 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     );
   }
 
-  List<DataRow> buildRowList(BuildContext context) {
-    return entries
-        .map(
-          (e) => DataRow(
-            color: DataTableStyles.buildDataRowColor(),
-            cells: buildDataCells(e, context),
-            onSelectChanged: (selected) {},
-          ),
-        )
-        .toList();
-  }
-
-  List<DataCell> buildDataCells(ProductEntry e, BuildContext context) {
-    return [
-      buildEntryDateDataCell(e),
-      buildNameDataCell(e),
-    ];
+  DataColumn buildPieceDataColumn(double width) {
+    return DataColumn(
+      label: SizedBox(
+        width: width * .1,
+        child: const Text(
+          'Adet',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
   }
 
   DataCell buildEntryDateDataCell(ProductEntry e) {
@@ -156,9 +220,16 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     ));
   }
 
+  DataCell buildPieceDataCell(ProductEntry e) {
+    return DataCell(Text(
+      e.piece.toString(),
+      style: const TextStyle(fontSize: 20),
+    ));
+  }
+
   SizedBox buildTableHeightPaddingBox() {
     return const SizedBox(
-      height: 30,
+      height: 20,
     );
   }
 
