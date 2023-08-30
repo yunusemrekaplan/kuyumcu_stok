@@ -41,13 +41,19 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   int? isFun;
   var textFormFieldColors = Colors.white;
 
-  TextEditingController barcodeTextEditingController = TextEditingController();
-  TextEditingController earningRateTLTextEditingController =
-      TextEditingController();
-  TextEditingController earningRateGramTextEditingController =
-      TextEditingController();
-  TextEditingController saleTextEditingController = TextEditingController();
-  TextEditingController pieceTextEditingController = TextEditingController();
+  late TextEditingController barcodeTextEditingController;
+  late TextEditingController earningRateTLTextEditingController;
+  late TextEditingController earningRateGramTextEditingController;
+  late TextEditingController saleTextEditingController;
+  late TextEditingController pieceTextEditingController;
+
+  _GoldProductSaleScreenState() {
+    barcodeTextEditingController = TextEditingController();
+    earningRateTLTextEditingController = TextEditingController();
+    earningRateGramTextEditingController = TextEditingController();
+    saleTextEditingController = TextEditingController();
+    pieceTextEditingController = TextEditingController();
+  }
 
   @override
   void initState() {
@@ -55,18 +61,6 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       (value) => setState(
         () {
           buildCurrencies(value);
-          fineGoldBuy = NumberFormat('#,##0.0', 'tr_TR')
-              .format(double.parse(fineGoldBuy));
-          fineGoldSale = NumberFormat('#,##0.0', 'tr_TR')
-              .format(double.parse(fineGoldSale));
-          usdBuy =
-              NumberFormat('#,##0.0', 'tr_TR').format(double.parse(usdBuy));
-          usdSale =
-              NumberFormat('#,##0.0', 'tr_TR').format(double.parse(usdSale));
-          eurBuy =
-              NumberFormat('#,##0.0', 'tr_TR').format(double.parse(eurBuy));
-          eurSale =
-              NumberFormat('#,##0.0', 'tr_TR').format(double.parse(eurSale));
         },
       ),
     );
@@ -125,33 +119,29 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Container _buildBarcodeAndEarningRateRow() {
-    return Container(
-      //color: Colors.white,
-      child: Row(
-        children: [
-          // Barcode TextFormField
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0),
-            child: _buildBarcodeRow(),
-          ),
-          // Earning Rate TextFormField
-          Padding(
-            padding: const EdgeInsets.only(left: 40.0),
-            child: _buildEarningRateTLRow(),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 40.0),
-            child: _buildEarningRateGramRow(),
-          ),
-          // Calculation button
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0),
-            child: _buildCalculatingButton(),
-          )
-        ],
-      ),
+  Row _buildBarcodeAndEarningRateRow() {
+    return Row(
+      children: [
+        // Barcode TextFormField
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: _buildBarcodeRow(),
+        ),
+        // Earning Rate TextFormField
+        Padding(
+          padding: const EdgeInsets.only(left: 40.0),
+          child: _buildEarningRateTLRow(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 40.0),
+          child: _buildEarningRateGramRow(),
+        ),
+        // Calculation button
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0),
+          child: _buildCalculatingButton(),
+        )
+      ],
     );
   }
 
@@ -159,64 +149,19 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        _buildBarcodeText(),
-        _buildBarcodeTextFormField(),
+        Text(
+          'Barkod: ',
+          style: buildTextStyle(),
+        ),
+        TextFormField(
+          controller: barcodeTextEditingController,
+          cursorHeight: 20,
+          decoration: buildInputDecoration(const Size(160, 38)),
+          style: buildTextFormFieldTextStyle(),
+          cursorColor: textFormFieldColors,
+          onChanged: onSearch,
+        ),
       ],
-    );
-  }
-
-  Text _buildBarcodeText() {
-    return Text(
-      'Barkod: ',
-      style: buildTextStyle(),
-    );
-  }
-
-  TextStyle buildTextStyle() {
-    return const TextStyle(
-      fontSize: 22,
-      color: Colors.white,
-    );
-  }
-
-  TextFormField _buildBarcodeTextFormField() {
-    return TextFormField(
-      controller: barcodeTextEditingController,
-      cursorHeight: 20,
-      decoration: buildInputDecoration(const Size(160, 38)),
-      style: buildTextFormFieldTextStyle(),
-      cursorColor: textFormFieldColors,
-      onChanged: onSearch,
-    );
-  }
-
-  InputDecoration buildInputDecoration(Size size) {
-    return InputDecoration(
-      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-      constraints: DecorationStyles.buildBoxConstraints(size),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: buildBorderSide(),
-      ),
-      border: OutlineInputBorder(
-        borderSide: buildBorderSide(),
-      ),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: buildBorderSide(),
-      ),
-      fillColor: textFormFieldColors,
-      focusColor: textFormFieldColors,
-      hoverColor: textFormFieldColors,
-    );
-  }
-
-  BorderSide buildBorderSide() => const BorderSide(color: Colors.white);
-
-  TextStyle buildTextFormFieldTextStyle() {
-    return const TextStyle(
-      fontSize: 20,
-      height: 1,
-      color: Colors.white,
-      //backgroundColor: Colors.black,
     );
   }
 
@@ -224,31 +169,23 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildEarningRateTLText(),
-        _buildEarningRateTLTextFormField(),
+        Text(
+          'Kar %: ',
+          style: buildTextStyle(),
+        ),
+        TextFormField(
+          controller: earningRateTLTextEditingController,
+          cursorHeight: 20,
+          decoration: buildInputDecoration(const Size(60, 38)),
+          inputFormatters: <TextInputFormatter>[
+            InputFormatters.inputOnlyDigits(),
+          ],
+          style: buildTextFormFieldTextStyle(),
+          cursorColor: textFormFieldColors,
+          onChanged: (value) => onCalculatePercent(),
+          onFieldSubmitted: (value) => onCalculatePercent(),
+        ),
       ],
-    );
-  }
-
-  Text _buildEarningRateTLText() {
-    return Text(
-      'Kar %: ',
-      style: buildTextStyle(),
-    );
-  }
-
-  TextFormField _buildEarningRateTLTextFormField() {
-    return TextFormField(
-      controller: earningRateTLTextEditingController,
-      cursorHeight: 20,
-      decoration: buildInputDecoration(const Size(60, 38)),
-      inputFormatters: <TextInputFormatter>[
-        InputFormatters.inputOnlyDigits(),
-      ],
-      style: buildTextFormFieldTextStyle(),
-      cursorColor: textFormFieldColors,
-      onChanged: (value) => onCalculatePercent(),
-      onFieldSubmitted: (value) => onCalculatePercent(),
     );
   }
 
@@ -256,31 +193,23 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildEarningRateGramText(),
-        _buildEarningRateGramTextFormField(),
+        Text(
+          'Gram: ',
+          style: buildTextStyle(),
+        ),
+        TextFormField(
+          controller: earningRateGramTextEditingController,
+          cursorHeight: 20,
+          decoration: buildInputDecoration(const Size(75, 38)),
+          inputFormatters: <TextInputFormatter>[
+            InputFormatters.inputDouble(),
+          ],
+          style: buildTextFormFieldTextStyle(),
+          cursorColor: textFormFieldColors,
+          onChanged: (value) => onCalculateGram(),
+          onFieldSubmitted: (value) => onCalculateGram(),
+        ),
       ],
-    );
-  }
-
-  Text _buildEarningRateGramText() {
-    return Text(
-      'Gram: ',
-      style: buildTextStyle(),
-    );
-  }
-
-  TextFormField _buildEarningRateGramTextFormField() {
-    return TextFormField(
-      controller: earningRateGramTextEditingController,
-      cursorHeight: 20,
-      decoration: buildInputDecoration(const Size(75, 38)),
-      inputFormatters: <TextInputFormatter>[
-        InputFormatters.inputDouble(),
-      ],
-      style: buildTextFormFieldTextStyle(),
-      cursorColor: textFormFieldColors,
-      onChanged: (value) => onCalculateGram(),
-      onFieldSubmitted: (value) => onCalculateGram(),
     );
   }
 
@@ -641,6 +570,43 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
+  TextStyle buildTextStyle() {
+    return const TextStyle(
+      fontSize: 22,
+      color: Colors.white,
+    );
+  }
+
+  TextStyle buildTextFormFieldTextStyle() {
+    return const TextStyle(
+      fontSize: 20,
+      height: 1,
+      color: Colors.white,
+      //backgroundColor: Colors.black,
+    );
+  }
+
+  InputDecoration buildInputDecoration(Size size) {
+    return InputDecoration(
+      contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+      constraints: DecorationStyles.buildBoxConstraints(size),
+      focusedBorder: UnderlineInputBorder(
+        borderSide: buildBorderSide(),
+      ),
+      border: OutlineInputBorder(
+        borderSide: buildBorderSide(),
+      ),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: buildBorderSide(),
+      ),
+      fillColor: textFormFieldColors,
+      focusColor: textFormFieldColors,
+      hoverColor: textFormFieldColors,
+    );
+  }
+
+  BorderSide buildBorderSide() => const BorderSide(color: Colors.white);
+
   void buildCurrencies(Map<String, double> value) {
     fineGoldBuy = value['fineGoldBuy']!.toString();
     fineGoldSale = value['fineGoldSale']!.toString();
@@ -648,6 +614,14 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     usdSale = value['usdSale']!.toString();
     eurBuy = value['eurBuy']!.toString();
     eurSale = value['eurSale']!.toString();
+    fineGoldBuy =
+        NumberFormat('#,##0.0', 'tr_TR').format(double.parse(fineGoldBuy));
+    fineGoldSale =
+        NumberFormat('#,##0.0', 'tr_TR').format(double.parse(fineGoldSale));
+    usdBuy = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(usdBuy));
+    usdSale = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(usdSale));
+    eurBuy = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(eurBuy));
+    eurSale = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(eurSale));
   }
 
   void onSearch(value) {
