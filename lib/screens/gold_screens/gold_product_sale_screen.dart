@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum_carat.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
+import 'package:kuyumcu_stok/localizations/output_formatters.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/models/product_sale.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
@@ -19,6 +20,7 @@ class GoldProductSaleScreen extends StatefulWidget {
 
 class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   GoldProduct? product;
+  late List<GoldProduct> products;
 
   String? earningRate;
   String fineGoldBuy = '.......';
@@ -28,6 +30,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String eurBuy = '.......';
   String eurSale = '.......';
   String nameTxt = '';
+  String pieceTxt = '';
   String caratTxt = '';
   String gramTxt = '';
   String salesGramsTxt = '';
@@ -50,6 +53,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   late TextEditingController pieceTextEditingController;
 
   _GoldProductSaleScreenState() {
+    products = GoldProductDbHelper().products;
     barcodeTextEditingController = TextEditingController();
     earningRateTLTextEditingController = TextEditingController();
     earningRateGramTextEditingController = TextEditingController();
@@ -79,6 +83,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         ),
       ),
       drawer: const MyDrawer(),
+      backgroundColor: const Color(0xFF07263C),
       body: Container(
         //color: const Color(0xFF212529),
         color: const Color(0xFF07263C),
@@ -88,15 +93,57 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Widget _buildBody() {
-    return Row(
+  Column _buildBody() {
+    return Column(
       children: [
         Flexible(
           flex: 1,
           fit: FlexFit.tight,
-          child: _buildLeftOfBody(),
+          child: Row(
+            children: [
+              _buildLeftOfBody(),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: _buildRightOfBody(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        _buildRightOfBody(),
+        Flexible(
+          flex: 2,
+          fit: FlexFit.tight,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0, top: 30),
+                  child: buildProductInformationDataTable(),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+              left: 20.0, top: 20.0, right: 20.0, bottom: 30.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildSaleRow(),
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: _buildRefreshButton(),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -110,33 +157,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 30.0),
+                padding: const EdgeInsets.only(left: 20.0, top: 60.0),
                 child: _buildBarcodeAndEarningRateRow(),
-              ),
-            ],
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          fit: FlexFit.tight,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 30),
-                child: buildProductInformationDataTable(),
-              ),
-            ],
-          ),
-        ),
-        Flexible(
-          flex: 0,
-          fit: FlexFit.tight,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 30, bottom: 30),
-                child: _buildSaleRow(),
               ),
             ],
           ),
@@ -267,7 +289,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   Container buildProductInformationDataTable() {
     return Container(
-      width: 950,
+      width: 1120,
       decoration: const BoxDecoration(
         color: Color(0xFF2b384a),
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -293,6 +315,12 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   DataColumn(
                     label: Text(
                       'İsim',
+                      style: buildDataColumnTextStyle(),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Adet',
                       style: buildDataColumnTextStyle(),
                     ),
                   ),
@@ -325,14 +353,20 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   DataRow(
                     cells: [
                       DataCell(
-                        SizedBox(
-                          width: 270,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              nameTxt,
-                              style: buildDataCellTextStyle(),
-                            ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            nameTxt,//27
+                            style: buildDataCellTextStyle(),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            pieceTxt,
+                            style: buildDataCellTextStyle(),
                           ),
                         ),
                       ),
@@ -383,25 +417,30 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Container _buildSaleRow() {
-    return Container(
-      width: 950,
-      decoration: const BoxDecoration(
-        color: Color(0xFF2b384a),
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      ),
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 20, top: 30.0, right: 20, bottom: 30.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildSalePriceTextAndForm(),
-            _buildSaleGramTextAndForm(),
-            _buildSaleButton(),
-          ],
+  Row _buildSaleRow() {
+    return Row(
+      children: [
+        Container(
+          width: 1120,
+          decoration: const BoxDecoration(
+            color: Color(0xFF2b384a),
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 20, top: 30.0, right: 20, bottom: 30.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildSalePriceTextAndForm(),
+                _buildSaleGramTextAndForm(),
+                _buildSalePieceTextAndForm(),
+                _buildSaleButton(),
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -428,7 +467,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   Padding _buildSaleGramTextAndForm() {
     return Padding(
-      padding: const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 35),
       child: Row(
         children: [
           Text(
@@ -438,9 +477,33 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           TextFormField(
             controller: saleGramTextEditingController,
             cursorHeight: 20,
-            decoration: buildInputDecoration(const Size(160, 38)),
+            decoration: buildInputDecoration(const Size(120, 38)),
             inputFormatters: <TextInputFormatter>[
               InputFormatters.inputDouble(),
+            ],
+            cursorColor: textFormFieldColors,
+            style: buildTextFormFieldTextStyle(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildSalePieceTextAndForm() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 35),
+      child: Row(
+        children: [
+          Text(
+            'Adedi: ',
+            style: buildTextStyle(),
+          ),
+          TextFormField(
+            controller: pieceTextEditingController,
+            cursorHeight: 20,
+            decoration: buildInputDecoration(const Size(70, 38)),
+            inputFormatters: <TextInputFormatter>[
+              InputFormatters.inputOnlyDigits(),
             ],
             cursorColor: textFormFieldColors,
             style: buildTextFormFieldTextStyle(),
@@ -458,57 +521,45 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         child: const Text(
           'Satışı Onayla',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 24,
           ),
         ),
       ),
     );
   }
 
-  Flexible _buildRefreshButton() {
-    return Flexible(
-      flex: 1,
-      fit: FlexFit.tight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 24, top: 80),
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  CurrencyService.getCurrenciesOfHakanAltin().then(
-                    (value) => setState(
-                      () {
-                        buildCurrencies(value);
-                      },
-                    ),
-                  );
-                  caratTxt = '..';
-                  gramTxt = '..';
-                  costTxt = '....';
-                  costPriceTxt = '....';
-                  barcodeTextEditingController.text = '';
-                  earningRateTLTextEditingController.text = '';
-                  saleTextEditingController.text = '';
-                });
+  ElevatedButton _buildRefreshButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          CurrencyService.getCurrenciesOfHakanAltin().then(
+            (value) => setState(
+              () {
+                buildCurrencies(value);
               },
-              child: const Text(
-                'Yenile',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
             ),
-          ),
-        ],
+          );
+          caratTxt = '..';
+          gramTxt = '..';
+          costTxt = '....';
+          costPriceTxt = '....';
+          barcodeTextEditingController.text = '';
+          earningRateTLTextEditingController.text = '';
+          saleTextEditingController.text = '';
+        });
+      },
+      child: const Text(
+        'Yenile',
+        style: TextStyle(
+          fontSize: 24,
+        ),
       ),
     );
   }
 
   Container _buildRightOfBody() {
     return Container(
-      width: 500,
+      width: 400,
       color: const Color(0xFF07263C),
       alignment: Alignment.topCenter,
       child: DataTable(
@@ -697,22 +748,23 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     eurBuy = value['eurBuy']!.toString();
     eurSale = value['eurSale']!.toString();
     fineGoldBuy =
-        NumberFormat('#,##0.0', 'tr_TR').format(double.parse(fineGoldBuy));
+        OutputFormatters().buildNumberFormat(double.parse(fineGoldBuy));
     fineGoldSale =
-        NumberFormat('#,##0.0', 'tr_TR').format(double.parse(fineGoldSale));
-    usdBuy = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(usdBuy));
-    usdSale = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(usdSale));
-    eurBuy = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(eurBuy));
-    eurSale = NumberFormat('#,##0.0', 'tr_TR').format(double.parse(eurSale));
+        OutputFormatters().buildNumberFormat(double.parse(fineGoldSale));
+    usdBuy = OutputFormatters().buildNumberFormat(double.parse(usdBuy));
+    usdSale = OutputFormatters().buildNumberFormat(double.parse(usdSale));
+    eurBuy = OutputFormatters().buildNumberFormat(double.parse(eurBuy));
+    eurSale = OutputFormatters().buildNumberFormat(double.parse(eurSale));
   }
 
   void onSearch(value) {
     if (value.length == 13) {
-      for (int i = 0; i < GoldProductDbHelper().products.length; i++) {
-        if (GoldProductDbHelper().products[i].barcodeText == value) {
+      for (int i = 0; i < products.length; i++) {
+        if (products[i].barcodeText == value) {
           setState(() {
             product = GoldProductDbHelper().products[i];
-            nameTxt = product!.name;
+            nameTxt = product!.name.substring(0, product!.name.length <=25 ? product!.name.length - 1:26 );
+            pieceTxt = product!.piece.toString();
             caratTxt = product!.carat.intDefinition.toString();
             gramTxt = product!.gram.toString().replaceAll('.', ',');
             salesGramsTxt = product!.salesGrams.toString().replaceAll('.', ',');
