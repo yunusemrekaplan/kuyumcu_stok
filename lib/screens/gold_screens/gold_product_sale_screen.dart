@@ -263,9 +263,9 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   }
 
   Text _buildEarningRateGramText() {
-    return const Text(
+    return Text(
       'Gram: ',
-      style: TextStyle(fontSize: 22),
+      style: buildTextStyle(),
     );
   }
 
@@ -273,12 +273,12 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return TextFormField(
       controller: earningRateGramTextEditingController,
       cursorHeight: 20,
-      decoration: DecorationStyles.buildInputDecoration(const Size(75, 38)),
-      style: const TextStyle(
-        fontSize: 20,
-        height: 1,
-        color: Colors.black,
-      ),
+      decoration: buildInputDecoration(const Size(75, 38)),
+      inputFormatters: <TextInputFormatter>[
+        InputFormatters.inputDouble(),
+      ],
+      style: buildTextFormFieldTextStyle(),
+      cursorColor: textFormFieldColors,
       onChanged: (value) => onCalculateGram(),
       onFieldSubmitted: (value) => onCalculateGram(),
     );
