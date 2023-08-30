@@ -4,7 +4,7 @@ import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/models/product_entry.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_entries_screen.dart';
-import 'package:kuyumcu_stok/screens/gold_screens/gold_sale_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sale_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen.dart';
 import 'package:window_manager/window_manager.dart';
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
         '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
         '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
         '/gold-product-entries-screen': (BuildContext context) => const GoldProductEntriesScreen(),
-        '/gold-sale-screen': (BuildContext context) => const GoldSaleScreen(),
+        '/gold-sale-screen': (BuildContext context) => const GoldProductSaleScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
         //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
         //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
