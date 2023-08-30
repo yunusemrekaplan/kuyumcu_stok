@@ -16,8 +16,10 @@ Future<void> main() async {
 
   WindowOptions windowOptions = const WindowOptions(
     title: 'Kuyumcu Stok Takibi',
-    size: Size(1500, 740),
-    minimumSize: Size(1500, 740),
+    //size: Size(1500, 740),
+    //minimumSize: Size(1500, 740),
+    size: Size(1200, 680),
+    minimumSize: Size(1200, 680),
     center: true,
     //fullScreen: true,
     backgroundColor: Colors.transparent,

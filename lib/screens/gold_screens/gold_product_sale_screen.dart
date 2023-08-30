@@ -37,6 +37,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String costTxt = '';
   String costPriceTxt = '';
 
+  double tableWidth = 840;
   double? soldPrice;
   double? soldGram;
   double? earnedProfitTL;
@@ -157,7 +158,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 60.0),
+                padding: const EdgeInsets.only(left: 20.0, top: 30.0),
                 child: _buildBarcodeAndEarningRateRow(),
               ),
             ],
@@ -289,7 +290,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   Container buildProductInformationDataTable() {
     return Container(
-      width: 1120,
+      width: tableWidth,
       decoration: const BoxDecoration(
         color: Color(0xFF2b384a),
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -559,7 +560,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   Container _buildRightOfBody() {
     return Container(
-      width: 400,
+      width: 450,
       color: const Color(0xFF07263C),
       alignment: Alignment.topCenter,
       child: DataTable(
@@ -567,10 +568,10 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         columns: [
           DataColumn(
             label: SizedBox(
-              width: 130,
+              //width: 10,
               child: Text(
                 '',
-                style: buildTextStyle(),
+                style: buildTableTextStyle(),
               ),
             ),
           ),
@@ -581,7 +582,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   'Alış',
-                  style: buildTextStyle(),
+                  style: buildTableTextStyle(),
                 ),
               ),
             ),
@@ -593,7 +594,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   'Satış',
-                  style: buildTextStyle(),
+                  style: buildTableTextStyle(),
                 ),
               ),
             ),
@@ -605,7 +606,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               DataCell(
                 Text(
                   'Has Altın',
-                  style: buildTextStyle(),
+                  style: buildTableTextStyle(),
                 ),
               ),
               DataCell(
@@ -613,7 +614,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     fineGoldBuy,
-                    style: buildTextStyle(),
+                    style: buildTableTextStyle(),
                   ),
                 ),
               ),
@@ -622,7 +623,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     fineGoldSale,
-                    style: buildTextStyle(),
+                    style: buildTableTextStyle(),
                   ),
                 ),
               ),
@@ -633,7 +634,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               DataCell(
                 Text(
                   'USD',
-                  style: buildTextStyle(),
+                  style: buildTableTextStyle(),
                 ),
               ),
               DataCell(
@@ -641,7 +642,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     usdBuy,
-                    style: buildTextStyle(),
+                    style: buildTableTextStyle(),
                   ),
                 ),
               ),
@@ -650,7 +651,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     usdSale,
-                    style: buildTextStyle(),
+                    style: buildTableTextStyle(),
                   ),
                 ),
               ),
@@ -661,7 +662,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               DataCell(
                 Text(
                   'EUR',
-                  style: buildTextStyle(),
+                  style: buildTableTextStyle(),
                 ),
               ),
               DataCell(
@@ -669,7 +670,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     eurBuy,
-                    style: buildTextStyle(),
+                    style: buildTableTextStyle(),
                   ),
                 ),
               ),
@@ -678,7 +679,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     eurSale,
-                    style: buildTextStyle(),
+                    style: buildTableTextStyle(),
                   ),
                 ),
               ),
@@ -706,6 +707,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   TextStyle buildTextStyle() {
     return const TextStyle(
       fontSize: 30,
+      color: Colors.white,
+    );
+  }
+
+  TextStyle buildTableTextStyle() {
+    return const TextStyle(
+      fontSize: 26,
       color: Colors.white,
     );
   }
@@ -762,8 +770,10 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       for (int i = 0; i < products.length; i++) {
         if (products[i].barcodeText == value) {
           setState(() {
+            tableWidth = 840;
             product = GoldProductDbHelper().products[i];
-            nameTxt = product!.name.substring(0, product!.name.length <=25 ? product!.name.length - 1:26 );
+            nameTxt = product!.name.substring(0, product!.name.length <=25 ? product!.name.length:26 );
+            tableWidth += product!.name.length * 9;
             pieceTxt = product!.piece.toString();
             caratTxt = product!.carat.intDefinition.toString();
             gramTxt = product!.gram.toString().replaceAll('.', ',');
