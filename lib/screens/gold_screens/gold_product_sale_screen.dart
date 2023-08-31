@@ -281,8 +281,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       child: const Text(
         'Hesapla',
         style: TextStyle(
-          fontSize: 20,
-          height: 1,
+          fontSize: 24,
         ),
       ),
     );
@@ -357,7 +356,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            nameTxt,//27
+                            nameTxt, //27
                             style: buildDataCellTextStyle(),
                           ),
                         ),
@@ -756,13 +755,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     eurBuy = value['eurBuy']!.toString();
     eurSale = value['eurSale']!.toString();
     fineGoldBuy =
-        OutputFormatters().buildNumberFormat(double.parse(fineGoldBuy));
+        OutputFormatters.buildNumberFormat1f(double.parse(fineGoldBuy));
     fineGoldSale =
-        OutputFormatters().buildNumberFormat(double.parse(fineGoldSale));
-    usdBuy = OutputFormatters().buildNumberFormat(double.parse(usdBuy));
-    usdSale = OutputFormatters().buildNumberFormat(double.parse(usdSale));
-    eurBuy = OutputFormatters().buildNumberFormat(double.parse(eurBuy));
-    eurSale = OutputFormatters().buildNumberFormat(double.parse(eurSale));
+        OutputFormatters.buildNumberFormat1f(double.parse(fineGoldSale));
+    usdBuy = OutputFormatters.buildNumberFormat1f(double.parse(usdBuy));
+    usdSale = OutputFormatters.buildNumberFormat1f(double.parse(usdSale));
+    eurBuy = OutputFormatters.buildNumberFormat1f(double.parse(eurBuy));
+    eurSale = OutputFormatters.buildNumberFormat1f(double.parse(eurSale));
   }
 
   void onSearch(value) {
@@ -772,7 +771,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           setState(() {
             tableWidth = 840;
             product = GoldProductDbHelper().products[i];
-            nameTxt = product!.name.substring(0, product!.name.length <=25 ? product!.name.length:26 );
+            nameTxt = product!.name.substring(
+                0, product!.name.length <= 25 ? product!.name.length : 26);
             tableWidth += product!.name.length * 9;
             pieceTxt = product!.piece.toString();
             caratTxt = product!.carat.intDefinition.toString();
@@ -812,12 +812,10 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent / 100));
         double temp = soldPrice! / costPrice;
-        earningRateGramTextEditingController
-            .text = NumberFormat('#,##0.000', 'tr_TR').format(product!
-                .salesGrams *
-            temp); //(product!.salesGrams * temp).toString().replaceAll('.', ',');
+        earningRateGramTextEditingController.text =
+            OutputFormatters.buildNumberFormat3f(product!.salesGrams * temp);
         saleTextEditingController.text =
-            NumberFormat('#,##0.0', 'tr_TR').format(soldPrice);
+            OutputFormatters.buildNumberFormat1f(soldPrice!);
         saleGramTextEditingController.text =
             earningRateGramTextEditingController.text;
       });
@@ -828,15 +826,24 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     isFun = 1;
     double? gram = double.tryParse(
         earningRateGramTextEditingController.text.replaceAll(',', '.'));
-    //double costPrice = (product!.cost * CurrencyService.fineGoldSale);
+    double costPrice = (product!.cost * CurrencyService.fineGoldSale);
     if (gram != null && product != null) {
+      double gramDiff = gram - product!.salesGrams;
       setState(() {
-        double gramDiff = gram - product!.salesGrams;
-        gramDiff = double.parse(gramDiff.toStringAsFixed(3));
-        double? percent =
-            double.tryParse((product!.salesGrams / gramDiff).toString());
-        print(product!.salesGrams / gramDiff);
-        earningRateTLTextEditingController.text = percent!.toStringAsFixed(0);
+        double? percent = gramDiff == 0
+            ? 0
+            : double.tryParse(
+                (100 / (product!.salesGrams / gramDiff)).toString());
+        soldPrice = (double.parse(costPrice.toString()) +
+            (double.parse(costPrice.toString()) * percent! / 100));
+        earningRateTLTextEditingController.text =
+            percent.toString().split('.')[1][0] == '0'
+                ? OutputFormatters.buildNumberFormat0f(percent)
+                : OutputFormatters.buildNumberFormat1f(percent);
+        saleTextEditingController.text =
+            OutputFormatters.buildNumberFormat1f(soldPrice!);
+        saleGramTextEditingController.text =
+            earningRateGramTextEditingController.text;
       });
     }
   }
@@ -848,7 +855,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         builder: (context) {
           return const Center(child: CircularProgressIndicator());
         });
-    product!.piece -= 1;
+    product!.piece -= int.tryParse(pieceTextEditingController.text)!;
     GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) {
       ProductSale(
           product: product!.toJson(),
@@ -872,110 +879,4 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       });
     });
   }
-
-  /*Row _buildProductInformationRow() {
-    return Row(
-      children: [
-        // Carat of product
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 34),
-          child: buildCaratRow(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 34),
-          child: buildGramRow(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 34),
-          child: buildSalesGramsRow(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, top: 34),
-          child: buildCostRow(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 24, top: 34),
-          child: buildCostPriceRow(),
-        ),
-      ],
-    );
-  }
-
-  Row buildCaratRow() {
-    return Row(
-      children: [
-        Text(
-          'Ayar: ',
-          style: buildTextStyle(),
-        ),
-        Text(
-          caratTxt,
-          style: buildTextStyle(),
-        ),
-      ],
-    );
-  }
-
-  Row buildGramRow() {
-    return Row(
-      children: [
-        Text(
-          'Gram: ',
-          style: buildTextStyle(),
-        ),
-        Text(
-          gramTxt,
-          style: buildTextStyle(),
-        ),
-      ],
-    );
-  }
-
-  Row buildSalesGramsRow() {
-    return Row(
-      children: [
-        Text(
-          'Satış Gram: ',
-          style: buildTextStyle(),
-        ),
-        Text(
-          salesGramsTxt,
-          style: buildTextStyle(),
-        ),
-      ],
-    );
-  }
-
-  Row buildCostRow() {
-    return Row(
-      children: [
-        Text(
-          'Maliyet: ',
-          style: buildTextStyle(),
-        ),
-        SizedBox(
-          width: 116,
-          child: Text(
-            costTxt,
-            style: buildTextStyle(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row buildCostPriceRow() {
-    return Row(
-      children: [
-        Text(
-          'Maliyet Fiyatı: ',
-          style: buildTextStyle(),
-        ),
-        Text(
-          costPriceTxt,
-          style: buildTextStyle(),
-        ),
-      ],
-    );
-  }*/
 }
