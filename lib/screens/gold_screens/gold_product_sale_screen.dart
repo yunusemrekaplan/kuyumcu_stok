@@ -808,12 +808,15 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     int? percent = int.tryParse(earningRateTLTextEditingController.text);
     double costPrice = (product!.cost * CurrencyService.fineGoldSale);
     if (percent != null && product != null) {
+      soldPrice = (double.parse(costPrice.toString()) +
+          (double.parse(costPrice.toString()) * percent / 100));
+      double temp = soldPrice! / costPrice;
+      double gram = product!.salesGrams * temp;
+      //print(gram);
+      //gram.toString().split('.')[1][0] == '0' ?
       setState(() {
-        soldPrice = (double.parse(costPrice.toString()) +
-            (double.parse(costPrice.toString()) * percent / 100));
-        double temp = soldPrice! / costPrice;
         earningRateGramTextEditingController.text =
-            OutputFormatters.buildNumberFormat3f(product!.salesGrams * temp);
+            OutputFormatters.buildNumberFormat2f(gram);
         saleTextEditingController.text =
             OutputFormatters.buildNumberFormat1f(soldPrice!);
         saleGramTextEditingController.text =
@@ -829,13 +832,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     double costPrice = (product!.cost * CurrencyService.fineGoldSale);
     if (gram != null && product != null) {
       double gramDiff = gram - product!.salesGrams;
+      double? percent = gramDiff == 0
+          ? 0
+          : double.tryParse(
+              (100 / (product!.salesGrams / gramDiff)).toString());
+      soldPrice = (double.parse(costPrice.toString()) +
+          (double.parse(costPrice.toString()) * percent! / 100));
       setState(() {
-        double? percent = gramDiff == 0
-            ? 0
-            : double.tryParse(
-                (100 / (product!.salesGrams / gramDiff)).toString());
-        soldPrice = (double.parse(costPrice.toString()) +
-            (double.parse(costPrice.toString()) * percent! / 100));
         earningRateTLTextEditingController.text =
             percent.toString().split('.')[1][0] == '0'
                 ? OutputFormatters.buildNumberFormat0f(percent)
