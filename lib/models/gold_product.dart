@@ -1,4 +1,5 @@
-import 'package:kuyumcu_stok/enum_carat.dart';
+import 'package:kuyumcu_stok/enum/carat.dart';
+import 'package:kuyumcu_stok/extension/carat_extension.dart';
 
 class GoldProduct {
   late int id;

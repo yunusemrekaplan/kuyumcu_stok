@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
-import 'package:kuyumcu_stok/models/gold_product.dart';
-import 'package:kuyumcu_stok/models/product_entry.dart';
+import 'package:kuyumcu_stok/extension/route_extension.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_entries_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sale_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen.dart';
+import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:kuyumcu_stok/enum/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,49 +32,22 @@ Future<void> main() async {
     await windowManager.focus();
   });
 
-  /*BarcodeDbHelper().open();
-  List<StockGoldProduct> goldProducts = [];
-  List<DiamondProduct> diamondProducts = [];
+  await GoldProductDbHelper().open();
+  await ProductEntryDbHelper().open();
 
-  CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
-        StockGoldProductDbHelper().open().then((value) => {
-              StockGoldProductDbHelper().queryAllRows().then((value) => {
-                    for (int i = 0; i < value.length; i++)
-                      {
-                        goldProducts.add(
-                            StockGoldProduct.fromJson(value[i], value[i]['id'])),
-                      }
-                  }),
-            }),
-        DiamondProductDbHelper().open().then((value) => {
-              DiamondProductDbHelper().queryAllRows().then((value) => {
-                    for (int i = 0; i < value.length; i++)
-                      {
-                        diamondProducts.add(DiamondProduct.fromJson(value[i])),
-                      }
-                  }),
-            }),
-        StockGoldProductDbHelper().stockProducts = goldProducts,
-        DiamondProductDbHelper().products = diamondProducts,
-
-      });*/
-
-  GoldProductDbHelper().open().then((value) {
-    GoldProductDbHelper().queryAllRows().then((value) {
-      for (int i = 0; i < value.length; i++) {
-        GoldProductDbHelper().products.add(GoldProduct.fromJson(value[i], value[i]['id']));
-      }
-      ProductEntryDbHelper().open().then((value) {
-        ProductEntryDbHelper().queryAllRows().then((value) {
-          for (int i = 0; i < value.length; i++) {
-            ProductEntryDbHelper().entries.add(ProductEntry.fromJson(value[i], value[i]['id']));
-          }
-          runApp(const MyApp());
-        });
+  /*GoldProductDbHelper().queryAllRows().then((value) {
+    for (int i = 0; i < value.length; i++) {
+      GoldProductDbHelper().products.add(GoldProduct.fromJson(value[i], value[i]['id']));
+    }
+    ProductEntryDbHelper().open().then((value) {
+      ProductEntryDbHelper().queryAllRows().then((value) {
+        for (int i = 0; i < value.length; i++) {
+          ProductEntryDbHelper().entries.add(ProductEntry.fromJson(value[i], value[i]['id']));
+        }
+        runApp(const MyApp());
       });
     });
-  });
-
+  });*/
 }
 
 class MyApp extends StatelessWidget {
@@ -91,6 +65,8 @@ class MyApp extends StatelessWidget {
         ),
       );
     };*/
+    Routes initialRoute = Routes.homeScreen;
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -109,7 +85,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        //'/': (BuildContext context) => const HomeScreen(),
+        '/home-screen': (BuildContext context) => const HomeScreen(),
         '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
         '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
         '/gold-product-entries-screen': (BuildContext context) => const GoldProductEntriesScreen(),
@@ -118,7 +94,7 @@ class MyApp extends StatelessWidget {
         //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
         //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
       },
-      initialRoute: '/gold-products-inventory-screen',
+      initialRoute: initialRoute.nameDefinition,
     );
   }
 }

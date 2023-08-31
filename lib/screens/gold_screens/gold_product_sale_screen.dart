@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/enum_carat.dart';
+import 'package:kuyumcu_stok/enum/carat.dart';
+import 'package:kuyumcu_stok/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
 import 'package:kuyumcu_stok/localizations/output_formatters.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
@@ -851,6 +852,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     }
   }
 
+  // isCorrect? isNull? onSale
   void onSale() async {
     showDialog(
         barrierDismissible: false,
