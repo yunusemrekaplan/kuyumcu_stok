@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/enum/routes.dart';
+import 'package:kuyumcu_stok/extension/route_extension.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -17,7 +19,8 @@ class _MyDrawerState extends State<MyDrawer> {
         children: <Widget>[
           IconButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.homeScreen.nameDefinition, (route) => false);
             },
             icon: const Icon(Icons.house),
             iconSize: 40,
@@ -27,36 +30,27 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('Altınlar'),
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-products-inventory-screen', (route) => false);
+                  context,
+                  Routes.goldProductsInventoryScreen.nameDefinition,
+                  (route) => false);
             },
           ),
-          /*ListTile(
-            title: const Text('Pırlantalar'),
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/diamond-products-screen', (route) => false);
-            },
-          ),*/
           ListTile(
             title: const Text('Altın Satış İşlemi'),
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-sale-screen', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context,
+                  Routes.goldSaleScreen.nameDefinition, (route) => false);
             },
           ),
-          ListTile(
-            title: const Text('Satılan Altınlar'),
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-products-sold-screen', (route) => false);
-            },),
           ListTile(
             title: const Text('Girilen Altınlar'),
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-product-entries-screen', (route) => false);
-            },),
-
+                  context,
+                  Routes.goldProductEntriesScreen.nameDefinition,
+                  (route) => false);
+            },
+          ),
         ],
       ),
     );
