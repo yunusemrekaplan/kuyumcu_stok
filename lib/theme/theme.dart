@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-const int backgroundColor = 0xFF07263C;
+const Color backgroundColor = Color(0xFF07263C);
 
-final themeMainColorData = ThemeData(
+final mainThemeData = ThemeData(
   //brightness: Brightness.dark,
   useMaterial3: true,
   appBarTheme: const AppBarTheme(

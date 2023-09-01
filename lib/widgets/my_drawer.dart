@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/enum/extension/route_extension.dart';
 import 'package:kuyumcu_stok/enum/routes.dart';
-import 'package:kuyumcu_stok/extension/route_extension.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});

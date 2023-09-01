@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
-import 'package:kuyumcu_stok/models/diamond_product.dart';
+import 'package:kuyumcu_stok/model/diamond_product.dart';
 import 'package:kuyumcu_stok/screens/diamond_screens/diamond_product_edit_screen.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 

@@ -1,5 +1,4 @@
-import 'package:kuyumcu_stok/models/gold_product.dart';
-import 'package:kuyumcu_stok/models/product_entry.dart';
+import 'package:kuyumcu_stok/model/product_entry.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -12,7 +11,7 @@ class ProductEntryDbHelper {
 
   ProductEntryDbHelper._internal();
 
-  Database? _db;
+  late Database _db;
 
   late List<ProductEntry> entries;
 
@@ -29,7 +28,7 @@ class ProductEntryDbHelper {
   }
 
   Future<void> _createTable() async {
-    await _db!.execute('''
+    await _db.execute('''
       CREATE TABLE IF NOT EXISTS product_entries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         productId INTEGER NOT NULL,
@@ -40,23 +39,19 @@ class ProductEntryDbHelper {
   }
 
   Future<void> close() async {
-    await _db!.close();
+    await _db.close();
   }
 
   Future<int> insert(Map<String, dynamic> data) async {
-    if (_db == null) {
-      throw Exception("Database is not open.");
-    }
-
-    return await _db!.insert(tableName, data);
+    return await _db.insert(tableName, data);
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await _db!.query(tableName);
+    return await _db.query(tableName);
   }
 
   Future<Map<String, dynamic>?> getProductEntryById(int id) async {
-    final List<Map<String, dynamic>> results = await _db!.query(
+    final List<Map<String, dynamic>> results = await _db.query(
       tableName,
       where: 'id = ?',
       whereArgs: [id],
@@ -70,10 +65,10 @@ class ProductEntryDbHelper {
   }
 
   Future<int> update(Map<String, dynamic> data, int id) async {
-    return await _db!.update(tableName, data, where: 'id = ?', whereArgs: [id]);
+    return await _db.update(tableName, data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> delete(int id) async {
-    return await _db!.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    return await _db.delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 }

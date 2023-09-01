@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/calculate.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/carat.dart';
-import 'package:kuyumcu_stok/extension/carat_extension.dart';
-import 'package:kuyumcu_stok/localizations/input_formatters.dart';
-import 'package:kuyumcu_stok/models/gold_product.dart';
+import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
+import 'package:kuyumcu_stok/localization/input_formatters.dart';
+import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
@@ -149,16 +149,6 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
               inputDouble,
-              /*TextInputFormatter.withFunction((oldValue, newValue) {
-                if (newValue.text.isEmpty) {
-                  return newValue.copyWith(text: '');
-                } else {
-                  final n = NumberFormat('#,##0.0', 'tr_TR');
-                  final number = n.parse(newValue.text);
-                  return newValue.copyWith(
-                      text: n.format(number), selection: updateCursorPosition(newValue));
-                }
-              })*/
             ],
             onChanged: (value) {
               setState(() {
@@ -171,11 +161,6 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       ),
     );
   }
-
-  /*TextSelection updateCursorPosition(TextEditingValue value) {
-    final int offset = value.text.length;
-    return TextSelection.fromPosition(TextPosition(offset: offset));
-  }*/
 
   Padding buildLaborCostRow() {
     return Padding(

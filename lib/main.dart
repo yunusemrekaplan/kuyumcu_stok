@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
-import 'package:kuyumcu_stok/extension/route_extension.dart';
+import 'package:kuyumcu_stok/enum/extension/route_extension.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_entries_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sale_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
@@ -56,11 +56,11 @@ class MyApp extends StatelessWidget {
         ),
       );
     };*/
-    Routes initialRoute = Routes.goldProductsInventoryScreen;
+    Routes initialRoute = Routes.homeScreen;
 
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: themeMainColorData,
+      theme: mainThemeData,
       routes: {
         Routes.homeScreen.nameDefinition: (BuildContext context) => const HomeScreen(),
         Routes.goldProductsInventoryScreen.nameDefinition: (BuildContext context) => const GoldProductsInventoryScreen(),

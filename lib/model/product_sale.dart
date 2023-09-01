@@ -1,5 +1,3 @@
-import 'package:kuyumcu_stok/models/gold_product.dart';
-
 class ProductSale {
   late int id;
   late Map product;

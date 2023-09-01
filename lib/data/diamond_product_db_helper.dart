@@ -1,4 +1,4 @@
-import 'package:kuyumcu_stok/models/diamond_product.dart';
+import 'package:kuyumcu_stok/model/diamond_product.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DiamondProductDbHelper {

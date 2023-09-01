@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:aspose_barcode_cloud/api.dart' as barcode;
-import 'package:kuyumcu_stok/models/barcode.dart';
+import 'package:kuyumcu_stok/model/barcode.dart';
 
 class BarcodeService {
   static const String firstCode = '978';

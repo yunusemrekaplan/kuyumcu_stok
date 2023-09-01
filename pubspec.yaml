@@ -46,6 +46,7 @@ dependencies:
   numberpicker: ^2.1.2
   intl: ^0.18.1
   adaptive_scrollbar: ^2.1.2
+  fl_chart: ^0.63.0
 
 dev_dependencies:
   flutter_test:

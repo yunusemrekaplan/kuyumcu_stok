@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/diamond_product_db_helper.dart';
-import 'package:kuyumcu_stok/models/diamond_product.dart';
+import 'package:kuyumcu_stok/model/diamond_product.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
