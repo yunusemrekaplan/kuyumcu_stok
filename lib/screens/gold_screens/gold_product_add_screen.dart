@@ -605,7 +605,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         costController.text =
             NumberFormat('#,##0', 'tr_TR').format(Calculate.calculateCostPrice(
           double.parse(purityRateController.text.replaceAll(",", ".")),
-          double.parse(gramController.text.replaceAll(",", ".")),
+          // salesGran vs gram
+          double.parse(salesGramsController.text.replaceAll(",", ".")),
           double.parse(laborCostController.text.replaceAll(",", ".")),
         ));
       });

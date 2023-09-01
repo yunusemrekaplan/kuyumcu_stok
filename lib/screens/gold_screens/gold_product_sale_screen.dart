@@ -38,7 +38,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String costTxt = '';
   String costPriceTxt = '';
 
-  double tableWidth = 840;
+  double tableWidth = 690;
   double? soldPrice;
   double? soldGram;
   double? earnedProfitTL;
@@ -97,6 +97,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           child: Row(
             children: [
               _buildLeftOfBody(),
+              const SizedBox(width: 20,),
               Expanded(
                 child: Align(
                   alignment: Alignment.topRight,
@@ -126,8 +127,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(
-              left: 20.0, top: 20.0, right: 20.0, bottom: 30.0),
+          padding: const EdgeInsets.all(20.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -139,6 +139,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             ],
           ),
         ),
+        const SizedBox(height: 10,),
       ],
     );
   }
@@ -164,7 +165,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   Container _buildBarcodeAndEarningRateRow() {
     return Container(
-      width: 950,
+      width: 895,
       decoration: const BoxDecoration(
         color: Color(0xFF2b384a),
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -209,7 +210,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         TextFormField(
           controller: barcodeTextEditingController,
           cursorHeight: 20,
-          decoration: buildInputDecoration(const Size(220, 38)),
+          decoration: buildInputDecoration(const Size(190, 38)),
           inputFormatters: <TextInputFormatter>[
             inputOnlyDigits,
           ],
@@ -276,6 +277,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         'Hesapla',
         style: TextStyle(
           fontSize: 24,
+          color: Colors.black,
         ),
       ),
     );
@@ -326,12 +328,6 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   ),
                   DataColumn(
                     label: Text(
-                      'Gram',
-                      style: buildDataColumnTextStyle(),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
                       'Satış Gramı',
                       style: buildDataColumnTextStyle(),
                     ),
@@ -377,15 +373,6 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            gramTxt,
-                            style: buildDataCellTextStyle(),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
                             salesGramsTxt,
                             style: buildDataCellTextStyle(),
                           ),
@@ -415,7 +402,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Row(
       children: [
         Container(
-          width: 1120,
+          width: 1030,
           decoration: const BoxDecoration(
             color: Color(0xFF2b384a),
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -471,7 +458,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           TextFormField(
             controller: saleGramTextEditingController,
             cursorHeight: 20,
-            decoration: buildInputDecoration(const Size(120, 38)),
+            decoration: buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
               inputDouble,
             ],
@@ -516,6 +503,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           'Satışı Onayla',
           style: TextStyle(
             fontSize: 24,
+            color: Colors.black,
           ),
         ),
       ),
@@ -546,6 +534,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         'Yenile',
         style: TextStyle(
           fontSize: 24,
+          color: Colors.black,
         ),
       ),
     );
@@ -570,7 +559,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           ),
           DataColumn(
             label: SizedBox(
-              width: 100,
+              width: 70,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
@@ -598,7 +587,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             cells: [
               DataCell(
                 Text(
-                  'Has Altın',
+                  'HAS',
                   style: buildTableTextStyle(),
                 ),
               ),
@@ -685,35 +674,35 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   TextStyle buildDataCellTextStyle() {
     return const TextStyle(
-      fontSize: 24,
+      fontSize: 22,
       color: Colors.white,
     );
   }
 
   TextStyle buildDataColumnTextStyle() {
     return const TextStyle(
-      fontSize: 26,
+      fontSize: 24,
       color: Colors.white,
     );
   }
 
   TextStyle buildTextStyle() {
     return const TextStyle(
-      fontSize: 30,
+      fontSize: 26,
       color: Colors.white,
     );
   }
 
   TextStyle buildTableTextStyle() {
     return const TextStyle(
-      fontSize: 26,
+      fontSize: 22,
       color: Colors.white,
     );
   }
 
   TextStyle buildTextFormFieldTextStyle() {
     return const TextStyle(
-      fontSize: 28,
+      fontSize: 24,
       height: 0.9,
       color: Colors.white,
       //backgroundColor: Colors.black,
@@ -763,11 +752,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       for (int i = 0; i < products.length; i++) {
         if (products[i].barcodeText == value) {
           setState(() {
-            tableWidth = 840;
+            tableWidth = 690;
             product = GoldProductDbHelper().products[i];
             nameTxt = product!.name.substring(
-                0, product!.name.length <= 25 ? product!.name.length : 26);
-            tableWidth += product!.name.length * 9;
+                0, product!.name.length <= 21 ? product!.name.length : 21);
+            tableWidth += nameTxt.length > 5 ? (nameTxt.length - 5) * 13.65 : 0;
             pieceTxt = product!.piece.toString();
             caratTxt = product!.carat.intDefinition.toString();
             gramTxt = product!.gram.toString().replaceAll('.', ',');
@@ -779,6 +768,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   setState(() {
                     costPriceTxt =
                         '${NumberFormat('#,##0.0', 'tr_TR').format(product!.cost * CurrencyService.fineGoldSale)} TL';
+                    print('Cost: ' + product!.cost.toString());
+                    print('Gold: ' + CurrencyService.fineGoldSale.toString());
                     buildCurrencies(value);
                   }),
                 });
@@ -819,6 +810,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     }
   }
 
+  // todo Caculate ile tekrar hesapla
   void onCalculateGram() {
     isFun = 1;
     double? gram = double.tryParse(
