@@ -149,7 +149,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(150, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              inputOnlyDigits
             ],
             onChanged: (value) {
               setState(() {
@@ -235,7 +235,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputDouble(),
+              inputDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -265,7 +265,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputDouble(),
+              inputDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -295,7 +295,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputDouble(),
+              inputDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -325,7 +325,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputDouble(),
+              inputDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -354,7 +354,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputDouble(),
+              inputDouble,
             ],
             onChanged: (value) {
               setState(() {

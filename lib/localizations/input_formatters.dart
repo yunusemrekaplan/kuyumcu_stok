@@ -1,12 +1,5 @@
 import 'package:flutter/services.dart';
 
-class InputFormatters {
+final inputDouble = FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'));
 
-  static FilteringTextInputFormatter inputDouble() {
-    return FilteringTextInputFormatter.allow(RegExp(r'[0-9,.]'));
-  }
-
-  static FilteringTextInputFormatter inputOnlyDigits() {
-    return FilteringTextInputFormatter.allow(RegExp(r'[0-9]'));
-  }
-}
+final inputOnlyDigits = FilteringTextInputFormatter.allow(RegExp(r'\d'));

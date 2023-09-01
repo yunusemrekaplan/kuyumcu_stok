@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/enum/carat.dart';
 import 'package:kuyumcu_stok/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localizations/input_formatters.dart';
 import 'package:kuyumcu_stok/localizations/output_formatters.dart';
@@ -212,7 +211,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(220, 38)),
           inputFormatters: <TextInputFormatter>[
-            InputFormatters.inputOnlyDigits(),
+            inputOnlyDigits,
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
@@ -235,7 +234,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(70, 38)),
           inputFormatters: <TextInputFormatter>[
-            InputFormatters.inputOnlyDigits(),
+            inputOnlyDigits,
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
@@ -259,7 +258,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(100, 38)),
           inputFormatters: <TextInputFormatter>[
-            InputFormatters.inputDouble(),
+            inputDouble,
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
@@ -451,7 +450,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(160, 38)),
           inputFormatters: <TextInputFormatter>[
-            InputFormatters.inputDouble(),
+            inputDouble,
           ],
           cursorColor: textFormFieldColors,
           style: buildTextFormFieldTextStyle(),
@@ -474,7 +473,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             cursorHeight: 20,
             decoration: buildInputDecoration(const Size(120, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputDouble(),
+              inputDouble,
             ],
             cursorColor: textFormFieldColors,
             style: buildTextFormFieldTextStyle(),
@@ -498,7 +497,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             cursorHeight: 20,
             decoration: buildInputDecoration(const Size(70, 38)),
             inputFormatters: <TextInputFormatter>[
-              InputFormatters.inputOnlyDigits(),
+              inputOnlyDigits,
             ],
             cursorColor: textFormFieldColors,
             style: buildTextFormFieldTextStyle(),
