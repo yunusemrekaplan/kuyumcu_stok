@@ -15,6 +15,7 @@ import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
+import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class GoldProductAddScreen extends StatefulWidget {
@@ -55,9 +56,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey,
-      ),
+      appBar: appBar,
       drawer: const MyDrawer(),
       body: Column(
         children: [

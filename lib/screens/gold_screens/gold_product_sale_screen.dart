@@ -11,6 +11,7 @@ import 'package:kuyumcu_stok/models/product_sale.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:kuyumcu_stok/widgets/app_bar.dart';
 
 class GoldProductSaleScreen extends StatefulWidget {
   const GoldProductSaleScreen({super.key});
@@ -79,17 +80,10 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Y&Y',
-        ),
-      ),
+      appBar: appBar,
       drawer: const MyDrawer(),
       backgroundColor: const Color(0xFF07263C),
       body: Container(
-        //color: const Color(0xFF212529),
-        color: const Color(0xFF07263C),
-        //color: const Color(0xFF0b3163),
         child: _buildBody(),
       ),
     );

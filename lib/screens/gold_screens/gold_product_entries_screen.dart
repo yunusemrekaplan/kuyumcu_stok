@@ -6,6 +6,7 @@ import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/models/gold_product.dart';
 import 'package:kuyumcu_stok/models/product_entry.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
+import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/date_picker_row.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
@@ -58,9 +59,7 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey,
-      ),
+      appBar: appBar,
       drawer: const MyDrawer(),
       body: Container(
         width: MediaQuery.of(context).size.width,

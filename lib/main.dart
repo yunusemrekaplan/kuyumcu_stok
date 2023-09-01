@@ -9,24 +9,13 @@ import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen
 import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:kuyumcu_stok/enum/routes.dart';
+import 'package:kuyumcu_stok/options/window_options.dart';
+import 'package:kuyumcu_stok/theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Must add this line.
   await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions = const WindowOptions(
-    title: 'Kuyumcu Stok Takibi',
-    //size: Size(1500, 740),
-    //minimumSize: Size(1500, 740),
-    size: Size(1360, 680),
-    minimumSize: Size(1360, 680),
-    center: true,
-    //fullScreen: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal,
-  );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
     await windowManager.focus();
@@ -34,6 +23,8 @@ Future<void> main() async {
 
   await GoldProductDbHelper().open();
   await ProductEntryDbHelper().open();
+
+  runApp(const MyApp());
 
   /*GoldProductDbHelper().queryAllRows().then((value) {
     for (int i = 0; i < value.length; i++) {
@@ -65,31 +56,17 @@ class MyApp extends StatelessWidget {
         ),
       );
     };*/
-    Routes initialRoute = Routes.homeScreen;
+    Routes initialRoute = Routes.goldProductsInventoryScreen;
 
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF2b384a),
-          centerTitle: true,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          titleTextStyle: TextStyle(
-            color: Colors.yellow,
-            fontSize: 36,
-          ),
-        ),
-        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
-        useMaterial3: true,
-      ),
+      theme: themeMainColorData,
       routes: {
-        '/home-screen': (BuildContext context) => const HomeScreen(),
-        '/gold-products-inventory-screen': (BuildContext context) => const GoldProductsInventoryScreen(),
-        '/gold-product-add-screen': (BuildContext context) => const GoldProductAddScreen(),
-        '/gold-product-entries-screen': (BuildContext context) => const GoldProductEntriesScreen(),
-        '/gold-sale-screen': (BuildContext context) => const GoldProductSaleScreen(),
+        Routes.homeScreen.nameDefinition: (BuildContext context) => const HomeScreen(),
+        Routes.goldProductsInventoryScreen.nameDefinition: (BuildContext context) => const GoldProductsInventoryScreen(),
+        Routes.goldProductAddScreen.nameDefinition: (BuildContext context) => const GoldProductAddScreen(),
+        Routes.goldProductEntriesScreen.nameDefinition: (BuildContext context) => const GoldProductEntriesScreen(),
+        Routes.goldSaleScreen.nameDefinition: (BuildContext context) => const GoldProductSaleScreen(),
         //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
         //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
         //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),

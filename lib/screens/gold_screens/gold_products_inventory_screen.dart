@@ -10,6 +10,7 @@ import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
+import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class GoldProductsInventoryScreen extends StatefulWidget {
@@ -41,19 +42,15 @@ class _GoldProductsInventoryScreenState
     final double width = MediaQuery.of(context).size.width - 60;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey,
-      ),
+      appBar: appBar,
       drawer: const MyDrawer(),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
         child: Column(
           children: [
             buildTableHeightPaddingBox(),
             Container(
-              color: Colors.white,
               width: double.infinity,
               height: MediaQuery.of(context).size.height - 170,
               child: Row(

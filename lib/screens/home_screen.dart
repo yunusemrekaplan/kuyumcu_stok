@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
+import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    gold = CurrencyService.fineGoldSale.toString();
+    //gold = CurrencyService.fineGoldSale.toString();
     CurrencyService.getCurrenciesOfHakanAltin().then(
       (value) => setState(
         () {
@@ -41,12 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     };*/
     return Scaffold(
-      appBar: AppBar(),
+      appBar: appBar,
       drawer: const MyDrawer(),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
