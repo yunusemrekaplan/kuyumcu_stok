@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
 
-final inputDouble = FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'));
+final inputFormatDouble = FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'));
 
-final inputOnlyDigits = FilteringTextInputFormatter.allow(RegExp(r'\d'));
+final inputFormatOnlyDigits = FilteringTextInputFormatter.allow(RegExp(r'\d'));

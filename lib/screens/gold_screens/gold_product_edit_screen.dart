@@ -148,7 +148,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputDouble,
+              inputFormatDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -178,7 +178,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputDouble,
+              inputFormatDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -208,7 +208,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputDouble,
+              inputFormatDouble,
             ],
             onChanged: (value) {
               setState(() {
@@ -238,7 +238,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputDouble,
+              inputFormatDouble,
             ],
             onChanged: (value) {
               setState(() {

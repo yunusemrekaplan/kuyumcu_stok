@@ -9,8 +9,10 @@ import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/product_sale.dart';
 import 'package:kuyumcu_stok/services/currency_service.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
+import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
+import 'package:kuyumcu_stok/localization/converters.dart';
 
 class GoldProductSaleScreen extends StatefulWidget {
   const GoldProductSaleScreen({super.key});
@@ -97,7 +99,9 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           child: Row(
             children: [
               _buildLeftOfBody(),
-              const SizedBox(width: 20,),
+              const SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: Align(
                   alignment: Alignment.topRight,
@@ -139,7 +143,9 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
       ],
     );
   }
@@ -167,7 +173,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Container(
       width: 895,
       decoration: const BoxDecoration(
-        color: Color(0xFF2b384a),
+        color: secondColor,
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
       ),
       child: Padding(
@@ -212,7 +218,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(190, 38)),
           inputFormatters: <TextInputFormatter>[
-            inputOnlyDigits,
+            inputFormatOnlyDigits,
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
@@ -235,7 +241,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(70, 38)),
           inputFormatters: <TextInputFormatter>[
-            inputOnlyDigits,
+            inputFormatOnlyDigits,
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
@@ -259,7 +265,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(100, 38)),
           inputFormatters: <TextInputFormatter>[
-            inputDouble,
+            inputFormatDouble,
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
@@ -298,103 +304,115 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               padding: const EdgeInsets.only(left: 20.0),
               child: DataTable(
                 columnSpacing: 45,
-                border: const TableBorder(
-                  top: BorderSide(width: 1, color: Colors.white),
-                  left: BorderSide(width: 1, color: Colors.white),
-                  right: BorderSide(width: 1, color: Colors.white),
-                  bottom: BorderSide(width: 1, color: Colors.white),
-                  horizontalInside: BorderSide(width: 1, color: Colors.white),
-                  verticalInside: BorderSide(width: 1, color: Colors.white),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                columns: [
-                  DataColumn(
-                    label: Text(
-                      'İsim',
-                      style: buildDataColumnTextStyle(),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Adet',
-                      style: buildDataColumnTextStyle(),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Ayar',
-                      style: buildDataColumnTextStyle(),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Satış Gramı',
-                      style: buildDataColumnTextStyle(),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Maliyet Fiyatı',
-                      style: buildDataColumnTextStyle(),
-                    ),
-                  ),
-                ],
-                rows: [
-                  DataRow(
-                    cells: [
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            nameTxt, //27
-                            style: buildDataCellTextStyle(),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            pieceTxt,
-                            style: buildDataCellTextStyle(),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            caratTxt,
-                            style: buildDataCellTextStyle(),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            salesGramsTxt,
-                            style: buildDataCellTextStyle(),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            costPriceTxt,
-                            style: buildDataCellTextStyle(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                border: buildInformationTableBorder(),
+                columns: buildInformationTableColumns(),
+                rows: buildInformationTableRows(),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  List<DataRow> buildInformationTableRows() {
+    return [
+      DataRow(
+        cells: [
+          DataCell(
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                nameTxt, //27
+                style: buildDataCellTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                pieceTxt,
+                style: buildDataCellTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                caratTxt,
+                style: buildDataCellTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                salesGramsTxt,
+                style: buildDataCellTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                costPriceTxt,
+                style: buildDataCellTextStyle(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  List<DataColumn> buildInformationTableColumns() {
+    return [
+      DataColumn(
+        label: Text(
+          'İsim',
+          style: buildDataColumnTextStyle(),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Adet',
+          style: buildDataColumnTextStyle(),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Ayar',
+          style: buildDataColumnTextStyle(),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Satış Gramı',
+          style: buildDataColumnTextStyle(),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Maliyet Fiyatı',
+          style: buildDataColumnTextStyle(),
+        ),
+      ),
+    ];
+  }
+
+  TableBorder buildInformationTableBorder() {
+    return const TableBorder(
+      top: BorderSide(width: 1, color: Colors.white),
+      left: BorderSide(width: 1, color: Colors.white),
+      right: BorderSide(width: 1, color: Colors.white),
+      bottom: BorderSide(width: 1, color: Colors.white),
+      horizontalInside: BorderSide(width: 1, color: Colors.white),
+      verticalInside: BorderSide(width: 1, color: Colors.white),
+      borderRadius: BorderRadius.all(Radius.circular(20)),
     );
   }
 
@@ -437,10 +455,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(160, 38)),
           inputFormatters: <TextInputFormatter>[
-            inputDouble,
+            inputFormatDouble,
           ],
           cursorColor: textFormFieldColors,
           style: buildTextFormFieldTextStyle(),
+          onChanged: onChangedSalePrice,
         ),
       ],
     );
@@ -460,7 +479,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             cursorHeight: 20,
             decoration: buildInputDecoration(const Size(100, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputDouble,
+              inputFormatDouble,
             ],
             cursorColor: textFormFieldColors,
             style: buildTextFormFieldTextStyle(),
@@ -484,7 +503,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             cursorHeight: 20,
             decoration: buildInputDecoration(const Size(70, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputOnlyDigits,
+              inputFormatOnlyDigits,
             ],
             cursorColor: textFormFieldColors,
             style: buildTextFormFieldTextStyle(),
@@ -834,6 +853,30 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         saleGramTextEditingController.text =
             earningRateGramTextEditingController.text;
       });
+    }
+  }
+
+  void onChangedSalePrice(value) {
+    if (product != null && value.isNotEmpty) {
+      double costPrice = product!.cost * CurrencyService.fineGoldSale;
+      double price = double.parse(Converters.doubleNumToTr(value));
+      double diff = price - costPrice;
+      String percentString = (100 / (costPrice / diff)).toStringAsFixed(1);
+      double percent = double.parse(percentString);
+      double newSalesGram = (product!.salesGrams + (product!.salesGrams * percent / 100));
+
+      if (percent != 0) {
+        setState(() {
+          saleGramTextEditingController.text = OutputFormatters.buildNumberFormat2f(newSalesGram);
+        });
+      }
+      else {
+        setState(() {
+          saleGramTextEditingController.text = OutputFormatters.buildNumberFormat2f(product!.salesGrams);
+        });
+      }
+
+      //print((product!.salesGrams / percent));
     }
   }
 
