@@ -167,7 +167,7 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
       label: SizedBox(
         width: width * .09,
         child: const Text(
-          'Satış Tarihi',
+          'Giriş Tarihi',
           style: TextStyle(fontSize: 20),
         ),
       ),

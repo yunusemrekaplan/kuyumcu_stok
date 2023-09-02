@@ -12,18 +12,17 @@ class ProductEntryDbHelper {
   ProductEntryDbHelper._internal();
 
   late Database _db;
-
   late List<ProductEntry> entries;
 
+  String path = 'kuyumcu.db';
   String tableName = "product_entries";
 
   Future<void> open() async {
     entries = [];
     sqfliteFfiInit();
 
-    String path = 'kuyumcu.db';
     _db = await databaseFactoryFfi.openDatabase(path);
-    //await _db!.execute('DROP TABLE product_entries');
+    //await _db.execute('DROP TABLE product_entries');
     await _createTable();
   }
 

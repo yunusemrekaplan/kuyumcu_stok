@@ -12,11 +12,9 @@ class GoldProductDbHelper {
   GoldProductDbHelper._internal();
 
   late Database _db;
-
   late List<GoldProduct> products;
 
   String path = 'kuyumcu.db';
-
   String tableName = "gold_products";
 
   Future<void> open() async {
@@ -24,7 +22,7 @@ class GoldProductDbHelper {
     sqfliteFfiInit();
 
     _db = await databaseFactoryFfi.openDatabase(path);
-    //await _db!.execute('DROP TABLE gold_products');
+    //await _db.execute('DROP TABLE gold_products');
     await _createTable();
   }
 
