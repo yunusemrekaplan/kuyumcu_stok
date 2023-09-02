@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localization/input_formatters.dart';
@@ -25,6 +24,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   GoldProduct? product;
   late List<GoldProduct> products;
 
+  late int productIndex;
   String? earningRate;
   String fineGoldBuy = '.......';
   String fineGoldSale = '.......';
@@ -40,7 +40,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String costTxt = '';
   String costPriceTxt = '';
 
-  double tableWidth = 690;
+  double tableWidth = 700;
   double? soldPrice;
   double? soldGram;
   double? earnedProfitTL;
@@ -52,8 +52,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   late TextEditingController barcodeTextEditingController;
   late TextEditingController earningRateTLTextEditingController;
   late TextEditingController earningRateGramTextEditingController;
-  late TextEditingController saleTextEditingController;
-  late TextEditingController saleGramTextEditingController;
+  late TextEditingController saleTLTextEditingController;
   late TextEditingController pieceTextEditingController;
 
   _GoldProductSaleScreenState() {
@@ -61,8 +60,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     barcodeTextEditingController = TextEditingController();
     earningRateTLTextEditingController = TextEditingController();
     earningRateGramTextEditingController = TextEditingController();
-    saleTextEditingController = TextEditingController();
-    saleGramTextEditingController = TextEditingController();
+    saleTLTextEditingController = TextEditingController();
     pieceTextEditingController = TextEditingController();
   }
 
@@ -222,7 +220,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           ],
           style: buildTextFormFieldTextStyle(),
           cursorColor: textFormFieldColors,
-          onChanged: onSearch,
+          onChanged: (value) => onSearch(value, context),
         ),
       ],
     );
@@ -421,7 +419,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Row(
       children: [
         Container(
-          width: 1030,
+          width: 1010,
           decoration: const BoxDecoration(
             color: Color(0xFF2b384a),
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -452,12 +450,10 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           style: buildTextStyle(),
         ),
         TextFormField(
-          controller: saleTextEditingController,
+          controller: saleTLTextEditingController,
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(160, 38)),
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
           inputFormatters: <TextInputFormatter>[
-            //inputFormatDouble,
             LengthLimitingTextInputFormatter(7),
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}')),
             ThousandsFormatter(),
@@ -479,15 +475,16 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             'Satış Gramı: ',
             style: buildTextStyle(),
           ),
-          TextFormField(
-            controller: saleGramTextEditingController,
-            cursorHeight: 20,
-            decoration: buildInputDecoration(const Size(100, 38)),
-            inputFormatters: <TextInputFormatter>[
-              inputFormatDouble,
-            ],
-            cursorColor: textFormFieldColors,
-            style: buildTextFormFieldTextStyle(),
+          SizedBox(
+            width: 90,
+            height: 33,
+            child: Text(
+              gramTxt,
+              style: const TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),
@@ -496,7 +493,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   Padding _buildSalePieceTextAndForm() {
     return Padding(
-      padding: const EdgeInsets.only(left: 35),
+      padding: const EdgeInsets.only(left: 25),
       child: Row(
         children: [
           Text(
@@ -507,6 +504,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             controller: pieceTextEditingController,
             cursorHeight: 20,
             decoration: buildInputDecoration(const Size(70, 38)),
+            keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               inputFormatOnlyDigits,
             ],
@@ -546,12 +544,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             ),
           );
           caratTxt = '..';
-          gramTxt = '..';
           costTxt = '....';
           costPriceTxt = '....';
           barcodeTextEditingController.text = '';
           earningRateTLTextEditingController.text = '';
-          saleTextEditingController.text = '';
+          saleTLTextEditingController.text = '';
         });
       },
       child: const Text(
@@ -771,35 +768,67 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     eurSale = OutputFormatters.buildNumberFormat1f(double.parse(eurSale));
   }
 
-  void onSearch(value) {
+  void onSearch(value, BuildContext context) {
+    bool control = false;
     if (value.length == 13) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
       for (int i = 0; i < products.length; i++) {
         if (products[i].barcodeText == value) {
+          productIndex = i;
           setState(() {
-            tableWidth = 690;
+            earningRateTLTextEditingController.text = '';
+            earningRateGramTextEditingController.text = '';
+            saleTLTextEditingController.text = '';
+            gramTxt = '';
+            pieceTextEditingController.text = '';
+            tableWidth = 700;
             product = GoldProductDbHelper().products[i];
             nameTxt = product!.name.substring(
                 0, product!.name.length <= 21 ? product!.name.length : 21);
-            tableWidth += nameTxt.length > 5 ? (nameTxt.length - 5) * 13.65 : 0;
+            tableWidth += nameTxt.length > 5 ? (nameTxt.length - 5) * 18 : 0;
             pieceTxt = product!.piece.toString();
             caratTxt = product!.carat.intDefinition.toString();
-            gramTxt = product!.gram.toString().replaceAll('.', ',');
-            salesGramsTxt = product!.salesGrams.toString().replaceAll('.', ',');
-            costTxt = NumberFormat('#,##0.00', 'tr_TR').format(
-                product!.cost); //product!.cost.toString().replaceAll('.', ',');
-            // + product!.cost.toString().split('')[1].substring(0, 1)
+            salesGramsTxt =
+                OutputFormatters.buildNumberFormat2f(product!.salesGrams);
             CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
                   setState(() {
+                    double costPrice =
+                        product!.cost * CurrencyService.fineGoldSale;
                     costPriceTxt =
-                        '${NumberFormat('#,##0.0', 'tr_TR').format(product!.cost * CurrencyService.fineGoldSale)} TL';
-                    print('Cost: ' + product!.cost.toString());
-                    print('Gold: ' + CurrencyService.fineGoldSale.toString());
+                        '${OutputFormatters.buildNumberFormat0f(costPrice)} TL';
                     buildCurrencies(value);
                   }),
                 });
           });
+          control = true;
           break;
         }
+      }
+      Navigator.of(context).pop();
+      if (!control) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Stokta bu barkoda ait ürün bulunmamaktadır'),
+            actions: [
+              TextButton(
+                child: const Text(
+                  'Tamam',
+                  style: TextStyle(fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
       }
     }
   }
@@ -822,21 +851,17 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             (double.parse(costPrice.toString()) * percent / 100));
         double temp = soldPrice! / costPrice;
         double gram = product!.salesGrams * temp;
-        //print(gram);
-        //gram.toString().split('.')[1][0] == '0' ?
         setState(() {
           earningRateGramTextEditingController.text =
               OutputFormatters.buildNumberFormat2f(gram);
-          saleTextEditingController.text =
-              OutputFormatters.buildNumberFormat1f(soldPrice!);
-          saleGramTextEditingController.text =
-              earningRateGramTextEditingController.text;
+          saleTLTextEditingController.text =
+              OutputFormatters.buildNumberFormat0f(soldPrice!);
+          gramTxt = earningRateGramTextEditingController.text;
         });
       }
     }
   }
 
-  // todo Caculate ile tekrar hesapla
   void onCalculateGram() {
     if (product != null) {
       isFun = 1;
@@ -848,18 +873,17 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         double? percent = gramDiff == 0
             ? 0
             : double.tryParse(
-            (100 / (product!.salesGrams / gramDiff)).toString());
+                (100 / (product!.salesGrams / gramDiff)).toString());
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent! / 100));
         setState(() {
           earningRateTLTextEditingController.text =
-          percent.toString().split('.')[1][0] == '0'
-              ? OutputFormatters.buildNumberFormat0f(percent)
-              : OutputFormatters.buildNumberFormat1f(percent);
-          saleTextEditingController.text =
-              OutputFormatters.buildNumberFormat1f(soldPrice!);
-          saleGramTextEditingController.text =
-              earningRateGramTextEditingController.text;
+              percent.toString().split('.')[1][0] == '0'
+                  ? OutputFormatters.buildNumberFormat0f(percent)
+                  : OutputFormatters.buildNumberFormat1f(percent);
+          saleTLTextEditingController.text =
+              OutputFormatters.buildNumberFormat0f(soldPrice!);
+          gramTxt = earningRateGramTextEditingController.text;
         });
       }
     }
@@ -870,84 +894,110 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       double costPrice = product!.cost * CurrencyService.fineGoldSale;
       double price = double.parse(Converters.doubleNumToTr(value));
       double diff = price - costPrice;
-      String percentString = (100 / (costPrice / diff)).toStringAsFixed(1);
+      String percentString = (100 / (costPrice / diff)).toString();
       double percent = double.parse(percentString);
-      double newSalesGram = (product!.salesGrams + (product!.salesGrams * percent / 100));
+      double profit = (product!.salesGrams * percent / 100);
+      double newSalesGram = (product!.salesGrams + profit);
 
       if (percent != 0) {
         setState(() {
-          saleGramTextEditingController.text = OutputFormatters.buildNumberFormat2f(newSalesGram);
+          gramTxt = OutputFormatters.buildNumberFormat3f(newSalesGram);
         });
-      }
-      else {
+      } else {
         setState(() {
-          saleGramTextEditingController.text = OutputFormatters.buildNumberFormat2f(product!.salesGrams);
+          gramTxt = OutputFormatters.buildNumberFormat3f(product!.salesGrams);
         });
       }
-
-      //print((product!.salesGrams / percent));
     }
   }
 
   // isCorrect? isNull? onSale
   void onSale() async {
+    int? piece = int.tryParse(pieceTextEditingController.text);
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) {
           return const Center(child: CircularProgressIndicator());
         });
-    product!.piece -= int.tryParse(pieceTextEditingController.text)!;
-    GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) {
-      ProductSale(
+    if (isVariablesEmpty()) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Boş alanları doldurun!'),
+          actions: [
+            TextButton(
+              onPressed: () => {
+                Navigator.of(context).pop(),
+                Navigator.of(context).pop(),
+              },
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    } else if (piece! > product!.piece) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Yeterli sayıda ürün bulunmamaktadır'),
+          actions: [
+            TextButton(
+              onPressed: () => {
+                Navigator.of(context).pop(),
+                Navigator.of(context).pop(),
+              },
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      product!.piece -= piece;
+
+      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
+      soldPrice = double.parse(saleTLTextEditingController.text.replaceAll('.', ','));
+      soldGram = double.parse(salesGramsTxt.replaceAll(',', '.'));
+      earnedProfitTL = soldPrice! - costPrice;
+      earnedProfitGram = soldGram! - product!.salesGrams;
+
+      GoldProductDbHelper()
+          .update(product!.toJson(), product!.id)
+          .then((value) {
+        GoldProductDbHelper().products[productIndex] = product!;
+
+        ProductSale productSale = ProductSale(
           product: product!.toJson(),
           soldDate: DateTime.now(),
-          piece: int.parse(pieceTextEditingController.text),
-          costPrice: (product!.cost * CurrencyService.fineGoldSale),
+          piece: piece,
+          costPrice: costPrice,
           soldPrice: soldPrice!,
           soldGram: soldGram!,
           earnedProfitTL: earnedProfitTL!,
-          earnedProfitGram: earnedProfitGram!);
-      Navigator.of(context).pop();
-      print(product!.toJson());
-      setState(() {
-        caratTxt = '..';
-        gramTxt = '..';
-        costTxt = '....';
-        costPriceTxt = '....';
-        barcodeTextEditingController.text = '';
-        earningRateTLTextEditingController.text = '';
-        saleTextEditingController.text = '';
+          earnedProfitGram: earnedProfitGram!,
+        );
+
+        print(productSale.toJson());
+        setState(() {
+          nameTxt = '';
+          pieceTxt = '';
+          caratTxt = '';
+          salesGramsTxt = '';
+          costPriceTxt = '';
+          barcodeTextEditingController.text = '';
+          earningRateTLTextEditingController.text = '';
+          earningRateGramTextEditingController.text = '';
+          saleTLTextEditingController.text = '';
+          salesGramsTxt = '';
+          pieceTextEditingController.text = '';
+        });
+        Navigator.of(context).pop();
       });
-    });
+    }
   }
-}
 
-
-class ThousandsFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
-    if (text.contains('.')) {
-      text = text.replaceAll('.', '');
-    }
-    List<String> split = text.split(',');
-    if (split.length > 2) {
-      return oldValue;
-    }
-    String integerPart = split[0];
-    if (integerPart.length > 3) {
-      RegExp regExp = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-      integerPart = integerPart.replaceAllMapped(regExp, (match) => '${match[1]}.');
-    }
-    String newString = integerPart;
-    if (split.length == 2) {
-      String decimalPart = split[1];
-      newString += ',$decimalPart';
-    }
-    return TextEditingValue(
-        text: newString,
-        selection: TextSelection.collapsed(offset: newString.length));
+  bool isVariablesEmpty() {
+    return saleTLTextEditingController.text.isEmpty ||
+        pieceTextEditingController.text.isEmpty;
   }
 }
