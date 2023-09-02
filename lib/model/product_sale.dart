@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 class ProductSale {
   late int id;
-  late Map product;
+  late Map<String, dynamic> product;
   late DateTime soldDate;
   late int piece;
   late double costPrice; // s
@@ -21,8 +23,8 @@ class ProductSale {
   });
 
   ProductSale.fromJson(Map<String, dynamic> json, this.id) {
-    product = json['product'];
-    soldDate = json['soldDate'];
+    product = jsonDecode(json['product']);
+    soldDate = DateTime.parse(json['soldDate']);
     piece = json['piece'];
     costPrice = json['costPrice'];
     soldPrice = json['soldPrice'];
@@ -33,8 +35,8 @@ class ProductSale {
 
   Map<String, dynamic> toJson() {
     return {
-      'product': product,
-      'soldDate': soldDate,
+      'product': jsonEncode(product),
+      'soldDate': soldDate.toIso8601String(),
       'piece': piece,
       'costPrice': costPrice,
       'soldPrice': soldPrice,
