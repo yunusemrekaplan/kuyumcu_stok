@@ -265,6 +265,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(100, 38)),
           inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'^\d+,?\d{0,3}')),
             inputFormatDouble,
           ],
           style: buildTextFormFieldTextStyle(),
@@ -454,8 +455,12 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           controller: saleTextEditingController,
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(160, 38)),
+          keyboardType: TextInputType.numberWithOptions(decimal: true),
           inputFormatters: <TextInputFormatter>[
-            inputFormatDouble,
+            //inputFormatDouble,
+            LengthLimitingTextInputFormatter(7),
+            FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}')),
+            ThousandsFormatter(),
           ],
           cursorColor: textFormFieldColors,
           style: buildTextFormFieldTextStyle(),
@@ -808,51 +813,55 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   }
 
   void onCalculatePercent() {
-    isFun = 0;
-    int? percent = int.tryParse(earningRateTLTextEditingController.text);
-    double costPrice = (product!.cost * CurrencyService.fineGoldSale);
-    if (percent != null && product != null) {
-      soldPrice = (double.parse(costPrice.toString()) +
-          (double.parse(costPrice.toString()) * percent / 100));
-      double temp = soldPrice! / costPrice;
-      double gram = product!.salesGrams * temp;
-      //print(gram);
-      //gram.toString().split('.')[1][0] == '0' ?
-      setState(() {
-        earningRateGramTextEditingController.text =
-            OutputFormatters.buildNumberFormat2f(gram);
-        saleTextEditingController.text =
-            OutputFormatters.buildNumberFormat1f(soldPrice!);
-        saleGramTextEditingController.text =
-            earningRateGramTextEditingController.text;
-      });
+    if (product != null) {
+      isFun = 0;
+      int? percent = int.tryParse(earningRateTLTextEditingController.text);
+      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
+      if (percent != null) {
+        soldPrice = (double.parse(costPrice.toString()) +
+            (double.parse(costPrice.toString()) * percent / 100));
+        double temp = soldPrice! / costPrice;
+        double gram = product!.salesGrams * temp;
+        //print(gram);
+        //gram.toString().split('.')[1][0] == '0' ?
+        setState(() {
+          earningRateGramTextEditingController.text =
+              OutputFormatters.buildNumberFormat2f(gram);
+          saleTextEditingController.text =
+              OutputFormatters.buildNumberFormat1f(soldPrice!);
+          saleGramTextEditingController.text =
+              earningRateGramTextEditingController.text;
+        });
+      }
     }
   }
 
   // todo Caculate ile tekrar hesapla
   void onCalculateGram() {
-    isFun = 1;
-    double? gram = double.tryParse(
-        earningRateGramTextEditingController.text.replaceAll(',', '.'));
-    double costPrice = (product!.cost * CurrencyService.fineGoldSale);
-    if (gram != null && product != null) {
-      double gramDiff = gram - product!.salesGrams;
-      double? percent = gramDiff == 0
-          ? 0
-          : double.tryParse(
-              (100 / (product!.salesGrams / gramDiff)).toString());
-      soldPrice = (double.parse(costPrice.toString()) +
-          (double.parse(costPrice.toString()) * percent! / 100));
-      setState(() {
-        earningRateTLTextEditingController.text =
-            percent.toString().split('.')[1][0] == '0'
-                ? OutputFormatters.buildNumberFormat0f(percent)
-                : OutputFormatters.buildNumberFormat1f(percent);
-        saleTextEditingController.text =
-            OutputFormatters.buildNumberFormat1f(soldPrice!);
-        saleGramTextEditingController.text =
-            earningRateGramTextEditingController.text;
-      });
+    if (product != null) {
+      isFun = 1;
+      double? gram = double.tryParse(
+          earningRateGramTextEditingController.text.replaceAll(',', '.'));
+      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
+      if (gram != null) {
+        double gramDiff = gram - product!.salesGrams;
+        double? percent = gramDiff == 0
+            ? 0
+            : double.tryParse(
+            (100 / (product!.salesGrams / gramDiff)).toString());
+        soldPrice = (double.parse(costPrice.toString()) +
+            (double.parse(costPrice.toString()) * percent! / 100));
+        setState(() {
+          earningRateTLTextEditingController.text =
+          percent.toString().split('.')[1][0] == '0'
+              ? OutputFormatters.buildNumberFormat0f(percent)
+              : OutputFormatters.buildNumberFormat1f(percent);
+          saleTextEditingController.text =
+              OutputFormatters.buildNumberFormat1f(soldPrice!);
+          saleGramTextEditingController.text =
+              earningRateGramTextEditingController.text;
+        });
+      }
     }
   }
 
@@ -911,5 +920,34 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         saleTextEditingController.text = '';
       });
     });
+  }
+}
+
+
+class ThousandsFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+    if (text.contains('.')) {
+      text = text.replaceAll('.', '');
+    }
+    List<String> split = text.split(',');
+    if (split.length > 2) {
+      return oldValue;
+    }
+    String integerPart = split[0];
+    if (integerPart.length > 3) {
+      RegExp regExp = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+      integerPart = integerPart.replaceAllMapped(regExp, (match) => '${match[1]}.');
+    }
+    String newString = integerPart;
+    if (split.length == 2) {
+      String decimalPart = split[1];
+      newString += ',$decimalPart';
+    }
+    return TextEditingValue(
+        text: newString,
+        selection: TextSelection.collapsed(offset: newString.length));
   }
 }

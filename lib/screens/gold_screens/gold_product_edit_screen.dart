@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kuyumcu_stok/calculate.dart';
+import 'package:kuyumcu_stok/calculator.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/carat.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
@@ -295,7 +295,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         gramController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
-        costController.text = Calculate.calculateCostPrice(
+        costController.text = Calculator.calculateCostPrice(
           double.parse(purityRateController.text.replaceAll(",", ".")),
           double.parse(gramController.text.replaceAll(",", ".")),
           double.parse(laborCostController.text.replaceAll(",", ".")),
