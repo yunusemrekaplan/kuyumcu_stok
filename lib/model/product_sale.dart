@@ -26,11 +26,11 @@ class ProductSale {
     product = jsonDecode(json['product']);
     soldDate = DateTime.parse(json['soldDate']);
     piece = json['piece'];
-    costPrice = json['costPrice'];
-    soldPrice = json['soldPrice'];
-    soldGram = json['soldGram'];
-    earnedProfitTL = json['earnedProfitTL'];
-    earnedProfitGram = json['earnedProfitGram'];
+    costPrice = double.parse(json['costPrice'].toString());
+    soldPrice = double.parse(json['soldPrice'].toString());
+    soldGram = double.parse(json['soldGram'].toString());
+    earnedProfitTL = double.parse(json['earnedProfitTL'].toString());
+    earnedProfitGram = double.parse(json['earnedProfitGram'].toString());
   }
 
   Map<String, dynamic> toJson() {

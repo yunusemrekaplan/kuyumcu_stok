@@ -36,10 +36,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String nameTxt = '';
   String pieceTxt = '';
   String caratTxt = '';
-  String gramTxt = '';
   String salesGramsTxt = '';
   String costTxt = '';
   String costPriceTxt = '';
+
+  String soldGramTxt = '';
 
   double tableWidth = 700;
   double? soldPrice;
@@ -480,7 +481,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             width: 90,
             height: 33,
             child: Text(
-              gramTxt,
+              soldGramTxt,
               style: const TextStyle(
                 fontSize: 25,
                 color: Colors.white,
@@ -786,7 +787,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             earningRateTLTextEditingController.text = '';
             earningRateGramTextEditingController.text = '';
             saleTLTextEditingController.text = '';
-            gramTxt = '';
+            soldGramTxt = '';
             pieceTextEditingController.text = '';
             tableWidth = 700;
             product = GoldProductDbHelper().products[i];
@@ -795,8 +796,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             tableWidth += nameTxt.length > 5 ? (nameTxt.length - 5) * 18 : 0;
             pieceTxt = product!.piece.toString();
             caratTxt = product!.carat.intDefinition.toString();
-            salesGramsTxt =
-                OutputFormatters.buildNumberFormat2f(product!.salesGrams);
+            salesGramsTxt = OutputFormatters.buildNumberFormat2f(product!.salesGrams);
             CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
                   setState(() {
                     double costPrice =
@@ -857,7 +857,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               OutputFormatters.buildNumberFormat2f(gram);
           saleTLTextEditingController.text =
               OutputFormatters.buildNumberFormat0f(soldPrice!);
-          gramTxt = earningRateGramTextEditingController.text;
+          soldGramTxt = earningRateGramTextEditingController.text;
         });
       }
     }
@@ -884,7 +884,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                   : OutputFormatters.buildNumberFormat1f(percent);
           saleTLTextEditingController.text =
               OutputFormatters.buildNumberFormat0f(soldPrice!);
-          gramTxt = earningRateGramTextEditingController.text;
+          soldGramTxt = earningRateGramTextEditingController.text;
         });
       }
     }
@@ -902,11 +902,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
       if (percent != 0) {
         setState(() {
-          gramTxt = OutputFormatters.buildNumberFormat3f(newSalesGram);
+          soldGramTxt = OutputFormatters.buildNumberFormat3f(newSalesGram);
         });
       } else {
         setState(() {
-          gramTxt = OutputFormatters.buildNumberFormat3f(product!.salesGrams);
+          soldGramTxt = OutputFormatters.buildNumberFormat3f(product!.salesGrams);
         });
       }
     }
@@ -958,10 +958,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
       double costPrice = (product!.cost * CurrencyService.fineGoldSale);
       soldPrice = double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
-      soldGram = double.parse(salesGramsTxt.replaceAll(',', '.'));
+      soldGram = double.parse(soldGramTxt.replaceAll(',', '.'));
+      print('soldGram: '+ soldGram!.toString());
+      print('salesGrams: '+ product!.salesGrams.toString());
       earnedProfitTL = soldPrice! - costPrice;
       earnedProfitGram = soldGram! - product!.salesGrams;
 
+      print(earnedProfitGram);
       GoldProductDbHelper()
           .update(product!.toJson(), product!.id)
           .then((value) {
@@ -993,7 +996,10 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           pieceTextEditingController.text = '';
         });
 
-        ProductSaleDbHelper().insert(productSale.toJson()).then((value) => Navigator.of(context).pop());
+        ProductSaleDbHelper().insert(productSale.toJson()).then((value) {
+          ProductSaleDbHelper().sales.add(ProductSale.fromJson(productSale.toJson(), value));
+          Navigator.of(context).pop();
+        });
       });
     }
   }

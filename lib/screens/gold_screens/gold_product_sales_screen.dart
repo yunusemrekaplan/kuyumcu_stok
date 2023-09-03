@@ -36,6 +36,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
   _GoldProductSalesScreenState() {
     sales = ProductSaleDbHelper().sales;
     products = GoldProductDbHelper().products;
+    print(sales.length);
     initializeDateFormatting('tr_TR', null);
     startTime = timeRange;
     startDatePickerRow = DatePickerRow(

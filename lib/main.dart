@@ -5,6 +5,7 @@ import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/route_extension.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/product_entry.dart';
+import 'package:kuyumcu_stok/model/product_sale.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_entries_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sale_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
@@ -35,14 +36,17 @@ Future<void> main() async {
     for (int i = 0; i < value.length; i++) {
       GoldProductDbHelper().products.add(GoldProduct.fromJson(value[i], value[i]['id']));
     }
-    ProductEntryDbHelper().open().then((value) {
-      ProductEntryDbHelper().queryAllRows().then((value) {
-        for (int i = 0; i < value.length; i++) {
-          ProductEntryDbHelper().entries.add(ProductEntry.fromJson(value[i], value[i]['id']));
-        }
-        runApp(const MyApp());
-      });
+    ProductEntryDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i < value.length; i++) {
+        ProductEntryDbHelper().entries.add(ProductEntry.fromJson(value[i], value[i]['id']));
+      }
     });
+    ProductSaleDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i< value.length; i++) {
+        ProductSaleDbHelper().sales.add(ProductSale.fromJson(value[i], value[i]['id']));
+      }
+    });
+    runApp(const MyApp());
   });
 }
 
