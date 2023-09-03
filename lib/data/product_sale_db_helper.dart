@@ -46,7 +46,6 @@ class ProductSaleDbHelper {
   }
 
   Future<int> insert(Map<String, dynamic> data) async {
-    print(data);
     return await _db.insert(tableName, data);
   }
 
