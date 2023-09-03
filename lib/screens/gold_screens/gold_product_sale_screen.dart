@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localization/input_formatters.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
@@ -956,7 +957,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       product!.piece -= piece;
 
       double costPrice = (product!.cost * CurrencyService.fineGoldSale);
-      soldPrice = double.parse(saleTLTextEditingController.text.replaceAll('.', ','));
+      soldPrice = double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
       soldGram = double.parse(salesGramsTxt.replaceAll(',', '.'));
       earnedProfitTL = soldPrice! - costPrice;
       earnedProfitGram = soldGram! - product!.salesGrams;
@@ -991,7 +992,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           salesGramsTxt = '';
           pieceTextEditingController.text = '';
         });
-        Navigator.of(context).pop();
+
+        ProductSaleDbHelper().insert(productSale.toJson()).then((value) => Navigator.of(context).pop());
       });
     }
   }

@@ -67,8 +67,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           buildPurityRateRow(),
           buildLaborCostRow(),
           buildGramRow(),
-          buildCostRow(),
           buildSalesGramsRow(),
+          buildCostRow(),
           buildSaveButton(),
           const Expanded(
             child: SizedBox(
@@ -301,6 +301,36 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               setState(() {
                 gramController;
               });
+              //buildCalculate();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildSalesGramsRow() {
+    return Padding(
+      padding: buildEdgeInsets(),
+      child: Row(
+        children: [
+          Text(
+            'Satış Gramı: ',
+            style: TextStyles.buildTextStyle(),
+          ),
+          TextFormField(
+            validator: NumberValidator.validate,
+            controller: salesGramsController,
+            style: TextStyles.buildTextFormFieldTextStyle(),
+            decoration:
+            DecorationStyles.buildInputDecoration(const Size(125, 38)),
+            inputFormatters: <TextInputFormatter>[
+              inputFormatDouble,
+            ],
+            onChanged: (value) {
+              setState(() {
+                salesGramsController;
+              });
               buildCalculate();
             },
           ),
@@ -321,35 +351,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           TextFormField(
             validator: NumberValidator.validate,
             controller: costController,
-            style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration:
-                DecorationStyles.buildInputDecoration(const Size(125, 38)),
-            inputFormatters: <TextInputFormatter>[
-              inputFormatDouble,
-            ],
-            onChanged: (value) {
-              setState(() {
-                costController;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding buildSalesGramsRow() {
-    return Padding(
-      padding: buildEdgeInsets(),
-      child: Row(
-        children: [
-          Text(
-            'Satış Gramı: ',
-            style: TextStyles.buildTextStyle(),
-          ),
-          TextFormField(
-            validator: NumberValidator.validate,
-            controller: salesGramsController,
             style: TextStyles.buildTextFormFieldTextStyle(),
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(125, 38)),
@@ -599,7 +600,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   void buildCalculate() {
     if (purityRateController.text.isNotEmpty &&
-        gramController.text.isNotEmpty &&
+        salesGramsController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
         costController.text =

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/route_extension.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/product_entry.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
 
   await GoldProductDbHelper().open();
   await ProductEntryDbHelper().open();
+  await ProductSaleDbHelper().open();
 
   runApp(const MyApp());
 

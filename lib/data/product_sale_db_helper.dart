@@ -27,7 +27,7 @@ class ProductSaleDbHelper {
 
   Future<void> _createTable() async {
     await _db.execute('''
-      CREATE TABLE IF NOT EXISTS gold_products (
+      CREATE TABLE IF NOT EXISTS product_sales (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         product TEXT NOT NULL,
         soldDate TEXT NOT NULL,
@@ -46,6 +46,7 @@ class ProductSaleDbHelper {
   }
 
   Future<int> insert(Map<String, dynamic> data) async {
+    print(data);
     return await _db.insert(tableName, data);
   }
 
