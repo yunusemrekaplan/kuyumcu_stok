@@ -66,11 +66,9 @@ class _DatePickerRowState extends State<DatePickerRow> {
               ))!;
 
               String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format((widget.initialTime));
-              String newTime = widget.label == 'Bitiş Tarihi' ? '23:59:59':'00:00:00';
+              String newTime = widget.label == 'Bitiş Tarihi:' ? '23:59:59':'00:00:00';
               String newFormattedDate = '${formattedDate.substring(0, 11)}$newTime';
               widget.initialTime = DateFormat('yyyy-MM-dd HH:mm:ss').parse(newFormattedDate);
-
-              print(widget.initialTime.hour);
               dateController.text = DateFormat.yMd('tr-Tr').format(widget.initialTime);
             },
           ),

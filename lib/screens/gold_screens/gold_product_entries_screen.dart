@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
+import 'package:kuyumcu_stok/localization/converters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/product_entry.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
@@ -29,34 +29,31 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
 
+  late DatePickerRow startDatePickerRow;
+  late DatePickerRow endDatePickerRow;
+
   _GoldProductEntriesScreenState() {
     entries = ProductEntryDbHelper().entries;
     products = GoldProductDbHelper().products;
     initializeDateFormatting('tr_TR', null);
     startTime = timeRange;
-    //print(startTime);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    entries = ProductEntryDbHelper().entries;
-    products = GoldProductDbHelper().products;
-    final double width = MediaQuery.of(context).size.width - 60;
-    final verticalScrollController = ScrollController();
-
-    DatePickerRow startDatePickerRow = DatePickerRow(
+    startDatePickerRow = DatePickerRow(
       label: 'Başlangıç Tarihi:',
       startTime: startTime,
       endTime: endTime,
       initialTime: startTime,
     );
-
-    DatePickerRow endDatePickerRow = DatePickerRow(
+    endDatePickerRow = DatePickerRow(
       label: 'Bitiş Tarihi:',
       startTime: startTime,
       endTime: endTime,
       initialTime: endTime,
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final verticalScrollController = ScrollController();
 
     return Scaffold(
       appBar: appBar,
@@ -83,9 +80,9 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
                   child: ElevatedButton(
                     child: const Text('Tarihi Onayla'),
                     onPressed: () {
-                      startTime = startDatePickerRow.initialTime;
-                      endTime = endDatePickerRow.initialTime;
                       setState(() {
+                        startTime = startDatePickerRow.initialTime;
+                        endTime = endDatePickerRow.initialTime;
                         entries;
                       });
                     },
@@ -116,30 +113,30 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
                           horizontalMargin: 10,
                           showCheckboxColumn: false,
                           border: DataTableStyles.buildTableBorder(),
-                          columns: buildDataColumns(width),
-                          rows: buildRowList(context),
+                          columns: buildDataColumns(),
+                          rows: buildRowList(),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  List<DataColumn> buildDataColumns(double width) {
+  List<DataColumn> buildDataColumns() {
     return [
-      buildEntryDateDataColumn(width),
-      buildNameDataColumn(width),
-      buildPieceDataColumn(width),
+      buildEntryDateDataColumn(),
+      buildNameDataColumn(),
+      buildPieceDataColumn(),
     ];
   }
 
-  List<DataRow> buildRowList(BuildContext context) {
+  List<DataRow> buildRowList() {
     return entries
         .where((element) =>
             (element.enteredDate.compareTo(startTime) >= 0) &&
@@ -147,14 +144,14 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
         .map(
           (e) => DataRow(
             color: DataTableStyles.buildDataRowColor(),
-            cells: buildDataCells(e, context),
+            cells: buildDataCells(e),
             onSelectChanged: (selected) {},
           ),
         )
         .toList();
   }
 
-  List<DataCell> buildDataCells(ProductEntry e, BuildContext context) {
+  List<DataCell> buildDataCells(ProductEntry e) {
     return [
       buildEntryDateDataCell(e),
       buildNameDataCell(e),
@@ -162,40 +159,31 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     ];
   }
 
-  DataColumn buildEntryDateDataColumn(double width) {
+  DataColumn buildEntryDateDataColumn() {
     return DataColumn(
-      label: SizedBox(
-        width: width * .09,
-        child: const Text(
-          'Giriş Tarihi',
-          style: TextStyle(fontSize: 20),
-        ),
+      label: const Text(
+        'Giriş Tarihi',
+        style: TextStyle(fontSize: 20),
       ),
       onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
     );
   }
 
-  DataColumn buildNameDataColumn(double width) {
+  DataColumn buildNameDataColumn() {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
-          'İsim',
-          style: TextStyle(fontSize: 20),
-        ),
+      label: const Text(
+        'İsim',
+        style: TextStyle(fontSize: 20),
       ),
       onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
     );
   }
 
-  DataColumn buildPieceDataColumn(double width) {
+  DataColumn buildPieceDataColumn() {
     return DataColumn(
-      label: SizedBox(
-        width: width * .1,
-        child: const Text(
-          'Girilen Adet',
-          style: TextStyle(fontSize: 20),
-        ),
+      label: const Text(
+        'Girilen Adet',
+        style: TextStyle(fontSize: 20),
       ),
       onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
     );
@@ -203,7 +191,7 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
 
   DataCell buildEntryDateDataCell(ProductEntry e) {
     return DataCell(Text(
-      '${DateFormat.yMd('tr-Tr').format(e.enteredDate)}  ${DateFormat.Hm().format(e.enteredDate)}',
+      Converters.dateToTr(e.enteredDate),
       style: const TextStyle(fontSize: 20),
     ));
   }
@@ -243,7 +231,8 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
         } else {
           entries.sort((a, b) => b.enteredDate.compareTo(a.enteredDate));
         }
-      } else if (columnIndex == 1) {
+      }
+      else if (columnIndex == 1) {
         if (ascending) {
           //a.name.compareTo(b.name)
           entries.sort((a, b) => products
@@ -254,7 +243,8 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
                   .where((element) => element.id == b.productId)
                   .map((e) => e.name)
                   .toString()));
-        } else {
+        }
+        else {
           entries.sort((a, b) => products
               .where((element) => element.id == b.productId)
               .map((e) => e.name)
@@ -263,6 +253,13 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
                   .where((element) => element.id == a.productId)
                   .map((e) => e.name)
                   .toString()));
+        }
+      }
+      else if (columnIndex == 2) {
+        if (ascending) {
+          entries.sort((a, b) => a.piece.compareTo(b.piece));
+        } else {
+          entries.sort((a, b) => b.piece.compareTo(a.piece));
         }
       }
     });

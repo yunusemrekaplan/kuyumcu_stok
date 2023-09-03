@@ -4,4 +4,5 @@ enum Routes {
   goldProductAddScreen,
   goldProductEntriesScreen,
   goldSaleScreen,
+  goldProductSalesScreen,
 }

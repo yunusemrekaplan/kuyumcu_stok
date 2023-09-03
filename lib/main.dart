@@ -8,6 +8,7 @@ import 'package:kuyumcu_stok/model/product_entry.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_entries_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sale_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
+import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sales_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
 import 'package:window_manager/window_manager.dart';
@@ -71,9 +72,7 @@ class MyApp extends StatelessWidget {
         Routes.goldProductAddScreen.nameDefinition: (BuildContext context) => const GoldProductAddScreen(),
         Routes.goldProductEntriesScreen.nameDefinition: (BuildContext context) => const GoldProductEntriesScreen(),
         Routes.goldSaleScreen.nameDefinition: (BuildContext context) => const GoldProductSaleScreen(),
-        //'/gold-products-sold-screen': (BuildContext context) => const GoldProductsSoldScreen(),
-        //'/diamond-products-screen': (BuildContext context) => const DiamondProductsScreen(),
-        //'/diamond-product-add-screen': (BuildContext context) => const DiamondProductAddScreen(),
+        Routes.goldProductSalesScreen.nameDefinition: (BuildContext context) => const GoldProductSalesScreen(),
       },
       initialRoute: initialRoute.nameDefinition,
     );

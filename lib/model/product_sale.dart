@@ -5,7 +5,7 @@ class ProductSale {
   late Map<String, dynamic> product;
   late DateTime soldDate;
   late int piece;
-  late double costPrice; // s
+  late double costPrice;
   late double soldPrice;
   late double soldGram;
   late double earnedProfitTL;

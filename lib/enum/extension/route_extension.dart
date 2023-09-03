@@ -13,6 +13,8 @@ extension ToName on Routes {
         return '/gold-product-entries-screen';
       case Routes.goldSaleScreen:
         return '/gold-sale-screen';
+      case Routes.goldProductSalesScreen:
+        return '/gold-product-sales-screen';
     }
   }
 }
