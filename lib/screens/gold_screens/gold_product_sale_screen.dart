@@ -83,7 +83,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
-      backgroundColor: const Color(0xFF07263C),
+      backgroundColor: backgroundColor,
       body: Container(
         child: _buildBody(),
       ),
