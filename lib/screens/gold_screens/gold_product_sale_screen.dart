@@ -265,7 +265,6 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           cursorHeight: 20,
           decoration: buildInputDecoration(const Size(100, 38)),
           inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'^\d+,?\d{0,3}')),
             inputFormatDouble,
           ],
           style: buildTextFormFieldTextStyle(),

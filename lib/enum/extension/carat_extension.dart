@@ -4,13 +4,13 @@ extension ToPurityRate on Carat {
   double get purityRateDefinition {
     switch (this) {
       case Carat.twentyFour:
-        return 995;
+        return 995.0;
       case Carat.twentyTwo:
-        return 916;
+        return 916.0;
       case Carat.eighteen:
-        return 750;
+        return 750.0;
       case Carat.fourteen:
-        return 585;
+        return 585.0;
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-final inputFormatDouble = FilteringTextInputFormatter.allow(RegExp(r'[\d,]'));
+final inputFormatDouble = FilteringTextInputFormatter.allow(RegExp(r'^\d+,?\d{0,3}'));
 
 final inputFormatOnlyDigits = FilteringTextInputFormatter.allow(RegExp(r'\d'));
 

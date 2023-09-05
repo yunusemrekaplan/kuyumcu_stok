@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/calculator.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/enum/carat.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localization/input_formatters.dart';
+import 'package:kuyumcu_stok/localization/output_formatters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/product_entry.dart';
 import 'package:kuyumcu_stok/services/barcode_service.dart';
@@ -30,27 +30,28 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late Carat dropdownValue;
   late TextEditingController pieceController;
   late TextEditingController nameController;
-  late TextEditingController gramController;
-  late TextEditingController costGramController;
   late TextEditingController purityRateController;
-  late TextEditingController costController;
   late TextEditingController laborCostController;
+  late TextEditingController gramController;
   late TextEditingController salesGramsController;
+  late TextEditingController costController;
+
+  late ButtonStyles buttonStyles;
 
   _GoldProductAddScreenState() {
     initializeDateFormatting('tr_TR', null);
+    buttonStyles = ButtonStyles();
     dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';
     pieceController = TextEditingController();
     nameController = TextEditingController();
-    gramController = TextEditingController();
-    costGramController = TextEditingController();
     purityRateController = TextEditingController();
-    costController = TextEditingController();
     laborCostController = TextEditingController();
+    gramController = TextEditingController();
     salesGramsController = TextEditingController();
-    String text1 = dropdownValue.purityRateDefinition.toString();
-    purityRateController.text = text1.replaceAll(".", ",");
+    costController = TextEditingController();
+    purityRateController.text = OutputFormatters.buildNumberFormat1f(
+        dropdownValue.purityRateDefinition);
   }
 
   @override
@@ -117,7 +118,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   ElevatedButton buildBarcodeGeneratorButton() {
     return ElevatedButton(
-      style: ButtonStyles.buildBasicButtonStyle(),
+      style: buttonStyles.buildBasicButtonStyle(),
       onPressed: () {
         barcodeNo = BarcodeService.generateCode();
         setState(() {
@@ -149,11 +150,12 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             decoration:
                 DecorationStyles.buildInputDecoration(const Size(150, 38)),
             inputFormatters: <TextInputFormatter>[
-              inputFormatOnlyDigits
+              inputFormatOnlyDigits,
             ],
             onChanged: (value) {
               setState(() {
                 pieceController;
+                buttonStyles;
               });
             },
           ),
@@ -179,6 +181,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             onChanged: (value) {
               setState(() {
                 nameController;
+                buttonStyles;
               });
             },
           ),
@@ -206,9 +209,12 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               items: buildDropdownMenuItemList(),
               onChanged: (Carat? newValue) {
                 dropdownValue = newValue!;
-                String temp = dropdownValue.purityRateDefinition.toString();
+                purityRateController.text =
+                    OutputFormatters.buildNumberFormat1f(
+                        dropdownValue.purityRateDefinition);
                 setState(() {
-                  purityRateController.text = temp.replaceAll('.', ',');
+                  purityRateController;
+                  buttonStyles;
                 });
                 buildCalculate();
               },
@@ -240,6 +246,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             onChanged: (value) {
               setState(() {
                 purityRateController;
+                buttonStyles;
               });
               buildCalculate();
             },
@@ -270,6 +277,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             onChanged: (value) {
               setState(() {
                 laborCostController;
+                buttonStyles;
               });
               buildCalculate();
             },
@@ -300,8 +308,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             onChanged: (value) {
               setState(() {
                 gramController;
+                buttonStyles;
               });
-              //buildCalculate();
             },
           ),
         ],
@@ -323,13 +331,14 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             controller: salesGramsController,
             style: TextStyles.buildTextFormFieldTextStyle(),
             decoration:
-            DecorationStyles.buildInputDecoration(const Size(125, 38)),
+                DecorationStyles.buildInputDecoration(const Size(125, 38)),
             inputFormatters: <TextInputFormatter>[
               inputFormatDouble,
             ],
             onChanged: (value) {
               setState(() {
                 salesGramsController;
+                buttonStyles;
               });
               buildCalculate();
             },
@@ -360,6 +369,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             onChanged: (value) {
               setState(() {
                 costController;
+                buttonStyles;
               });
             },
           ),
@@ -374,7 +384,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildSaveButtonStyle((isVariablesEmpty() ||
+            style: buttonStyles.buildSaveButtonStyle((isVariablesEmpty() ||
                 isCorrectFormat() ||
                 barcodeNo == '0000000000000')),
             onPressed: onSaved,
@@ -394,7 +404,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildBasicButtonStyle(),
+            style: buttonStyles.buildBasicButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/gold-products-inventory-screen', (route) => false);
@@ -509,54 +519,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           ),
         );
       }
-
-      /*Barcode barcode;
-
-      try {
-        GoldProductDbHelper().insert(json).then(
-              (value) => {
-                GoldProductDbHelper().products.add(
-                      GoldProduct.fromJson(json, value),
-                    ),
-                print('id: $value'),
-                BarcodeService.generateBarcode(barcodeNo).then(
-                  (value) => {
-                    barcode = value,
-                    BarcodeDbHelper().insert(barcode.toJson()),
-                    setState(
-                      () {
-                        barcodeNo = '0000000000000';
-                        nameController.text = '';
-                        gramController.text = '';
-                        costGramController.text = '';
-                        purityRateController.text = dropdownValue
-                            .purityRateDefinition
-                            .toStringAsFixed(0);
-                        laborCostController.text = '';
-
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  },
-                ),
-              },
-            );
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context, '/gold-product-add-screen', (route) => false),
-                child: const Text('Tamam'),
-              ),
-            ],
-          ),
-        );
-      }
-*/
     }
   }
 
@@ -583,14 +545,14 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         purityRateController.text.isEmpty ||
         laborCostController.text.isEmpty ||
         gramController.text.isEmpty ||
-        costController.text.isEmpty ||
-        salesGramsController.text.isEmpty;
+        salesGramsController.text.isEmpty ||
+        costController.text.isEmpty;
   }
 
   bool isCorrectFormat() {
     return double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
             null ||
-        double.tryParse(pieceController.text.replaceAll(",", ".")) == null ||
+        int.tryParse(pieceController.text) == null ||
         double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
             null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
@@ -603,13 +565,14 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         salesGramsController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
-        costController.text =
-            NumberFormat('#,##0', 'tr_TR').format(Calculator.calculateCostPrice(
-          double.parse(purityRateController.text.replaceAll(",", ".")),
-          // salesGran vs gram
-          double.parse(salesGramsController.text.replaceAll(",", ".")),
-          double.parse(laborCostController.text.replaceAll(",", ".")),
-        ));
+        double cost = Calculator.calculateCostPrice(
+              double.parse(purityRateController.text.replaceAll(",", ".")),
+              // salesGran vs gram
+              double.parse(salesGramsController.text.replaceAll(",", ".")),
+              double.parse(laborCostController.text.replaceAll(",", ".")),
+            ) /
+            1000;
+        costController.text = OutputFormatters.buildNumberFormat3f(cost);
       });
     }
   }

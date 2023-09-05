@@ -34,7 +34,10 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
   late TextEditingController costController;
   late TextEditingController laborCostController;
 
+  late ButtonStyles buttonStyles;
+
   _GoldProductEditScreenState({required this.product}) {
+    buttonStyles = ButtonStyles();
     dropdownValue = product.carat;
     nameController = TextEditingController();
     gramController = TextEditingController();
@@ -257,7 +260,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildUpdateButtonStyle(isUpdatable()),
+            style: buttonStyles.buildUpdateButtonStyle(isUpdatable()),
             onPressed: onUpdateFun,
             child: Text(
               'Güncelle',
@@ -275,7 +278,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       child: Row(
         children: [
           ElevatedButton(
-            style: ButtonStyles.buildBasicButtonStyle(),
+            style: buttonStyles.buildBasicButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(context,
                   '/gold-products-inventory-screen', (route) => false);

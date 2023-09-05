@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ButtonStyles {
-  static ButtonStyle buildBasicButtonStyle() {
+  static final ButtonStyles _instance = ButtonStyles._internal();
+
+  factory ButtonStyles() {
+    return _instance;
+  }
+
+  ButtonStyles._internal();
+
+  ButtonStyle buildBasicButtonStyle() {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.hovered)) {
@@ -12,7 +20,7 @@ class ButtonStyles {
     );
   }
 
-  static ButtonStyle buildSaveButtonStyle(bool state) {
+  ButtonStyle buildSaveButtonStyle(bool state) {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
         (Set<MaterialState> states) {
@@ -30,7 +38,7 @@ class ButtonStyles {
   }
 
 
-  static ButtonStyle buildUpdateButtonStyle(int state) {
+  ButtonStyle buildUpdateButtonStyle(int state) {
     return ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) {

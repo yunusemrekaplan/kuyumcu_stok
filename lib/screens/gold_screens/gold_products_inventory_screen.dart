@@ -24,10 +24,13 @@ class _GoldProductsInventoryScreenState
   late List<GoldProduct> products;
   late TextEditingController searchController;
 
+  late ButtonStyles buttonStyles;
+
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
 
   _GoldProductsInventoryScreenState() {
+    buttonStyles = ButtonStyles();
     products = GoldProductDbHelper().products;
     searchController = TextEditingController();
   }
@@ -459,7 +462,7 @@ class _GoldProductsInventoryScreenState
         Padding(
           padding: const EdgeInsets.only(left: 25.0, bottom: 10),
           child: ElevatedButton(
-            style: ButtonStyles.buildBasicButtonStyle(),
+            style: buttonStyles.buildBasicButtonStyle(),
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                   context, '/gold-product-add-screen', (route) => false);

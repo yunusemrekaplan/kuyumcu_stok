@@ -1,5 +1,4 @@
 import 'package:kuyumcu_stok/model/gold_product.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class GoldProductDbHelper {
