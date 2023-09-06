@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
+import 'package:kuyumcu_stok/enum/my_error.dart';
+import 'package:kuyumcu_stok/localization/output_formatters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
+import 'package:kuyumcu_stok/model/log.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
@@ -33,6 +36,51 @@ class _GoldProductsInventoryScreenState
     buttonStyles = ButtonStyles();
     products = GoldProductDbHelper().products;
     searchController = TextEditingController();
+  }
+
+  @override
+  void initState() {
+    if (GoldProductDbHelper().products.isEmpty) {
+      getProducts();
+    }
+    super.initState();
+  }
+
+  void getProducts() {
+    try {
+      GoldProductDbHelper().queryAllRows().then((value) {
+        for (int i = 0; i < value.length; i++) {
+          GoldProductDbHelper()
+              .products
+              .add(GoldProduct.fromJson(value[i], value[i]['id']));
+        }
+      });
+    } catch (e) {
+      Log log = Log(
+        dateTime: DateTime.now(),
+        state: MyError.dataBaseQueryAllRows,
+        errorMessage: e.toString(),
+      );
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title:
+              const Text('Ürünleri veritabanından çekerken bir hata oluştur!'),
+          actions: [
+            TextButton(
+              child: const Text(
+                style: TextStyle(fontSize: 20),
+                'Tamam',
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -296,8 +344,11 @@ class _GoldProductsInventoryScreenState
   }
 
   DataCell buildNameDataCell(GoldProduct e) {
+    int len = e.name.length;
+    String name =
+        e.name.substring(0, (len > 15 ? 11 : len)) + (len > 15 ? '...' : '');
     return DataCell(Text(
-      e.name.substring(0, (e.name.length > 15 ? 14 : e.name.length)),
+      name,
       style: const TextStyle(
         fontSize: 20,
         color: Colors.white,
@@ -327,8 +378,7 @@ class _GoldProductsInventoryScreenState
 
   DataCell buildLaborCostDataCell(GoldProduct e) {
     return DataCell(Text(
-      e.laborCost.toString().replaceAll(
-          '.', ','), //NumberFormat('#,##0.0', 'tr_TR').format(e.laborCost),
+      OutputFormatters.buildNumberFormat1f(e.laborCost),
       style: const TextStyle(
         fontSize: 20,
         color: Colors.white,
@@ -338,8 +388,7 @@ class _GoldProductsInventoryScreenState
 
   DataCell buildGramDataCell(GoldProduct e) {
     return DataCell(Text(
-      e.gram.toString().replaceAll(
-          '.', ','), //NumberFormat('#,##0.0', 'tr_TR').format(e.gram),
+      OutputFormatters.buildNumberFormat3f(e.gram),
       style: const TextStyle(
         fontSize: 20,
         color: Colors.white,
@@ -349,8 +398,7 @@ class _GoldProductsInventoryScreenState
 
   DataCell buildSalesGramsDataCell(GoldProduct e) {
     return DataCell(Text(
-      e.salesGrams.toString().replaceAll(
-          '.', ','), //NumberFormat('#,##0.0', 'tr_TR').format(e.salesGrams),
+      OutputFormatters.buildNumberFormat3f(e.salesGrams),
       style: const TextStyle(
         fontSize: 20,
         color: Colors.white,
@@ -360,8 +408,7 @@ class _GoldProductsInventoryScreenState
 
   DataCell buildCostDataCell(GoldProduct e) {
     return DataCell(Text(
-      e.cost.toString().replaceAll(
-          '.', ','), //NumberFormat('#,##0.0', 'tr_TR').format(e.cost),
+      OutputFormatters.buildNumberFormat3f(e.cost),
       style: const TextStyle(
         fontSize: 20,
         color: Colors.white,
@@ -392,8 +439,8 @@ class _GoldProductsInventoryScreenState
             actions: [
               TextButton(
                 child: const Text(
-                  'Evet',
                   style: TextStyle(fontSize: 20),
+                  'Evet',
                 ),
                 onPressed: () {
                   setState(

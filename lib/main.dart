@@ -34,16 +34,22 @@ Future<void> main() async {
 
   GoldProductDbHelper().queryAllRows().then((value) {
     for (int i = 0; i < value.length; i++) {
-      GoldProductDbHelper().products.add(GoldProduct.fromJson(value[i], value[i]['id']));
+      GoldProductDbHelper()
+          .products
+          .add(GoldProduct.fromJson(value[i], value[i]['id']));
     }
     ProductEntryDbHelper().queryAllRows().then((value) {
       for (int i = 0; i < value.length; i++) {
-        ProductEntryDbHelper().entries.add(ProductEntry.fromJson(value[i], value[i]['id']));
+        ProductEntryDbHelper()
+            .entries
+            .add(ProductEntry.fromJson(value[i], value[i]['id']));
       }
     });
     ProductSaleDbHelper().queryAllRows().then((value) {
-      for (int i = 0; i< value.length; i++) {
-        ProductSaleDbHelper().sales.add(ProductSale.fromJson(value[i], value[i]['id']));
+      for (int i = 0; i < value.length; i++) {
+        ProductSaleDbHelper()
+            .sales
+            .add(ProductSale.fromJson(value[i], value[i]['id']));
       }
     });
     runApp(const MyApp());
@@ -71,12 +77,18 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: mainThemeData,
       routes: {
-        Routes.homeScreen.nameDefinition: (BuildContext context) => const HomeScreen(),
-        Routes.goldProductsInventoryScreen.nameDefinition: (BuildContext context) => const GoldProductsInventoryScreen(),
-        Routes.goldProductAddScreen.nameDefinition: (BuildContext context) => const GoldProductAddScreen(),
-        Routes.goldProductEntriesScreen.nameDefinition: (BuildContext context) => const GoldProductEntriesScreen(),
-        Routes.goldSaleScreen.nameDefinition: (BuildContext context) => const GoldProductSaleScreen(),
-        Routes.goldProductSalesScreen.nameDefinition: (BuildContext context) => const GoldProductSalesScreen(),
+        Routes.homeScreen.nameDefinition: (BuildContext context) =>
+            const HomeScreen(),
+        Routes.goldProductsInventoryScreen.nameDefinition:
+            (BuildContext context) => const GoldProductsInventoryScreen(),
+        Routes.goldProductAddScreen.nameDefinition: (BuildContext context) =>
+            const GoldProductAddScreen(),
+        Routes.goldProductEntriesScreen.nameDefinition:
+            (BuildContext context) => const GoldProductEntriesScreen(),
+        Routes.goldSaleScreen.nameDefinition: (BuildContext context) =>
+            const GoldProductSaleScreen(),
+        Routes.goldProductSalesScreen.nameDefinition: (BuildContext context) =>
+            const GoldProductSalesScreen(),
       },
       initialRoute: initialRoute.nameDefinition,
     );
