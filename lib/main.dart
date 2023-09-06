@@ -31,29 +31,6 @@ Future<void> main() async {
   await ProductSaleDbHelper().open();
 
   runApp(const MyApp());
-
-  GoldProductDbHelper().queryAllRows().then((value) {
-    for (int i = 0; i < value.length; i++) {
-      GoldProductDbHelper()
-          .products
-          .add(GoldProduct.fromJson(value[i], value[i]['id']));
-    }
-    ProductEntryDbHelper().queryAllRows().then((value) {
-      for (int i = 0; i < value.length; i++) {
-        ProductEntryDbHelper()
-            .entries
-            .add(ProductEntry.fromJson(value[i], value[i]['id']));
-      }
-    });
-    ProductSaleDbHelper().queryAllRows().then((value) {
-      for (int i = 0; i < value.length; i++) {
-        ProductSaleDbHelper()
-            .sales
-            .add(ProductSale.fromJson(value[i], value[i]['id']));
-      }
-    });
-    runApp(const MyApp());
-  });
 }
 
 class MyApp extends StatelessWidget {

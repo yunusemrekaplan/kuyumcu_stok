@@ -1,10 +1,19 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
+import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
+import 'package:kuyumcu_stok/enum/my_error.dart';
 import 'package:kuyumcu_stok/line_chart.dart';
+import 'package:kuyumcu_stok/model/gold_product.dart';
+import 'package:kuyumcu_stok/model/log.dart';
+import 'package:kuyumcu_stok/model/product_entry.dart';
+import 'package:kuyumcu_stok/model/product_sale.dart';
 import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:kuyumcu_stok/widgets/show_dialogs.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +25,44 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    getProducts();
+    ProductEntryDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i < value.length; i++) {
+        ProductEntryDbHelper()
+            .entries
+            .add(ProductEntry.fromJson(value[i], value[i]['id']));
+      }
+    });
+    ProductSaleDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i < value.length; i++) {
+        ProductSaleDbHelper()
+            .sales
+            .add(ProductSale.fromJson(value[i], value[i]['id']));
+      }
+    });
     super.initState();
+  }
+
+  void getProducts() {
+    try {
+      GoldProductDbHelper().queryAllRows().then((value) {
+        for (int i = 0; i < value.length; i++) {
+          GoldProductDbHelper()
+              .products
+              .add(GoldProduct.fromJson(value[i], value[i]['id']));
+        }
+      });
+    } catch (e) {
+      Log log = Log(
+        dateTime: DateTime.now(),
+        state: MyError.dataBaseQueryAllRows,
+        errorMessage: e.toString(),
+      );
+
+      String errorMessage =
+          'Ürünleri veritabanından çekerken bir hata oluştur!';
+      ShowDialogs().errorShowDialog(context, errorMessage);
+    }
   }
 
   @override

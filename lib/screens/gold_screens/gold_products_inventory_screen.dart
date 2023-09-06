@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
-import 'package:kuyumcu_stok/enum/my_error.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
-import 'package:kuyumcu_stok/model/log.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
@@ -13,6 +11,7 @@ import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+
 
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
@@ -33,59 +32,13 @@ class _GoldProductsInventoryScreenState
   bool _sortAscending = true;
 
   _GoldProductsInventoryScreenState() {
-    buttonStyles = ButtonStyles();
     products = GoldProductDbHelper().products;
+    buttonStyles = ButtonStyles();
     searchController = TextEditingController();
   }
 
   @override
-  void initState() {
-    if (GoldProductDbHelper().products.isEmpty) {
-      getProducts();
-    }
-    super.initState();
-  }
-
-  void getProducts() {
-    try {
-      GoldProductDbHelper().queryAllRows().then((value) {
-        for (int i = 0; i < value.length; i++) {
-          GoldProductDbHelper()
-              .products
-              .add(GoldProduct.fromJson(value[i], value[i]['id']));
-        }
-      });
-    } catch (e) {
-      Log log = Log(
-        dateTime: DateTime.now(),
-        state: MyError.dataBaseQueryAllRows,
-        errorMessage: e.toString(),
-      );
-
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title:
-              const Text('Ürünleri veritabanından çekerken bir hata oluştur!'),
-          actions: [
-            TextButton(
-              child: const Text(
-                style: TextStyle(fontSize: 20),
-                'Tamam',
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final verticalScrollController = ScrollController();
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
@@ -105,7 +58,6 @@ class _GoldProductsInventoryScreenState
                     child: Container(
                       color: secondColor,
                       child: SingleChildScrollView(
-                        controller: verticalScrollController,
                         scrollDirection: Axis.vertical,
                         child: buildDataTable(context),
                       ),

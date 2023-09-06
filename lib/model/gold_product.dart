@@ -31,7 +31,7 @@ class GoldProduct {
     barcodeText = json['barcodeText'];
     piece = json['piece'];
     name = json['name'];
-    carat = int.parse(json['carat']).caratDefinition!;
+    carat = int.parse(json['carat'].toString()).caratDefinition!;
     gram = json['gram']!.toDouble();
     purityRate = json['purityRate']!.toDouble();
     laborCost = json['laborCost']!.toDouble();
