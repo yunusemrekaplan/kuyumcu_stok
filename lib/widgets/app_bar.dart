@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final appBar = AppBar(
+AppBar appBar = AppBar(
   title: const Text(
     'Y&Y',
   ),
