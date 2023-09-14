@@ -12,7 +12,6 @@ import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 
-
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
 
@@ -30,6 +29,7 @@ class _GoldProductsInventoryScreenState
 
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
+  bool isStock = true;
 
   _GoldProductsInventoryScreenState() {
     products = GoldProductDbHelper().products;
@@ -42,7 +42,7 @@ class _GoldProductsInventoryScreenState
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.blue[700],
       body: Column(
         children: [
           buildTableHeightPaddingBox(),
@@ -56,10 +56,16 @@ class _GoldProductsInventoryScreenState
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20.0),
                     child: Container(
-                      color: secondColor,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
-                        child: buildDataTable(context),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: buildDataTable(context),
+                        ),
                       ),
                     ),
                   ),
@@ -67,8 +73,16 @@ class _GoldProductsInventoryScreenState
               ],
             ),
           ),
-          buildTableHeightPaddingBox(),
-          Expanded(child: buildStockAddButton(context)),
+          //buildTableHeightPaddingBox(),
+          Expanded(
+            child: Row(
+              children: [
+                buildStockAddButton(context),
+                buildViewOutOfStockButton(context),
+                buildViewInStockButton(context),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -76,11 +90,12 @@ class _GoldProductsInventoryScreenState
 
   DataTable buildDataTable(BuildContext context) {
     return DataTable(
+      //headingTextStyle: TextStyle(),
       headingRowColor: DataTableStyles.buildHeadingRowColor(),
       sortColumnIndex: _sortColumnIndex,
       sortAscending: _sortAscending,
-      columnSpacing: 35,
-      horizontalMargin: 10,
+      columnSpacing: 30,
+      horizontalMargin: 20,
       showCheckboxColumn: false,
       border: DataTableStyles.buildTableBorder(),
       columns: buildDataColumns(),
@@ -247,7 +262,9 @@ class _GoldProductsInventoryScreenState
   List<DataRow> buildRowList(BuildContext context) {
     List<DataRow> res = products
         .where(
-          (e) => e.piece > 0,
+          (e) {
+            return isStock ? e.piece == 0 : e.piece > 0;
+          },
         )
         .map(
           (e) => DataRow(
@@ -286,19 +303,22 @@ class _GoldProductsInventoryScreenState
   }
 
   DataCell buildPieceDataCell(GoldProduct e) {
-    return DataCell(Text(
-      e.piece.toString(),
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
+    return DataCell(
+      Text(
+        e.piece.toString(),
+        style: const TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
+        textAlign: TextAlign.center,
       ),
-    ));
+    );
   }
 
   DataCell buildNameDataCell(GoldProduct e) {
     int len = e.name.length;
     String name =
-        e.name.substring(0, (len > 15 ? 11 : len)) + (len > 15 ? '...' : '');
+        e.name.substring(0, (len > 11 ? 11 : len)) + (len > 11 ? '...' : '');
     return DataCell(Text(
       name,
       style: const TextStyle(
@@ -376,6 +396,7 @@ class _GoldProductsInventoryScreenState
           buildEditButton(context, e),
           buildPrinterButton(),
           buildAddButton(),
+          buildRemoveButton(),
         ],
       ),
     );
@@ -455,6 +476,14 @@ class _GoldProductsInventoryScreenState
     );
   }
 
+  IconButton buildRemoveButton() {
+    return IconButton(
+      onPressed: () {},
+      icon: const Icon(Icons.remove_circle_outline),
+      iconSize: 26,
+    );
+  }
+
   Row buildStockAddButton(BuildContext context) {
     return Row(
       children: [
@@ -468,6 +497,52 @@ class _GoldProductsInventoryScreenState
             },
             child: Text(
               'Stok Ekle',
+              style: TextStyles.buildButtonTextStyle(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildViewOutOfStockButton(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 25.0, bottom: 10),
+          child: ElevatedButton(
+            style: buttonStyles.buildBasicButtonStyle(),
+            onPressed: () {
+              isStock = true;
+              setState(() {
+                products;
+              });
+            },
+            child: Text(
+              'Stok Dışı',
+              style: TextStyles.buildButtonTextStyle(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildViewInStockButton(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 25.0, bottom: 10),
+          child: ElevatedButton(
+            style: buttonStyles.buildBasicButtonStyle(),
+            onPressed: () {
+              isStock = false;
+              setState(() {
+                products;
+              });
+            },
+            child: Text(
+              'Stokta',
               style: TextStyles.buildButtonTextStyle(),
             ),
           ),
@@ -509,29 +584,23 @@ class _GoldProductsInventoryScreenState
         }
       } else if (columnIndex == 4) {
         if (ascending) {
-          products.sort((a, b) => a.purityRate.compareTo(b.purityRate));
-        } else {
-          products.sort((a, b) => b.purityRate.compareTo(a.purityRate));
-        }
-      } else if (columnIndex == 5) {
-        if (ascending) {
           products.sort((a, b) => a.laborCost.compareTo(b.laborCost));
         } else {
           products.sort((a, b) => b.laborCost.compareTo(a.laborCost));
         }
-      } else if (columnIndex == 6) {
+      } else if (columnIndex == 5) {
         if (ascending) {
           products.sort((a, b) => a.gram.compareTo(b.gram));
         } else {
           products.sort((a, b) => b.gram.compareTo(a.gram));
         }
-      } else if (columnIndex == 7) {
+      } else if (columnIndex == 6) {
         if (ascending) {
           products.sort((a, b) => a.salesGrams.compareTo(b.salesGrams));
         } else {
           products.sort((a, b) => b.salesGrams.compareTo(a.salesGrams));
         }
-      } else if (columnIndex == 8) {
+      } else if (columnIndex == 7) {
         if (ascending) {
           products.sort((a, b) => a.cost.compareTo(b.cost));
         } else {
