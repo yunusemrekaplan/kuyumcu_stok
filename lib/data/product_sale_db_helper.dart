@@ -23,6 +23,13 @@ class ProductSaleDbHelper {
     _db = await databaseFactoryFfi.openDatabase(path);
     //await _db.execute('DROP TABLE product_sales');
     await _createTable();
+    await ProductSaleDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i < value.length; i++) {
+        ProductSaleDbHelper()
+            .sales
+            .add(ProductSale.fromJson(value[i], value[i]['id']));
+      }
+    });
   }
 
   Future<void> _createTable() async {

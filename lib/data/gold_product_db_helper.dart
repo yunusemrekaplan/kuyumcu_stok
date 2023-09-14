@@ -23,6 +23,13 @@ class GoldProductDbHelper {
     _db = await databaseFactoryFfi.openDatabase(path);
     //await _db.execute('DROP TABLE gold_products');
     await _createTable();
+    await GoldProductDbHelper().queryAllRows().then((value) {
+      for (int i = 0; i < value.length; i++) {
+        GoldProductDbHelper()
+            .products
+            .add(GoldProduct.fromJson(value[i], value[i]['id']));
+      }
+    });
   }
 
   Future<void> _createTable() async {

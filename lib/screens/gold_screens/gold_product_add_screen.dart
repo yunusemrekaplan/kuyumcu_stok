@@ -71,370 +71,19 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               borderRadius: BorderRadius.circular(25),
             ),
             width: MediaQuery.of(context).size.width - 300,
-            height: MediaQuery.of(context).size.height - 120,
+            height: MediaQuery.of(context).size.height - 130,
             child: Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(25),
                 child: DataTable(
-                  //headingRowColor: DataTableStyles.buildHeadingRowColor(),
                   dataRowMinHeight: 48,
-                  dataRowMaxHeight: 60,
+                  dataRowMaxHeight: 55,
                   columnSpacing: 30,
                   horizontalMargin: 50,
                   showCheckboxColumn: false,
                   border: DataTableStyles.buildTableBorder(),
-                  columns: [
-                    DataColumn(
-                      label: Expanded(
-                        child: Text(
-                          'Barkod No:',
-                          textAlign: TextAlign.center,
-                          style: buildTextStyle(),
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        barcodeNo,
-                        textAlign: TextAlign.center,
-                        style: buildTextFormFieldTextStyle(),
-                      ),
-                    ),
-                    DataColumn(
-                      label: buildBarcodeGeneratorButton(),
-                    ),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  Adet:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              controller: pieceController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              inputFormatters: <TextInputFormatter>[
-                                inputFormatOnlyDigits,
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  pieceController;
-                                  buttonStyles;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  İsim:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              controller: nameController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              onChanged: (value) {
-                                setState(() {
-                                  nameController;
-                                  buttonStyles;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  Ayar:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: DropdownButtonFormField(
-                              alignment: Alignment.centerLeft,
-                              value: dropdownValue,
-                              icon: Icon(
-                                Icons.arrow_downward,
-                                color: cursorColor,
-                              ),
-                              dropdownColor: backgroundColor,
-                              decoration: DecorationStyles
-                                  .buildDropdownButtonInputDecoration(),
-                              style: buildTextFormFieldTextStyle(),
-                              items: buildDropdownMenuItemList(),
-                              onChanged: (Carat? newValue) {
-                                dropdownValue = newValue!;
-                                purityRateController.text =
-                                    OutputFormatters.buildNumberFormat1f(
-                                        dropdownValue.purityRateDefinition);
-                                setState(() {
-                                  purityRateController;
-                                  buttonStyles;
-                                });
-                                buildCalculate();
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  Saflık Oranı:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              validator: NumberValidator.validate,
-                              controller: purityRateController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              inputFormatters: <TextInputFormatter>[
-                                inputFormatDouble,
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  purityRateController;
-                                  buttonStyles;
-                                });
-                                buildCalculate();
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  İşçilik:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              validator: NumberValidator.validate,
-                              controller: laborCostController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              inputFormatters: <TextInputFormatter>[
-                                inputFormatDouble,
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  laborCostController;
-                                  buttonStyles;
-                                });
-                                buildCalculate();
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  Gram:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              validator: NumberValidator.validate,
-                              controller: gramController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              inputFormatters: <TextInputFormatter>[
-                                inputFormatDouble,
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  gramController;
-                                  buttonStyles;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  Satış Gramı:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              validator: NumberValidator.validate,
-                              controller: salesGramsController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              inputFormatters: <TextInputFormatter>[
-                                inputFormatDouble,
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  salesGramsController;
-                                  buttonStyles;
-                                });
-                                buildCalculate();
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              '  Maliyet:',
-                              textAlign: TextAlign.start,
-                              style: buildTextStyle(),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: TextFormField(
-                              validator: NumberValidator.validate,
-                              controller: costController,
-                              style: buildTextFormFieldTextStyle(),
-                              decoration: buildFormDecor(),
-                              cursorColor: cursorColor,
-                              inputFormatters: <TextInputFormatter>[
-                                inputFormatDouble,
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  costController;
-                                  buttonStyles;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        const DataCell(Text('')),
-                      ],
-                    ),
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          Row(
-                            children: [
-                              SizedBox(
-                                width: 22,
-                              ),
-                              ElevatedButton(
-                                style: buildSaveButtonStyle(),
-                                onPressed: onSaved,
-                                child: const Text(
-                                  '   Kaydet   ',
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        DataCell(
-                          Text(''),
-                        ),
-                        DataCell(
-                          ElevatedButton(
-                            style: buttonStyles.buildBasicButtonStyle(),
-                            onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  '/gold-products-inventory-screen',
-                                  (route) => false);
-                            },
-                            child: Text(
-                              'Geri Dön',
-                              style: TextStyles.buildButtonTextStyle(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  columns: buildDataColumns(),
+                  rows: buildDataRows(context),
                 ),
               ),
             ),
@@ -444,31 +93,372 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     );
   }
 
-  ButtonStyle buildSaveButtonStyle() {
-    return buttonStyles.buildSaveButtonStyle(
-      (isVariablesEmpty() || isCorrectFormat() || barcodeNo == '0000000000000'),
-    );
+  List<DataColumn> buildDataColumns() {
+    return [
+      DataColumn(
+        label: Expanded(
+          child: Text(
+            'Barkod No:',
+            textAlign: TextAlign.center,
+            style: buildTextStyle(),
+          ),
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          barcodeNo,
+          textAlign: TextAlign.center,
+          style: buildTextFormFieldTextStyle(),
+        ),
+      ),
+      DataColumn(
+        label: buildBarcodeGeneratorButton(),
+      ),
+    ];
   }
 
-  TextStyle buildTextFormFieldTextStyle() {
-    return const TextStyle(
-      fontSize: 30,
-      height: 0.9,
-      color: Colors.white,
-      fontStyle: FontStyle.normal,
-      fontWeight: FontWeight.normal,
-    );
-  }
-
-  InputDecoration buildFormDecor() =>
-      DecorationStyles.buildInputDecoration(const Size(240, 38));
-
-  TextStyle buildTextStyle() {
-    return const TextStyle(
-      fontSize: 40,
-      fontWeight: FontWeight.w700,
-      color: Colors.white,
-    );
+  List<DataRow> buildDataRows(BuildContext context) {
+    return [
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    Adet:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                controller: pieceController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                inputFormatters: <TextInputFormatter>[
+                  inputFormatOnlyDigits,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    pieceController;
+                    buttonStyles;
+                  });
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    İsim:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                controller: nameController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                onChanged: (value) {
+                  setState(() {
+                    nameController;
+                    buttonStyles;
+                  });
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    Ayar:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: DropdownButtonFormField(
+                alignment: Alignment.centerLeft,
+                value: dropdownValue,
+                icon: Icon(
+                  Icons.arrow_downward,
+                  color: cursorColor,
+                ),
+                dropdownColor: backgroundColor,
+                decoration:
+                    DecorationStyles.buildDropdownButtonInputDecoration(),
+                style: buildTextFormFieldTextStyle(),
+                items: buildDropdownMenuItemList(),
+                onChanged: (Carat? newValue) {
+                  dropdownValue = newValue!;
+                  purityRateController.text =
+                      OutputFormatters.buildNumberFormat1f(
+                          dropdownValue.purityRateDefinition);
+                  setState(() {
+                    purityRateController;
+                    buttonStyles;
+                  });
+                  buildCalculate();
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    Saflık Oranı:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                validator: NumberValidator.validate,
+                controller: purityRateController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                inputFormatters: <TextInputFormatter>[
+                  inputFormatDouble,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    purityRateController;
+                    buttonStyles;
+                  });
+                  buildCalculate();
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    İşçilik:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                validator: NumberValidator.validate,
+                controller: laborCostController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                inputFormatters: <TextInputFormatter>[
+                  inputFormatDouble,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    laborCostController;
+                    buttonStyles;
+                  });
+                  buildCalculate();
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    Gram:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                validator: NumberValidator.validate,
+                controller: gramController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                inputFormatters: <TextInputFormatter>[
+                  inputFormatDouble,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    gramController;
+                    buttonStyles;
+                  });
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    Satış Gramı:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                validator: NumberValidator.validate,
+                controller: salesGramsController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                inputFormatters: <TextInputFormatter>[
+                  inputFormatDouble,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    salesGramsController;
+                    buttonStyles;
+                  });
+                  buildCalculate();
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            SizedBox(
+              width: 250,
+              child: Text(
+                '    Maliyet:',
+                textAlign: TextAlign.start,
+                style: buildTextStyle(),
+              ),
+            ),
+          ),
+          DataCell(
+            Center(
+              child: TextFormField(
+                validator: NumberValidator.validate,
+                controller: costController,
+                style: buildTextFormFieldTextStyle(),
+                decoration: buildFormDecor(),
+                cursorColor: cursorColor,
+                inputFormatters: <TextInputFormatter>[
+                  inputFormatDouble,
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    costController;
+                    buttonStyles;
+                  });
+                },
+              ),
+            ),
+          ),
+          const DataCell(Text('')),
+        ],
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 36,
+                  ),
+                  ElevatedButton(
+                    style: buildSaveButtonStyle(),
+                    onPressed: onSaved,
+                    child: Text(
+                      '   Kaydet   ',
+                      style: buildButtonTextStyle(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ElevatedButton(
+                style: buttonStyles.buildBasicButtonStyle(),
+                onPressed: onRefresh,
+                child: Text(
+                  '   Yenile   ',
+                  style: buildButtonTextStyle(),
+                ),
+              ),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: ElevatedButton(
+                style: buttonStyles.buildBasicButtonStyle(),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(context,
+                      '/gold-products-inventory-screen', (route) => false);
+                },
+                child: Text(
+                  ' Geri Dön ',
+                  style: buildButtonTextStyle(),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ];
   }
 
   ElevatedButton buildBarcodeGeneratorButton() {
@@ -482,48 +472,59 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       },
       child: Text(
         'Barkod Oluştur',
-        style: buildTextStyle(),
+        style: buildButtonTextStyle(),
       ),
     );
   }
 
-  Padding buildSaveButton() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 0),
-      child: Row(
-        children: [
-          ElevatedButton(
-            style: buildSaveButtonStyle(),
-            onPressed: onSaved,
-            child: Text(
-              'Kaydet',
-              style: TextStyles.buildButtonTextStyle(),
-            ),
-          ),
-        ],
-      ),
+  List<DropdownMenuItem<Carat>> buildDropdownMenuItemList() {
+    return Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
+      return DropdownMenuItem<Carat>(
+        alignment: AlignmentDirectional.center,
+        value: value,
+        child: Text(
+          value.intDefinition.toString(),
+          style: TextStyles.buildTextFormFieldTextStyle(),
+          textAlign: TextAlign.right,
+        ),
+      );
+    }).toList();
+  }
+
+  TextStyle buildTextStyle() {
+    return const TextStyle(
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
     );
   }
 
-  Padding buildBackButton() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          ElevatedButton(
-            style: buttonStyles.buildBasicButtonStyle(),
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-products-inventory-screen', (route) => false);
-            },
-            child: Text(
-              'Geri Dön',
-              style: TextStyles.buildButtonTextStyle(),
-            ),
-          ),
-        ],
-      ),
+  TextStyle buildTextFormFieldTextStyle() {
+    return const TextStyle(
+      fontSize: 28,
+      height: 0.9,
+      color: Colors.white,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.normal,
     );
+  }
+
+  TextStyle buildButtonTextStyle() {
+    return const TextStyle(
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
+    );
+  }
+
+  ButtonStyle buildSaveButtonStyle() {
+    return buttonStyles.buildSaveButtonStyle(
+      (isVariablesEmpty() || isCorrectFormat() || barcodeNo == '0000000000000'),
+    );
+  }
+
+  InputDecoration buildFormDecor() {
+    return DecorationStyles.buildInputDecoration(const Size(240, 38));
   }
 
   void onSaved() async {
@@ -636,8 +637,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         pieceController.text = '';
         nameController.text = '';
         dropdownValue = Carat.twentyFour;
-        purityRateController.text =
-            dropdownValue.purityRateDefinition.toString();
+        purityRateController.text = OutputFormatters.buildNumberFormat1f(
+            dropdownValue.purityRateDefinition);
         laborCostController.text = '';
         gramController.text = '';
         costController.text = '';
@@ -682,19 +683,5 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         costController.text = OutputFormatters.buildNumberFormat3f(cost);
       });
     }
-  }
-
-  List<DropdownMenuItem<Carat>> buildDropdownMenuItemList() {
-    return Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
-      return DropdownMenuItem<Carat>(
-        alignment: AlignmentDirectional.center,
-        value: value,
-        child: Text(
-          value.intDefinition.toString(),
-          style: TextStyles.buildTextFormFieldTextStyle(),
-          textAlign: TextAlign.right,
-        ),
-      );
-    }).toList();
   }
 }
