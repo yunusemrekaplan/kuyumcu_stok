@@ -18,22 +18,6 @@ class DataTableStyles {
 
   static TableBorder buildTableBorder() {
     return const TableBorder(
-      top: BorderSide(
-        width: 1,
-        color: Colors.white,
-      ),
-      left: BorderSide(
-        width: 1,
-        color: Colors.white,
-      ),
-      right: BorderSide(
-        width: 1,
-        color: Colors.white,
-      ),
-      bottom: BorderSide(
-        width: 1,
-        color: Colors.white,
-      ),
       horizontalInside: BorderSide(
         width: 1,
         color: Colors.white,
@@ -42,7 +26,7 @@ class DataTableStyles {
         width: 1,
         color: Colors.white,
       ),
-      //borderRadius: BorderRadius.all(Radius.circular(20)),
+      borderRadius: BorderRadius.all(Radius.circular(25)),
     );
   }
 

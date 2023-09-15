@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kuyumcu_stok/theme/theme.dart';
 
 class ButtonStyles {
   static final ButtonStyles _instance = ButtonStyles._internal();
@@ -15,7 +16,7 @@ class ButtonStyles {
         if (states.contains(MaterialState.hovered)) {
           return Colors.green;
         }
-        return Colors.grey[600];
+        return buttonColor;
       }),
     );
   }
@@ -31,7 +32,7 @@ class ButtonStyles {
               return Colors.green;
             }
           }
-          return Colors.grey[600];
+          return buttonColor;
         },
       ),
     );

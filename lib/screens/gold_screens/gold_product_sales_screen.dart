@@ -63,7 +63,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        color: Colors.white,
+        //color: Colors.white,
         child: Column(
           children: [
             buildTableHeightPaddingBox(),
@@ -94,7 +94,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
             ),
             buildTableHeightPaddingBox(),
             Container(
-              color: Colors.white,
+              //color: Colors.white,
               width: double.infinity,
               height: MediaQuery.of(context).size.height - 170,
               child: Row(
@@ -107,8 +107,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
                         controller: verticalScrollController,
                         scrollDirection: Axis.vertical,
                         child: DataTable(
-                          headingRowColor:
-                          DataTableStyles.buildHeadingRowColor(),
+                          //headingRowColor: DataTableStyles.buildHeadingRowColor(),
                           sortColumnIndex: _sortColumnIndex,
                           sortAscending: _sortAscending,
                           columnSpacing: 35,
