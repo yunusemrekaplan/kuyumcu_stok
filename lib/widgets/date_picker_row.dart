@@ -41,8 +41,8 @@ class _DatePickerRowState extends State<DatePickerRow> {
         Text(
           widget.label,
           style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20.0,
+            color: Colors.white,
+            fontSize: 26.0,
           ),
         ),
         Padding(
@@ -51,6 +51,7 @@ class _DatePickerRowState extends State<DatePickerRow> {
             controller: dateController,
             decoration: DecorationStyles.buildInputDecoration(const Size(125, 40)),
             style: const TextStyle(
+              color: Colors.white,
               fontSize: 20,
               height: 1,
             ),

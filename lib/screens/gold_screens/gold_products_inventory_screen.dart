@@ -94,7 +94,6 @@ class _GoldProductsInventoryScreenState
 
   DataTable buildDataTable(BuildContext context) {
     return DataTable(
-      //headingTextStyle: TextStyle(),
       headingRowColor: DataTableStyles.buildHeadingRowColor(),
       sortColumnIndex: _sortColumnIndex,
       sortAscending: _sortAscending,
