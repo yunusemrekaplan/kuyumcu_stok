@@ -511,7 +511,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   TextStyle buildButtonTextStyle() {
     return const TextStyle(
-      fontSize: 32,
+      fontSize: 26,
       fontWeight: FontWeight.w700,
       color: Colors.white,
     );

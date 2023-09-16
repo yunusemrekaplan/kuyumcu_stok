@@ -29,7 +29,7 @@ class _GoldProductsInventoryScreenState
 
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
-  bool isStock = true;
+  bool isStock = false;
 
   _GoldProductsInventoryScreenState() {
     products = GoldProductDbHelper().products;
@@ -42,22 +42,27 @@ class _GoldProductsInventoryScreenState
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
-      backgroundColor: Colors.blue[700],
+      backgroundColor: backgroundColor,
       body: Column(
         children: [
-          buildTableHeightPaddingBox(),
+          const SizedBox(
+            height: 20,
+          ),
           SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height - 170,
+            height: MediaQuery.of(context).size.height - 150,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20.0),
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20.0,
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: secondColor,
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: SingleChildScrollView(
@@ -73,7 +78,6 @@ class _GoldProductsInventoryScreenState
               ],
             ),
           ),
-          //buildTableHeightPaddingBox(),
           Expanded(
             child: Row(
               children: [
@@ -105,157 +109,48 @@ class _GoldProductsInventoryScreenState
 
   List<DataColumn> buildDataColumns() {
     return [
-      buildBarcodeDataColumn(),
-      buildPieceDataColumn(),
-      buildNameDataColumn(),
-      //buildPurityRateDataColumn(),
-      buildCaratDataColumn(),
-      buildLaborCostDataColumn(),
-      buildGramDataColumn(),
-      buildSalesGramDataColumn(),
-      buildCostDataColumn(),
+      buildDataColumn('Barkod'),
+      buildDataColumn('Adet'),
+      buildDataColumn('İsim'),
+      buildDataColumn('Ayar'),
+      buildDataColumn('İşçilik'),
+      buildDataColumn('Gram'),
+      buildDataColumn('S. Gramı'),
+      buildDataColumn('Maliyet'),
       buildActionsDataColumn(),
     ];
   }
 
-  DataColumn buildBarcodeDataColumn() {
+  DataColumn buildDataColumn(String label) {
     return DataColumn(
       label: Text(
-        'Barkod',
+        label,
         style: buildDataColumnTextStyle(),
       ),
       onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildPieceDataColumn() {
-    return DataColumn(
-      label: Text(
-        'Adet',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildNameDataColumn() {
-    return DataColumn(
-      label: Text(
-        'İsim',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildCaratDataColumn() {
-    return DataColumn(
-      label: Text(
-        'Ayar',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  /*DataColumn buildPurityRateDataColumn(double width) {
-    return DataColumn(
-      label: const SizedBox(
-        //width: width * .13,
-        child: Text(
-          'Saflık',
-        style: TextStyle(
-          fontSize: 22,
-          color: Colors.white,
-        ),
-        ),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }*/
-
-  DataColumn buildLaborCostDataColumn() {
-    return DataColumn(
-      label: Text(
-        'İşçilik',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildGramDataColumn() {
-    return DataColumn(
-      label: Text(
-        'Gram',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildSalesGramDataColumn() {
-    return DataColumn(
-      label: Text(
-        'S. Gramı',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildCostDataColumn() {
-    return DataColumn(
-      label: Text(
-        'Maliyet',
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  TextStyle buildDataColumnTextStyle() {
-    return const TextStyle(
-      fontSize: 22,
-      color: Colors.white,
     );
   }
 
   DataColumn buildActionsDataColumn() {
     return DataColumn(
       label: Container(
-        color: Colors.white,
+        color: secondColor,
         child: TextFormField(
           controller: searchController,
           style: const TextStyle(
             fontSize: 20,
             height: 1,
-            color: Colors.black,
+            color: Colors.white,
           ),
           decoration: InputDecoration(
-            hintText: '9784753492558',
-            hintStyle: const TextStyle(
-              fontSize: 20,
-            ),
             contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
             constraints:
-                DecorationStyles.buildBoxConstraints(const Size(180, 35)),
+                DecorationStyles.buildBoxConstraints(const Size(200, 35)),
           ),
+          cursorColor: Colors.white,
           onChanged: onSearch,
         ),
       ),
-    );
-  }
-
-  SizedBox buildTableWidthPaddingBox() {
-    return const SizedBox(
-      width: 30,
-    );
-  }
-
-  SizedBox buildTableHeightPaddingBox() {
-    return const SizedBox(
-      height: 30,
     );
   }
 
@@ -278,109 +173,25 @@ class _GoldProductsInventoryScreenState
   }
 
   List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
+    int len = e.name.length;
+    String tripleDot = (len > 11 ? '...' : '');
+    String name = e.name.substring(0, (len > 11 ? 11 : len)) + tripleDot;
     return [
-      buildBarkodDataCell(e),
-      buildPieceDataCell(e),
-      buildNameDataCell(e),
-      buildCaratDataCell(e),
-      //buildPurityRateDataCell(e),
-      buildLaborCostDataCell(e),
-      buildGramDataCell(e),
-      buildSalesGramsDataCell(e),
-      buildCostDataCell(e),
+      buildDataCell(e.barcodeText),
+      buildDataCell(e.piece.toString()),
+      buildDataCell(name),
+      buildDataCell(e.carat.intDefinition.toString()),
+      buildDataCell(OutputFormatters.buildNumberFormat1f(e.laborCost)),
+      buildDataCell(OutputFormatters.buildNumberFormat3f(e.gram)),
+      buildDataCell(OutputFormatters.buildNumberFormat3f(e.salesGrams)),
+      buildDataCell(OutputFormatters.buildNumberFormat3f(e.cost)),
       buildActionsDataCell(context, e),
     ];
   }
 
-  DataCell buildBarkodDataCell(GoldProduct e) {
+  DataCell buildDataCell(String cell) {
     return DataCell(Text(
-      e.barcodeText,
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }
-
-  DataCell buildPieceDataCell(GoldProduct e) {
-    return DataCell(
-      Text(
-        e.piece.toString(),
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  DataCell buildNameDataCell(GoldProduct e) {
-    int len = e.name.length;
-    String name =
-        e.name.substring(0, (len > 11 ? 11 : len)) + (len > 11 ? '...' : '');
-    return DataCell(Text(
-      name,
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }
-
-  DataCell buildCaratDataCell(GoldProduct e) {
-    return DataCell(Text(
-      e.carat.intDefinition.toString(),
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }
-
-  /*DataCell buildPurityRateDataCell(GoldProduct e) {
-    return DataCell(Text(
-      e.purityRate.toString().replaceAll('.', ','),//NumberFormat('#,##0.0', 'tr_TR').format(e.purityRate),
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }*/
-
-  DataCell buildLaborCostDataCell(GoldProduct e) {
-    return DataCell(Text(
-      OutputFormatters.buildNumberFormat1f(e.laborCost),
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }
-
-  DataCell buildGramDataCell(GoldProduct e) {
-    return DataCell(Text(
-      OutputFormatters.buildNumberFormat3f(e.gram),
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }
-
-  DataCell buildSalesGramsDataCell(GoldProduct e) {
-    return DataCell(Text(
-      OutputFormatters.buildNumberFormat3f(e.salesGrams),
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
-      ),
-    ));
-  }
-
-  DataCell buildCostDataCell(GoldProduct e) {
-    return DataCell(Text(
-      OutputFormatters.buildNumberFormat3f(e.cost),
+      cell,
       style: const TextStyle(
         fontSize: 20,
         color: Colors.white,
@@ -484,70 +295,65 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  Row buildStockAddButton(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 25.0, bottom: 10),
-          child: ElevatedButton(
-            style: buttonStyles.buildBasicButtonStyle(),
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/gold-product-add-screen', (route) => false);
-            },
-            child: Text(
-              'Stok Ekle',
-              style: TextStyles.buildButtonTextStyle(),
-            ),
-          ),
+  Padding buildStockAddButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0),
+      child: ElevatedButton(
+        style: buttonStyles.buildBasicButtonStyle(),
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/gold-product-add-screen', (route) => false);
+        },
+        child: Text(
+          'Stok Ekle',
+          style: TextStyles.buildButtonTextStyle(),
         ),
-      ],
+      ),
     );
   }
 
-  Row buildViewOutOfStockButton(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 25.0, bottom: 10),
-          child: ElevatedButton(
-            style: buttonStyles.buildBasicButtonStyle(),
-            onPressed: () {
-              isStock = true;
-              setState(() {
-                products;
-              });
-            },
-            child: Text(
-              'Stok Dışı',
-              style: TextStyles.buildButtonTextStyle(),
-            ),
-          ),
+  Padding buildViewOutOfStockButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: ElevatedButton(
+        style: buttonStyles.buildBasicButtonStyle(),
+        onPressed: () {
+          isStock = true;
+          setState(() {
+            products;
+          });
+        },
+        child: Text(
+          'Stok Dışı',
+          style: TextStyles.buildButtonTextStyle(),
         ),
-      ],
+      ),
     );
   }
 
-  Row buildViewInStockButton(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 25.0, bottom: 10),
-          child: ElevatedButton(
-            style: buttonStyles.buildBasicButtonStyle(),
-            onPressed: () {
-              isStock = false;
-              setState(() {
-                products;
-              });
-            },
-            child: Text(
-              'Stokta',
-              style: TextStyles.buildButtonTextStyle(),
-            ),
-          ),
+  Padding buildViewInStockButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: ElevatedButton(
+        style: buttonStyles.buildBasicButtonStyle(),
+        onPressed: () {
+          isStock = false;
+          setState(() {
+            products;
+          });
+        },
+        child: Text(
+          'Stokta',
+          style: TextStyles.buildButtonTextStyle(),
         ),
-      ],
+      ),
+    );
+  }
+
+  TextStyle buildDataColumnTextStyle() {
+    return const TextStyle(
+      fontSize: 22,
+      color: Colors.white,
     );
   }
 
@@ -613,25 +419,19 @@ class _GoldProductsInventoryScreenState
   void onSearch(value) {
     if (value.isEmpty) {
       setState(() {
-        products = GoldProductDbHelper()
-            .products
-            .where(
-              (e) => e.piece > 0,
-            )
-            .toList();
+        products = GoldProductDbHelper().products.toList();
       });
     }
     setState(() {
-      products = GoldProductDbHelper()
-          .products
-          .where(
-            (e) => e.piece > 0,
-          )
-          .toList();
-      //print(value);
+      products = GoldProductDbHelper().products.toList();
       products = products
           .where(
-            (e) => e.barcodeText.contains(value),
+            (e) =>
+                e.barcodeText.contains(value) ||
+                e.name
+                    .toString()
+                    .toLowerCase()
+                    .contains(value.toString().toLowerCase()),
           )
           .toList();
     });
