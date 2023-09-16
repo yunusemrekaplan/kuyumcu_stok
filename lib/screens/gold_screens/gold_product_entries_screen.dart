@@ -231,31 +231,36 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
         } else {
           entries.sort((a, b) => b.enteredDate.compareTo(a.enteredDate));
         }
-      }
-      else if (columnIndex == 1) {
+      } else if (columnIndex == 1) {
         if (ascending) {
           //a.name.compareTo(b.name)
-          entries.sort((a, b) => products
-              .where((element) => element.id == a.productId)
-              .map((e) => e.name)
-              .toString()
-              .compareTo(products
-                  .where((element) => element.id == b.productId)
-                  .map((e) => e.name)
-                  .toString()));
+          entries.sort(
+            (a, b) => products
+                .where((element) => element.id == a.productId)
+                .map((e) => e.name)
+                .toString()
+                .compareTo(
+                  products
+                      .where((element) => element.id == b.productId)
+                      .map((e) => e.name)
+                      .toString(),
+                ),
+          );
+        } else {
+          entries.sort(
+            (a, b) => products
+                .where((element) => element.id == b.productId)
+                .map((e) => e.name)
+                .toString()
+                .compareTo(
+                  products
+                      .where((element) => element.id == a.productId)
+                      .map((e) => e.name)
+                      .toString(),
+                ),
+          );
         }
-        else {
-          entries.sort((a, b) => products
-              .where((element) => element.id == b.productId)
-              .map((e) => e.name)
-              .toString()
-              .compareTo(products
-                  .where((element) => element.id == a.productId)
-                  .map((e) => e.name)
-                  .toString()));
-        }
-      }
-      else if (columnIndex == 2) {
+      } else if (columnIndex == 2) {
         if (ascending) {
           entries.sort((a, b) => a.piece.compareTo(b.piece));
         } else {

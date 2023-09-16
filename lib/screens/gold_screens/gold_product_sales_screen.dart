@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
 import 'package:kuyumcu_stok/localization/converters.dart';
@@ -105,7 +104,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
                             showCheckboxColumn: false,
                             border: DataTableStyles.buildTableBorder(),
                             columns: buildDataColumns(),
-                            rows: buildRowList().toList(),
+                            rows: buildRowList(),
                           ),
                         ),
                       ),
@@ -173,7 +172,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
     );
   }
 
-  Iterable<DataRow> buildRowList() {
+  List<DataRow> buildRowList() {
     return sales
         .where((element) =>
             (element.soldDate.compareTo(startTime) >= 0) &&
@@ -222,7 +221,7 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
   }
 
   void _sortData(int columnIndex, bool ascending) {
-    /*setState(() {
+    setState(() {
       _sortColumnIndex = columnIndex;
       _sortAscending = ascending;
 
@@ -234,29 +233,29 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
         }
       } else if (columnIndex == 1) {
         if (ascending) {
-          sales.sort((a, b) => a.name.compareTo(b.name));
+          sales.sort((a, b) => a.product['name'].compareTo(b.product['name']));
         } else {
-          sales.sort((a, b) => b.name.compareTo(a.name));
+          sales.sort((a, b) => b.product['name'].compareTo(a.product['name']));
         }
       } else if (columnIndex == 2) {
         if (ascending) {
-          sales.sort((a, b) => a.costPrice.compareTo(b.costPrice));
+          sales.sort((a, b) => a.piece.compareTo(b.piece));
         } else {
-          sales.sort((a, b) => b.costPrice.compareTo(a.costPrice));
+          sales.sort((a, b) => b.piece.compareTo(a.piece));
         }
       } else if (columnIndex == 3) {
         if (ascending) {
-          sales.sort((a, b) => a.soldPrice.compareTo(b.soldPrice));
+          sales.sort((a, b) => a.earnedProfitTL.compareTo(b.earnedProfitTL));
         } else {
-          sales.sort((a, b) => b.soldPrice.compareTo(a.soldPrice));
+          sales.sort((a, b) => b.earnedProfitTL.compareTo(a.earnedProfitTL));
         }
       } else if (columnIndex == 4) {
         if (ascending) {
-          sales.sort((a, b) => a.earnedProfit.compareTo(b.earnedProfit));
+          sales.sort((a, b) => a.earnedProfitGram.compareTo(b.earnedProfitGram));
         } else {
-          sales.sort((a, b) => b.earnedProfit.compareTo(a.earnedProfit));
+          sales.sort((a, b) => b.earnedProfitGram.compareTo(a.earnedProfitGram));
         }
       }
-    });*/
+    });
   }
 }
