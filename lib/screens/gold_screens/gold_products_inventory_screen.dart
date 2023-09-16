@@ -108,20 +108,21 @@ class _GoldProductsInventoryScreenState
 
   List<DataColumn> buildDataColumns() {
     return [
-      buildDataColumn('Barkod'),
-      buildDataColumn('Adet'),
-      buildDataColumn('İsim'),
-      buildDataColumn('Ayar'),
-      buildDataColumn('İşçilik'),
-      buildDataColumn('Gram'),
-      buildDataColumn('S. Gramı'),
-      buildDataColumn('Maliyet'),
+      buildDataColumn(label: 'Barkod', numeric: false),
+      buildDataColumn(label: 'Adet', numeric: true),
+      buildDataColumn(label: 'İsim', numeric: false),
+      buildDataColumn(label: 'Ayar', numeric: true),
+      buildDataColumn(label: 'İşçilik', numeric: true),
+      buildDataColumn(label: 'Gram', numeric: true),
+      buildDataColumn(label: 'S. Gramı', numeric: true),
+      buildDataColumn(label: 'Maliyet', numeric: true),
       buildActionsDataColumn(),
     ];
   }
 
-  DataColumn buildDataColumn(String label) {
+  DataColumn buildDataColumn({required String label, required bool numeric}) {
     return DataColumn(
+      numeric: numeric,
       label: Text(
         label,
         style: buildDataColumnTextStyle(),
