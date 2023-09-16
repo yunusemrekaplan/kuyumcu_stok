@@ -50,7 +50,7 @@ class ButtonStyles {
               return Colors.red;
             }
           }
-          return Colors.grey[600];
+          return buttonColor;
         },
       ),
     );

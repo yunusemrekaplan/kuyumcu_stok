@@ -7,10 +7,13 @@ import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/carat.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localization/input_formatters.dart';
+import 'package:kuyumcu_stok/localization/output_formatters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
+import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
 import 'package:kuyumcu_stok/styles/text_styles.dart';
+import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/validations/number_validator.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -28,31 +31,38 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
   late GoldProduct product;
   late Carat dropdownValue;
   late TextEditingController nameController;
-  late TextEditingController caratController;
-  late TextEditingController gramController;
   late TextEditingController purityRateController;
-  late TextEditingController costController;
   late TextEditingController laborCostController;
+  late TextEditingController gramController;
+  late TextEditingController salesGramsController;
+  late TextEditingController costController;
 
   late ButtonStyles buttonStyles;
+  Color cursorColor = Colors.white;
+  List<TextInputFormatter> inputFormattersDouble = <TextInputFormatter>[
+    inputFormatDouble,
+  ];
+  List<TextInputFormatter> inputFormattersOnlyDigits = <TextInputFormatter>[
+    inputFormatOnlyDigits,
+  ];
 
   _GoldProductEditScreenState({required this.product}) {
     buttonStyles = ButtonStyles();
     dropdownValue = product.carat;
     nameController = TextEditingController();
-    gramController = TextEditingController();
     purityRateController = TextEditingController();
-    costController = TextEditingController();
     laborCostController = TextEditingController();
-    String text1 = dropdownValue.purityRateDefinition.toString();
-    String text2 = product.laborCost.toString();
-    String text3 = product.gram.toString();
-    String text4 = product.cost.toString();
+    gramController = TextEditingController();
+    salesGramsController = TextEditingController();
+    costController = TextEditingController();
+    purityRateController.text = OutputFormatters.buildNumberFormat1f(
+        dropdownValue.purityRateDefinition);
     nameController.text = product.name.toString();
-    purityRateController.text = text1.replaceAll(".", ",");
-    laborCostController.text = text2.replaceAll(".", ",");
-    gramController.text = text3.replaceAll(".", ",");
-    costController.text = text4.replaceAll(".", ",");
+    purityRateController.text = OutputFormatters.buildNumberFormat1f(product.purityRate);
+    laborCostController.text = OutputFormatters.buildNumberFormat1f(product.laborCost);
+    gramController.text = OutputFormatters.buildNumberFormat3f(product.gram);
+    salesGramsController.text = OutputFormatters.buildNumberFormat3f(product.salesGrams);
+    costController.text = OutputFormatters.buildNumberFormat3f(product.cost);
   }
 
   @override
@@ -60,203 +70,256 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
-      body: Column(
-        children: [
-          buildNameRow(),
-          buildCaratRow(),
-          buildPurityRateRow(),
-          buildLaborCostRow(),
-          buildGramRow(),
-          buildCostRow(),
-          buildUpdateButtonRow(),
-          const Expanded(
-            child: SizedBox(),
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: secondColor,
+            borderRadius: BorderRadius.circular(25),
           ),
-          buildBackButton(),
-        ],
-      ),
-    );
-  }
-
-  Padding buildNameRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          Text(
-            'İsim: ',
-            style: TextStyles.buildTextStyle(),
-          ),
-          TextFormField(
-            controller: nameController,
-            style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration:
-                DecorationStyles.buildInputDecoration(const Size(150, 38)),
-            onChanged: (value) {
-              setState(() {
-                nameController;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding buildCaratRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: SizedBox(
-        height: 56,
-        child: Row(
-          children: [
-            Text(
-              'Karat: ',
-              style: TextStyles.buildTextStyle(),
+          width: MediaQuery.of(context).size.width - 300,
+          height: MediaQuery.of(context).size.height - 130,
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: DataTable(
+                dataRowMinHeight: 48,
+                dataRowMaxHeight: 55,
+                columnSpacing: 30,
+                horizontalMargin: 50,
+                showCheckboxColumn: false,
+                border: DataTableStyles.buildTableBorder(),
+                columns: buildDataColumns(),
+                rows: buildDataRows(context),
+              ),
             ),
-            DropdownButtonFormField(
-              alignment: Alignment.centerLeft,
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_downward),
-              decoration: DecorationStyles.buildDropdownButtonInputDecoration(),
-              items: buildDropdownMenuItemList(),
-              onChanged: (Carat? newValue) {
-                dropdownValue = newValue!;
-                String temp = dropdownValue.purityRateDefinition.toString();
-                setState(() {
-                  purityRateController.text = temp.replaceAll('.', ',');
-                });
-                buildCalculate();
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Padding buildPurityRateRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          Text(
-            'Saflık Oranı: ',
-            style: TextStyles.buildTextStyle(),
+  List<DataColumn> buildDataColumns() {
+    return [
+      DataColumn(
+        label: Text(
+          '    İsim:',
+          textAlign: TextAlign.center,
+          style: buildTextStyle(),
+        ),
+      ),
+      DataColumn(
+        label: buildTextFormField(
+          controller: nameController,
+          inputFormatters: [],
+          onChanged: (value) {
+            setState(() {
+              nameController;
+              buttonStyles;
+            });
+          },
+        ),
+      ),
+      const DataColumn(
+        label: Text(''),
+      ),
+    ];
+  }
+
+  List<DataRow> buildDataRows(BuildContext context) {
+    return [
+      buildDataRow(
+        label: '    Ayar:',
+        formWidget: buildDropdownButtonFormField(),
+      ),
+      buildDataRow(
+        label: '    Saflık Oranı:',
+        formWidget: buildTextFormField(
+          controller: purityRateController,
+          inputFormatters: inputFormattersDouble,
+          onChanged: (value) {
+            setState(() {
+              laborCostController;
+              buttonStyles;
+            });
+            buildCalculate();
+          },
+        ),
+      ),
+      buildDataRow(
+        label: '    İşçilik:',
+        formWidget: buildTextFormField(
+          controller: laborCostController,
+          inputFormatters: inputFormattersDouble,
+          onChanged: (value) {
+            setState(() {
+              laborCostController;
+              buttonStyles;
+            });
+            buildCalculate();
+          },
+        ),
+      ),
+      buildDataRow(
+        label: '    Gram:',
+        formWidget: buildTextFormField(
+          controller: gramController,
+          inputFormatters: inputFormattersDouble,
+          onChanged: (value) {
+            setState(() {
+              gramController;
+              buttonStyles;
+            });
+          },
+        ),
+      ),
+      buildDataRow(
+        label: '    Satış Gramı:',
+        formWidget: buildTextFormField(
+          controller: salesGramsController,
+          inputFormatters: inputFormattersDouble,
+          onChanged: (value) {
+            setState(() {
+              salesGramsController;
+              buttonStyles;
+            });
+            buildCalculate();
+          },
+        ),
+      ),
+      buildDataRow(
+        label: '    Maliyet:',
+        formWidget: buildTextFormField(
+          controller: costController,
+          inputFormatters: inputFormattersDouble,
+          onChanged: (value) {
+            setState(() {
+              costController;
+              buttonStyles;
+            });
+          },
+        ),
+      ),
+      DataRow(
+        cells: [
+          DataCell(
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 36.0),
+                    child: buildUpdateButtonRow(),
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextFormField(
-            validator: NumberValidator.validate,
-            controller: purityRateController,
-            style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration:
-                DecorationStyles.buildInputDecoration(const Size(100, 38)),
-            inputFormatters: <TextInputFormatter>[
-              inputFormatDouble,
-            ],
-            onChanged: (value) {
-              setState(() {
-                purityRateController;
-              });
-              buildCalculate();
-            },
+          const DataCell(
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(''),
+            ),
+          ),
+          DataCell(
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: ElevatedButton(
+                style: buttonStyles.buildBasicButtonStyle(),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(context,
+                      '/gold-products-inventory-screen', (route) => false);
+                },
+                child: Text(
+                  ' Geri Dön ',
+                  style: buildButtonTextStyle(),
+                ),
+              ),
+            ),
           ),
         ],
+      ),
+    ];
+  }
+
+  DataRow buildDataRow({
+    required String label,
+    required Center formWidget,
+  }) {
+    return DataRow(
+      cells: [
+        DataCell(
+          buildFirstDataCell(
+            label: label,
+          ),
+        ),
+        DataCell(
+          formWidget,
+        ),
+        const DataCell(Text('')),
+      ],
+    );
+  }
+
+  SizedBox buildFirstDataCell({required String label}) {
+    return SizedBox(
+      width: 250,
+      child: Text(
+        label,
+        textAlign: TextAlign.start,
+        style: buildTextStyle(),
       ),
     );
   }
 
-  Padding buildLaborCostRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          Text(
-            'İşçilik: ',
-            style: TextStyles.buildTextStyle(),
-          ),
-          TextFormField(
-            validator: NumberValidator.validate,
-            controller: laborCostController,
-            style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration:
-                DecorationStyles.buildInputDecoration(const Size(100, 38)),
-            inputFormatters: <TextInputFormatter>[
-              inputFormatDouble,
-            ],
-            onChanged: (value) {
-              setState(() {
-                laborCostController;
-              });
-              buildCalculate();
-            },
-          ),
-        ],
+  Center buildTextFormField({
+    required TextEditingController controller,
+    required List<TextInputFormatter> inputFormatters,
+    required void Function(String)? onChanged,
+  }) {
+    return Center(
+      child: TextFormField(
+        validator: NumberValidator.validate,
+        controller: controller,
+        style: buildTextFormFieldTextStyle(),
+        decoration: buildFormDecor(),
+        cursorColor: cursorColor,
+        inputFormatters: inputFormatters,
+        onChanged: onChanged,
       ),
     );
   }
 
-  Padding buildGramRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          Text(
-            'Gram: ',
-            style: TextStyles.buildTextStyle(),
-          ),
-          TextFormField(
-            validator: NumberValidator.validate,
-            controller: gramController,
-            style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration:
-                DecorationStyles.buildInputDecoration(const Size(100, 38)),
-            inputFormatters: <TextInputFormatter>[
-              inputFormatDouble,
-            ],
-            onChanged: (value) {
-              setState(() {
-                gramController;
-              });
-              buildCalculate();
-            },
-          ),
-        ],
+  Center buildDropdownButtonFormField() {
+    return Center(
+      child: DropdownButtonFormField(
+        alignment: Alignment.centerLeft,
+        value: dropdownValue,
+        icon: Icon(
+          Icons.arrow_downward,
+          color: cursorColor,
+        ),
+        dropdownColor: backgroundColor,
+        decoration: DecorationStyles.buildDropdownButtonInputDecoration(),
+        style: buildTextFormFieldTextStyle(),
+        items: buildDropdownMenuItemList(),
+        onChanged: (Carat? newValue) {
+          dropdownValue = newValue!;
+          purityRateController.text = OutputFormatters.buildNumberFormat1f(
+              dropdownValue.purityRateDefinition);
+          setState(() {
+            purityRateController;
+            buttonStyles;
+          });
+          buildCalculate();
+        },
       ),
     );
   }
 
-  Padding buildCostRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
-      child: Row(
-        children: [
-          Text(
-            'Maliyet: ',
-            style: TextStyles.buildTextStyle(),
-          ),
-          TextFormField(
-            validator: NumberValidator.validate,
-            controller: costController,
-            style: TextStyles.buildTextFormFieldTextStyle(),
-            decoration:
-                DecorationStyles.buildInputDecoration(const Size(125, 38)),
-            inputFormatters: <TextInputFormatter>[
-              inputFormatDouble,
-            ],
-            onChanged: (value) {
-              setState(() {
-                costController;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding buildUpdateButtonRow() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 32.0, top: 16, bottom: 16),
+  Align buildUpdateButtonRow() {
+    return Align(
+      alignment: Alignment.bottomCenter,
       child: Row(
         children: [
           ElevatedButton(
@@ -264,7 +327,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
             onPressed: onUpdateFun,
             child: Text(
               'Güncelle',
-              style: TextStyles.buildButtonTextStyle(),
+              style: buildButtonTextStyle(),
             ),
           ),
         ],
@@ -280,8 +343,8 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           ElevatedButton(
             style: buttonStyles.buildBasicButtonStyle(),
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context,
-                  '/gold-products-inventory-screen', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/gold-products-inventory-screen', (route) => false);
             },
             child: Text(
               'Geri Dön',
@@ -293,16 +356,60 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     );
   }
 
+  List<DropdownMenuItem<Carat>> buildDropdownMenuItemList() {
+    return Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
+      return DropdownMenuItem<Carat>(
+        alignment: AlignmentDirectional.center,
+        value: value,
+        child: Text(
+          value.intDefinition.toString(),
+          style: TextStyles.buildTextFormFieldTextStyle(),
+          textAlign: TextAlign.right,
+        ),
+      );
+    }).toList();
+  }
+
+  TextStyle buildTextStyle() {
+    return const TextStyle(
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
+    );
+  }
+
+  TextStyle buildTextFormFieldTextStyle() {
+    return const TextStyle(
+      fontSize: 26,
+      height: 0.9,
+      color: Colors.white,
+      fontStyle: FontStyle.normal,
+      fontWeight: FontWeight.normal,
+    );
+  }
+
+  TextStyle buildButtonTextStyle() {
+    return const TextStyle(
+      fontSize: 26,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
+    );
+  }
+
+  InputDecoration buildFormDecor() {
+    return DecorationStyles.buildInputDecoration(const Size(240, 38));
+  }
+
   void buildCalculate() {
     if (purityRateController.text.isNotEmpty &&
-        gramController.text.isNotEmpty &&
+        salesGramsController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
-        costController.text = Calculator.calculateCostPrice(
+        costController.text = OutputFormatters.buildNumberFormat3f(Calculator.calculateCostPrice(
           double.parse(purityRateController.text.replaceAll(",", ".")),
-          double.parse(gramController.text.replaceAll(",", ".")),
+          double.parse(salesGramsController.text.replaceAll(",", ".")),
           double.parse(laborCostController.text.replaceAll(",", ".")),
-        ).toStringAsFixed(0);
+        ) / 1000);
       });
     }
   }
@@ -340,11 +447,9 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       product.gram = double.parse(gramController.text.replaceAll(',', '.'));
       product.laborCost =
           double.parse(laborCostController.text.replaceAll(',', '.'));
-      product.cost =
-          double.parse(costController.text.replaceAll(',', '.'));
+      product.cost = double.parse(costController.text.replaceAll(',', '.'));
       product.purityRate =
           double.parse(purityRateController.text.replaceAll(',', '.'));
-
 
       GoldProductDbHelper()
           .update(product.toJson(), product.id)
@@ -363,6 +468,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         purityRateController.text.isEmpty ||
         laborCostController.text.isEmpty ||
         gramController.text.isEmpty ||
+        salesGramsController.text.isEmpty ||
         costController.text.isEmpty) {
       return 0;
     }
@@ -371,24 +477,9 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
             null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
-        double.tryParse(costController.text.replaceAll(",", ".")) ==
-            null) {
+        double.tryParse(costController.text.replaceAll(",", ".")) == null) {
       return 1;
     }
     return 2;
-  }
-
-  List<DropdownMenuItem<Carat>> buildDropdownMenuItemList() {
-    return Carat.values.map<DropdownMenuItem<Carat>>((Carat value) {
-      return DropdownMenuItem<Carat>(
-        alignment: AlignmentDirectional.center,
-        value: value,
-        child: Text(
-          value.intDefinition.toString(),
-          style: TextStyles.buildTextFormFieldTextStyle(),
-          textAlign: TextAlign.right,
-        ),
-      );
-    }).toList();
   }
 }

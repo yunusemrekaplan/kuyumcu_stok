@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:kuyumcu_stok/calculator.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
@@ -48,7 +47,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   ];
 
   _GoldProductAddScreenState() {
-    initializeDateFormatting('tr_TR', null);
+    // initializeDateFormatting('tr_TR', null);
     buttonStyles = ButtonStyles();
     dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';
@@ -68,29 +67,27 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
-      body: Container(
-        color: backgroundColor,
-        child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: secondColor,
+      backgroundColor: backgroundColor,
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: secondColor,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          width: MediaQuery.of(context).size.width - 300,
+          height: MediaQuery.of(context).size.height - 130,
+          child: Center(
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
-            ),
-            width: MediaQuery.of(context).size.width - 300,
-            height: MediaQuery.of(context).size.height - 130,
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: DataTable(
-                  dataRowMinHeight: 48,
-                  dataRowMaxHeight: 55,
-                  columnSpacing: 30,
-                  horizontalMargin: 50,
-                  showCheckboxColumn: false,
-                  border: DataTableStyles.buildTableBorder(),
-                  columns: buildDataColumns(),
-                  rows: buildDataRows(context),
-                ),
+              child: DataTable(
+                dataRowMinHeight: 48,
+                dataRowMaxHeight: 55,
+                columnSpacing: 30,
+                horizontalMargin: 50,
+                showCheckboxColumn: false,
+                border: DataTableStyles.buildTableBorder(),
+                columns: buildDataColumns(),
+                rows: buildDataRows(context),
               ),
             ),
           ),
@@ -102,17 +99,15 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   List<DataColumn> buildDataColumns() {
     return [
       DataColumn(
-        label: Expanded(
-          child: Text(
-            'Barkod No:',
-            textAlign: TextAlign.center,
-            style: buildTextStyle(),
-          ),
+        label: Text(
+          '    Barkod No:',
+          textAlign: TextAlign.center,
+          style: buildTextStyle(),
         ),
       ),
       DataColumn(
         label: Text(
-          barcodeNo,
+          '$barcodeNo      ',
           textAlign: TextAlign.center,
           style: buildTextFormFieldTextStyle(),
         ),
@@ -394,7 +389,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   TextStyle buildTextFormFieldTextStyle() {
     return const TextStyle(
-      fontSize: 28,
+      fontSize: 26,
       height: 0.9,
       color: Colors.white,
       fontStyle: FontStyle.normal,
