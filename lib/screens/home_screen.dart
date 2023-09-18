@@ -3,13 +3,11 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
-import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
 import 'package:kuyumcu_stok/enum/my_error.dart';
 import 'package:kuyumcu_stok/line_chart.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/log.dart';
-import 'package:kuyumcu_stok/model/product_entry.dart';
 import 'package:kuyumcu_stok/model/product_sale.dart';
 import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
@@ -25,113 +23,76 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late List<FlSpot> salesChartSpotList;
-
   List<FlSpot> spots = [];
+  List<String> days = [];
+  List<String> values = [];
 
   @override
   void initState() {
-    print(DateTime.now().weekday);
-
-    /*
-    // TODO zamanı internetten çek
-    /*DateTime now = DateTime.now();
-    //DateTime now1 = DateTime.now();
-    int year;
-    int month;
-    int day;
-    year = now.year;
-    month = now.month - 2;
-    day = now.day;
-    switch (now.month) {
-      case 1:
-        year = now.year - 1;
-        month = 11;
-        day = now.day > 30 ? 30 : now.day;
-      case 2:
-        year = now.year - 1;
-        month = 12;
-        day = now.day;
-      case 4:
-        // month = 2;
-        bool isDivisibleFour = ((now.year % 4) == 0);
-        day = isDivisibleFour
-            ? ((now.day > 29) ? 29 : now.day)
-            : ((now.day > 28) ? 28 : now.day);
-      */
-    /*case 5:
-        // month = 3;
-        day = now.day;
-      case 6:
-        // month = 4;
-        day = now.day;
-      case 7:
-        // month = 5;
-        day = now.day;
-      case 8:
-        // month = 6;
-        day = now.day;
-      case 9:
-        // month = 7;
-        day = now.day;
-      case 10:
-        // month = 8;
-        day = now.day;
-      case 11:
-        // month = 9;
-        day = now.day;
-      case 12:
-        // month = 10;
-        day = now.day;*/
-    /*
-    }
-
-    DateTime startTime = DateTime(
-      year,
-      month,
-      day,
-    );
-    DateTime endTime = DateTime.now();*/
-    */
-
     if (ProductSaleDbHelper().sales.isNotEmpty) {
       DateTime lastDate = ProductSaleDbHelper().sales.last.soldDate;
-      DateTime firstDate = lastDate.subtract(Duration(days: 7));
-      List<ProductSale> filteredSales = ProductSaleDbHelper()
-          .sales
-          .where((sale) {
-            //print(sale.toJson());
-            return sale.soldDate.isAfter(firstDate);
-          })
-          .toList();
+      DateTime firstDate = lastDate.subtract(const Duration(days: 7));
+      List<ProductSale> filteredSales =
+          ProductSaleDbHelper().sales.where((sale) {
+        // print(sale.toJson());
+        return sale.soldDate.isAfter(firstDate);
+      }).toList();
 
-      List<List<ProductSale>> chunks = chunkByDate(filteredSales, firstDate, lastDate,);
-      //print(chunks);
+      List<List<ProductSale>> chunks = chunkByDate(
+        filteredSales,
+        firstDate,
+        lastDate,
+      );
 
       List<double> revenues = [];
       List.generate(chunks.length, (i) {
         if (chunks[i].isNotEmpty) {
-          double totalRevenue = chunks[i].map((sale) => sale.soldPrice * sale.piece).reduce((a, b) => a + b);
-          print(totalRevenue);
+          double totalRevenue = chunks[i]
+              .map((sale) => sale.soldPrice * sale.piece)
+              .reduce((a, b) => a + b);
           revenues.add(totalRevenue);
-        }
-        else {
+        } else {
           revenues.add(0);
         }
       });
-      print(revenues);
+
       double minRevenue = revenues.reduce(min);
       double maxRevenue = revenues.reduce(max);
-      print('min: $minRevenue');
-      print('max: $maxRevenue');
       double scaleRevenue(double revenue) {
         return (revenue - minRevenue) / (maxRevenue - minRevenue) * 6;
       }
 
+      List<double> newRevenues = [];
+
+      switch (DateTime.now().weekday) {
+        case 1:
+          days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
+          newRevenues = [
+            revenues[1],
+            revenues[2],
+            revenues[3],
+            revenues[4],
+            revenues[5],
+            revenues[6],
+            revenues[0]
+          ];
+      }
+
+      revenues.sort((a, b) => a.compareTo(b));
+
       List.generate(revenues.length, (i) {
-        spots.add(FlSpot(i.toDouble(), scaleRevenue(revenues[i])));
+        int tempInt = revenues[i] ~/ 1000;
+        double tempDouble = revenues[i] / 1000;
+        bool control = (tempDouble - tempInt) > 0.5;
+        tempInt = tempInt > 0 ? tempInt + 1 : tempInt;
+        values.add('${tempInt}K');
       });
 
-      print(spots);
+      List.generate(revenues.length, (i) {
+        spots.add(FlSpot(i.toDouble(), scaleRevenue(newRevenues[i])));
+      });
+
+      // print(spots);
     }
 
     salesChartSpotList = const [];
@@ -140,12 +101,16 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  List<List<ProductSale>> chunkByDate(List<ProductSale> sales, DateTime startDate, DateTime endDate) {
+  List<List<ProductSale>> chunkByDate(
+      List<ProductSale> sales, DateTime startDate, DateTime endDate) {
     List<List<ProductSale>> chunks = [];
     // Başlangıç tarihinden itibaren bir gün arttırarak bitiş tarihine kadar döngü oluştur
-    for (DateTime date = startDate; date.isBefore(endDate); date = date.add(Duration(days: 1))) {
+    for (DateTime date = startDate;
+        date.isBefore(endDate);
+        date = date.add(const Duration(days: 1))) {
       // Sales listesinden o gün satılan ürünleri filtrele
-      List<ProductSale>? dailySales = sales.where((sale) => sale.soldDate.day == date.day).toList();
+      List<ProductSale>? dailySales =
+          sales.where((sale) => sale.soldDate.day == date.day).toList();
       // Filtrelenen ürünleri chunks listesine ekle
       chunks.add(dailySales);
     }
@@ -189,8 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
+                padding: buildEdgeInsets(),
                 child: SizedBox(
                   width: 400,
                   height: 290,
@@ -198,19 +162,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Satış Grafiği',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                      ),
                       SizedBox(
                         width: 425,
-                        height: 250,
+                        height: 280,
                         //color: Colors.white,
                         child: LineChartSample2(
+                          chartName: 'Satış Grafiği',
                           spotList: spots,
+                          days: days,
+                          values: values,
                         ),
                       ),
                     ],
@@ -218,8 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
+                padding: buildEdgeInsets(),
                 child: SizedBox(
                   width: 400,
                   height: 290,
@@ -227,19 +186,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        'TL Kar Grafiği',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                      ),
                       SizedBox(
                         width: 425,
-                        height: 250,
+                        height: 280,
                         //color: Colors.white,
                         child: LineChartSample2(
+                          chartName: 'TL Kar Grafiği',
                           spotList: salesChartSpotList,
+                          days: days,
+                          values: values,
                         ),
                       ),
                     ],
@@ -247,8 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, top: 15.0, right: 15.0, bottom: 15.0),
+                padding: buildEdgeInsets(),
                 child: SizedBox(
                   width: 400,
                   height: 290,
@@ -256,19 +210,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Gram Kar Grafiği',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                      ),
                       SizedBox(
                         width: 425,
-                        height: 250,
+                        height: 280,
                         //color: Colors.white,
                         child: LineChartSample2(
+                          chartName: 'Gram Kar Grafiği',
                           spotList: salesChartSpotList,
+                          days: days,
+                          values: values,
                         ),
                       ),
                     ],
@@ -279,6 +229,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  EdgeInsets buildEdgeInsets() {
+    return const EdgeInsets.only(
+      left: 10.0,
+      top: 15.0,
+      right: 10.0,
+      bottom: 15.0,
     );
   }
 }
