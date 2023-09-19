@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
 import 'package:kuyumcu_stok/enum/my_error.dart';
-import 'package:kuyumcu_stok/line_chart.dart';
+import 'package:kuyumcu_stok/widgets/line_chart.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/log.dart';
 import 'package:kuyumcu_stok/model/product_sale.dart';

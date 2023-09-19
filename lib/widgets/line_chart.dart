@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:kuyumcu_stok/app_colors.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
 
 class LineChartSample2 extends StatefulWidget {

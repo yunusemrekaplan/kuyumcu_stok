@@ -47,7 +47,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   ];
 
   _GoldProductAddScreenState() {
-    // initializeDateFormatting('tr_TR', null);
     buttonStyles = ButtonStyles();
     dropdownValue = Carat.twentyFour;
     barcodeNo = '0000000000000';

@@ -14,6 +14,8 @@ import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/localization/converters.dart';
 
+import '../../styles/button_styles.dart';
+
 class GoldProductSaleScreen extends StatefulWidget {
   const GoldProductSaleScreen({super.key});
 
@@ -22,33 +24,29 @@ class GoldProductSaleScreen extends StatefulWidget {
 }
 
 class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
-  GoldProduct? product;
+  late GoldProduct product;
   late List<GoldProduct> products;
-
   late int productIndex;
-  String? earningRate;
+
   String fineGoldBuy = '.......';
   String fineGoldSale = '.......';
   String usdBuy = '.......';
   String usdSale = '.......';
   String eurBuy = '.......';
   String eurSale = '.......';
-  String nameTxt = '';
-  String pieceTxt = '';
-  String caratTxt = '';
-  String salesGramsTxt = '';
-  String costTxt = '';
+  String nameCellTxt = '';
+  String pieceCellTxt = '';
+  String gramCellTxt = '';
+  String salesGramsCellTxt = '';
   String costPriceTxt = '';
+  String soldGramTxt = '..........';
 
-  String soldGramTxt = '';
+  late double soldPrice;
+  late double soldGram;
+  late double earnedProfitTL;
+  late double earnedProfitGram;
 
-  double tableWidth = 700;
-  double? soldPrice;
-  double? soldGram;
-  double? earnedProfitTL;
-  double? earnedProfitGram;
-
-  int? isFun;
+  late int isFun;
   var textFormFieldColors = Colors.white;
 
   late TextEditingController barcodeTextEditingController;
@@ -56,9 +54,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   late TextEditingController earningRateGramTextEditingController;
   late TextEditingController saleTLTextEditingController;
   late TextEditingController pieceTextEditingController;
+  late ButtonStyles buttonStyles;
 
   _GoldProductSaleScreenState() {
     products = GoldProductDbHelper().products;
+    buttonStyles = ButtonStyles();
     barcodeTextEditingController = TextEditingController();
     earningRateTLTextEditingController = TextEditingController();
     earningRateGramTextEditingController = TextEditingController();
@@ -90,124 +90,86 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Column _buildBody() {
-    return Column(
+  Row _buildBody() {
+    return Row(
       children: [
-        Flexible(
-          flex: 1,
-          fit: FlexFit.tight,
-          child: Row(
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildLeftOfBody(),
-              const SizedBox(
-                width: 20,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(32),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    color: secondColor,
+                    child: buildBarcodeAndEarningRateRow(),
+                  ),
+                ),
               ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: _buildRightOfBody(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(32),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    color: secondColor,
+                    child: buildProductInformationDataTable(),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(32),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    color: secondColor,
+                    child: buildSaleRow(),
                   ),
                 ),
               ),
             ],
           ),
         ),
-        Flexible(
-          flex: 2,
-          fit: FlexFit.tight,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 50.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 30),
-                  child: buildProductInformationDataTable(),
-                ),
-              ],
-            ),
-          ),
+      ],
+    );
+  }
+
+  Row buildBarcodeAndEarningRateRow() {
+    return Row(
+      children: [
+        // Barcode TextFormField
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: buildBarcodeRow(),
+        ),
+        // Earning Rate TextFormField
+        Padding(
+          padding: const EdgeInsets.only(left: 40.0),
+          child: buildEarningRateTLRow(),
         ),
         Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildSaleRow(),
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: _buildRefreshButton(),
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.only(left: 40.0),
+          child: buildEarningRateGramRow(),
         ),
-        const SizedBox(
-          height: 10,
-        ),
+        // Calculation button
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0),
+          child: buildCalculatingButton(),
+        )
       ],
     );
   }
 
-  Column _buildLeftOfBody() {
-    return Column(
-      children: [
-        Flexible(
-          flex: 0,
-          fit: FlexFit.tight,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 30.0),
-                child: _buildBarcodeAndEarningRateRow(),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Container _buildBarcodeAndEarningRateRow() {
-    return Container(
-      width: 895,
-      decoration: const BoxDecoration(
-        color: secondColor,
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-        child: Row(
-          children: [
-            // Barcode TextFormField
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: _buildBarcodeRow(),
-            ),
-            // Earning Rate TextFormField
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0),
-              child: _buildEarningRateTLRow(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0),
-              child: _buildEarningRateGramRow(),
-            ),
-            // Calculation button
-            Padding(
-              padding: const EdgeInsets.only(left: 24.0),
-              child: _buildCalculatingButton(),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Row _buildBarcodeRow() {
+  Row buildBarcodeRow() {
     return Row(
-      mainAxisSize: MainAxisSize.max,
       children: [
         Text(
           'Barkod: ',
@@ -228,9 +190,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Row _buildEarningRateTLRow() {
+  Row buildEarningRateTLRow() {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Kar %: ',
@@ -252,9 +213,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Row _buildEarningRateGramRow() {
+  Row buildEarningRateGramRow() {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'Gram: ',
@@ -276,42 +236,34 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  ElevatedButton _buildCalculatingButton() {
+  ElevatedButton buildCalculatingButton() {
     return ElevatedButton(
       onPressed: onCalculate,
+      style: buttonStyles.buildBasicButtonStyle(),
       child: const Text(
         'Hesapla',
         style: TextStyle(
           fontSize: 24,
-          color: Colors.black,
+          color: Colors.white,
+          height: 2.2,
         ),
       ),
     );
   }
 
-  Container buildProductInformationDataTable() {
-    return Container(
-      width: tableWidth,
-      decoration: const BoxDecoration(
-        color: Color(0xFF2b384a),
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: DataTable(
-                columnSpacing: 45,
-                border: buildInformationTableBorder(),
-                columns: buildInformationTableColumns(),
-                rows: buildInformationTableRows(),
-              ),
-            ),
-          ],
+  Row buildProductInformationDataTable() {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: DataTable(
+            columnSpacing: 45,
+            border: buildInformationTableBorder(),
+            columns: buildInformationTableColumns(),
+            rows: buildInformationTableRows(),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -323,7 +275,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                nameTxt, //27
+                nameCellTxt, //27
                 style: buildDataCellTextStyle(),
               ),
             ),
@@ -332,7 +284,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                pieceTxt,
+                pieceCellTxt,
                 style: buildDataCellTextStyle(),
               ),
             ),
@@ -341,7 +293,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                caratTxt,
+                gramCellTxt,
                 style: buildDataCellTextStyle(),
               ),
             ),
@@ -350,7 +302,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                salesGramsTxt,
+                salesGramsCellTxt,
                 style: buildDataCellTextStyle(),
               ),
             ),
@@ -416,34 +368,30 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Row _buildSaleRow() {
+  Row buildSaleRow() {
     return Row(
       children: [
-        Container(
-          width: 1010,
-          decoration: const BoxDecoration(
-            color: Color(0xFF2b384a),
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(
-                left: 20, top: 30.0, right: 20, bottom: 30.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildSalePriceTextAndForm(),
-                _buildSaleGramTextAndForm(),
-                _buildSalePieceTextAndForm(),
-                _buildSaleButton(),
-              ],
-            ),
-          ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: buildSalePriceTextAndForm(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 38.0),
+          child: buildSaleGramTextAndForm(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 38.0),
+          child: buildSalePieceTextAndForm(),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: buildSaleButton(),
         ),
       ],
     );
   }
 
-  Row _buildSalePriceTextAndForm() {
+  Row buildSalePriceTextAndForm() {
     return Row(
       children: [
         Text(
@@ -453,7 +401,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         TextFormField(
           controller: saleTLTextEditingController,
           cursorHeight: 20,
-          decoration: buildInputDecoration(const Size(160, 38)),
+          decoration: buildInputDecoration(const Size(105, 38)),
           inputFormatters: <TextInputFormatter>[
             LengthLimitingTextInputFormatter(7),
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,6}')),
@@ -467,73 +415,66 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     );
   }
 
-  Padding _buildSaleGramTextAndForm() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 35),
-      child: Row(
-        children: [
-          Text(
-            'Satış Gramı: ',
-            style: buildTextStyle(),
-          ),
-          SizedBox(
-            width: 90,
-            height: 33,
-            child: Text(
-              soldGramTxt,
-              style: const TextStyle(
-                fontSize: 25,
-                color: Colors.white,
-              ),
+  Row buildSaleGramTextAndForm() {
+    return Row(
+      children: [
+        Text(
+          'Satış Gramı: ',
+          style: buildTextStyle(),
+        ),
+        SizedBox(
+          width: 90,
+          height: 33,
+          child: Text(
+            soldGramTxt,
+            style: const TextStyle(
+              fontSize: 25,
+              color: Colors.white,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Padding _buildSalePieceTextAndForm() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25),
-      child: Row(
-        children: [
-          Text(
-            'Adedi: ',
-            style: buildTextStyle(),
-          ),
-          TextFormField(
-            controller: pieceTextEditingController,
-            cursorHeight: 20,
-            decoration: buildInputDecoration(const Size(70, 38)),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              inputFormatOnlyDigits,
-            ],
-            cursorColor: textFormFieldColors,
-            style: buildTextFormFieldTextStyle(),
-          ),
-        ],
-      ),
+  Row buildSalePieceTextAndForm() {
+    return Row(
+      children: [
+        Text(
+          'Adedi: ',
+          style: buildTextStyle(),
+        ),
+        TextFormField(
+          controller: pieceTextEditingController,
+          cursorHeight: 20,
+          decoration: buildInputDecoration(const Size(50, 38)),
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            inputFormatOnlyDigits,
+          ],
+          cursorColor: textFormFieldColors,
+          style: buildTextFormFieldTextStyle(),
+        ),
+      ],
     );
   }
 
-  Padding _buildSaleButton() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24),
-      child: ElevatedButton(
-        onPressed: onSale,
-        child: const Text(
-          'Satışı Onayla',
-          style: TextStyle(
-            fontSize: 24,
-            color: Colors.black,
-          ),
+  ElevatedButton buildSaleButton() {
+    return ElevatedButton(
+      onPressed: onSale,
+      style: buttonStyles.buildBasicButtonStyle(),
+      child: const Text(
+        'Satışı Onayla',
+        style: TextStyle(
+          fontSize: 24,
+          color: Colors.white,
+          height: 2.2,
         ),
       ),
     );
   }
 
-  ElevatedButton _buildRefreshButton() {
+  ElevatedButton buildRefreshButton() {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -544,8 +485,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               },
             ),
           );
-          caratTxt = '..';
-          costTxt = '....';
+          gramCellTxt = '..';
+          // costTxt = '....';
           costPriceTxt = '....';
           barcodeTextEditingController.text = '';
           earningRateTLTextEditingController.text = '';
@@ -788,14 +729,14 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             saleTLTextEditingController.text = '';
             soldGramTxt = '';
             pieceTextEditingController.text = '';
-            tableWidth = 700;
+            //tableWidth = 700;
             product = GoldProductDbHelper().products[i];
-            nameTxt = product!.name.substring(
+            nameCellTxt = product!.name.substring(
                 0, product!.name.length <= 21 ? product!.name.length : 21);
-            tableWidth += nameTxt.length > 5 ? (nameTxt.length - 5) * 18 : 0;
-            pieceTxt = product!.piece.toString();
-            caratTxt = product!.carat.intDefinition.toString();
-            salesGramsTxt = OutputFormatters.buildNumberFormat2f(product!.salesGrams);
+            //tableWidth += nameCellTxt.length > 5 ? (nameCellTxt.length - 5) * 18 : 0;
+            pieceCellTxt = product!.piece.toString();
+            gramCellTxt = product!.carat.intDefinition.toString();
+            salesGramsCellTxt = OutputFormatters.buildNumberFormat2f(product!.salesGrams);
             CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
                   setState(() {
                     double costPrice =
@@ -979,16 +920,16 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
         print(productSale.toJson());
         setState(() {
-          nameTxt = '';
-          pieceTxt = '';
-          caratTxt = '';
-          salesGramsTxt = '';
+          nameCellTxt = '';
+          pieceCellTxt = '';
+          gramCellTxt = '';
+          salesGramsCellTxt = '';
           costPriceTxt = '';
           barcodeTextEditingController.text = '';
           earningRateTLTextEditingController.text = '';
           earningRateGramTextEditingController.text = '';
           saleTLTextEditingController.text = '';
-          salesGramsTxt = '';
+          salesGramsCellTxt = '';
           pieceTextEditingController.text = '';
         });
 
