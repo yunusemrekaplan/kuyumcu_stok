@@ -43,38 +43,32 @@ class _LineChartSample2State extends State<LineChartSample2> {
       double scaleRevenue(double revenue) {
         return (revenue - minRevenue) / (maxRevenue - minRevenue) * 6;
       }
-
-      List<double> newRevenues = [];
-
       switch (DateTime.now().weekday) {
         case 1:
-          newRevenues = [
-            widget.revenues[1],
-            widget.revenues[2],
-            widget.revenues[3],
-            widget.revenues[4],
-            widget.revenues[5],
-            widget.revenues[6],
-            widget.revenues[0]
-          ];
+          days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
           break;
         case 2:
-          newRevenues = [
-            widget.revenues[2],
-            widget.revenues[3],
-            widget.revenues[4],
-            widget.revenues[5],
-            widget.revenues[6],
-            widget.revenues[0],
-            widget.revenues[1],
-          ];
+          days = ['Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı'];
+          break;
+        case 3:
+          days = ['Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar'];
+          break;
+        case 4:
+          days = ['Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar', 'Per'];
+          break;
+        case 5:
+          days = ['Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar', 'Per', 'Cuma'];
+          break;
+        case 6:
+          days = ['Pzr', 'Pzt', 'Salı', 'Çar', 'Per', 'Cuma', 'Cmt'];
+          break;
+        case 7:
+          days = ['Pzt', 'Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr'];
           break;
       }
 
-      widget.revenues.sort((a, b) => a.compareTo(b));
-
       List.generate(widget.revenues.length, (i) {
-        spots.add(FlSpot(i.toDouble(), scaleRevenue(newRevenues[i])));
+        spots.add(FlSpot(i.toDouble(), scaleRevenue(widget.revenues[i])));
       });
 
       double scaleRevenueInverse(double scaledRevenue) {
@@ -83,26 +77,17 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
       if (widget.chartName == "Gram Kar Grafiği") {
         List.generate(7, (i) {
-          double value = scaleRevenueInverse(i.toDouble()) / 1;
-          value = value > 0 ? value + 1 : value;
+          double value = scaleRevenueInverse(i.toDouble());
+          //value = value > 0 ? value + 1 : value;
           values.add('${OutputFormatters.buildNumberFormat3f(value)} ');
         });
+      } else {
+        List.generate(7, (i) {
+          double value = scaleRevenueInverse(i.toDouble()) / 1000;
+          //value = value > 0 ? value + 1 : value;
+          values.add('${OutputFormatters.buildNumberFormat1f(value)}K ');
+        });
       }
-
-      List.generate(7, (i) {
-        int value = scaleRevenueInverse(i.toDouble()) ~/ 1000;
-        value = value > 0 ? value + 1 : value;
-        values.add('${value}K ');
-      });
-    }
-
-    switch (DateTime.now().weekday) {
-      case 1:
-        days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
-        break;
-      case 2:
-        days = ['Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı'];
-        break;
     }
 
     avgSpotList = [];
@@ -387,16 +372,16 @@ class _LineChartSample2State extends State<LineChartSample2> {
     String text = '';
     switch (value.toInt()) {
       case 0:
-        text = widget.revenues.isNotEmpty ? values[0]:'';
+        text = widget.revenues.isNotEmpty ? values[0] : '';
         break;
       case 2:
-        text = widget.revenues.isNotEmpty ? values[2]:'';
+        text = widget.revenues.isNotEmpty ? values[2] : '';
         break;
       case 4:
-        text = widget.revenues.isNotEmpty ? values[4]:'';
+        text = widget.revenues.isNotEmpty ? values[4] : '';
         break;
       case 6:
-        text = widget.revenues.isNotEmpty ? values[6]:'';
+        text = widget.revenues.isNotEmpty ? values[6] : '';
         break;
       default:
         return Container();

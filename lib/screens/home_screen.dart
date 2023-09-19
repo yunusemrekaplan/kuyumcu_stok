@@ -27,7 +27,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     if (ProductSaleDbHelper().sales.isNotEmpty) {
-      DateTime lastDate = ProductSaleDbHelper().sales.last.soldDate;
+      DateTime lastDate = DateTime.now();
+      String newLastDate = lastDate.toIso8601String();
+      List<String> array = newLastDate.split('');
+      array[11] = '0';
+      array[12] = '0';
+      array[14] = '0';
+      array[15] = '0';
+      array[17] = '0';
+      array[18] = '0';
+
+      lastDate = DateTime.parse(array.join().substring(0, 19));
+
+      lastDate = lastDate.add(const Duration(days: 1));
       DateTime firstDate = lastDate.subtract(const Duration(days: 7));
       List<ProductSale> filteredSales =
           ProductSaleDbHelper().sales.where((sale) {
@@ -43,22 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
       List.generate(chunks.length, (i) {
         if (chunks[i].isNotEmpty) {
-          double totalSalesRevenue = chunks[i]
-              .map((sale) {
-                // print(sale.toJson());
-                return sale.soldPrice * sale.piece;
-          })
-              .reduce((a, b) => a + b);
+          double totalSalesRevenue = chunks[i].map((sale) {
+            // print(sale.toJson());
+            return sale.soldPrice * sale.piece;
+          }).reduce((a, b) => a + b);
           salesChartRevenues.add(totalSalesRevenue);
 
           double totalTLProfitRevenues = chunks[i]
-              .map((sale) => sale.earnedProfitTL)
+              .map((sale) => sale.earnedProfitTL * sale.piece)
               .reduce((a, b) => a + b);
           tLProfitChartRevenues.add(totalTLProfitRevenues);
           // print(totalTLProfitRevenues);
 
           double totalGramProfitRevenues = chunks[i]
-              .map((sale) => sale.earnedProfitGram)
+              .map((sale) => sale.earnedProfitGram * sale.piece)
               .reduce((a, b) => a + b);
           gramProfitChartRevenues.add(totalGramProfitRevenues);
         } else {
@@ -68,6 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       });
     }
+
+    // print(gramProfitChartRevenues);
 
     // print(salesChartRevenues);
     // print(tLProfitChartRevenues);
@@ -83,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (DateTime date = startDate;
         date.isBefore(endDate);
         date = date.add(const Duration(days: 1))) {
-      print(date.toIso8601String());
+      // print(date.toIso8601String());
       // Sales listesinden o gün satılan ürünleri filtrele
       List<ProductSale>? dailySales =
           sales.where((sale) => sale.soldDate.day == date.day).toList();
