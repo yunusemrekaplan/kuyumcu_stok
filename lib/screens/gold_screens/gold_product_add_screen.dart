@@ -75,7 +75,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             borderRadius: BorderRadius.circular(25),
           ),
           width: MediaQuery.of(context).size.width - 300,
-          height: MediaQuery.of(context).size.height - 130,
+          height: MediaQuery.of(context).size.height - 90,
           child: Center(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
@@ -498,29 +498,29 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             double.parse(salesGramsController.text.replaceAll(',', '.')),
       ).toJson();
 
-      Map<String, dynamic> productEntryJson;
-
       try {
-        GoldProductDbHelper().insert(goldProductJson).then(
+        GoldProductDbHelper()
+            .insert(goldProductJson)
+            .then(
               (value) => {
                 GoldProductDbHelper().products.add(
                       GoldProduct.fromJson(goldProductJson, value),
                     ),
-                productEntryJson = ProductEntry(
-                  productId: value,
-                  enteredDate: DateTime.now(),
-                  piece: int.parse(pieceController.text),
-                ).toJson(),
-                ProductEntryDbHelper()
-                    .insert(productEntryJson)
-                    .then((value) => {
-                          ProductEntryDbHelper().entries.add(
-                              ProductEntry.fromJson(productEntryJson, value)),
-                          onRefresh(),
-                          //Navigator.of(context).pop(),
-                        }),
               },
             );
+        ProductEntry productEntry = ProductEntry(
+          product: goldProductJson,
+          enteredDate: DateTime.now(),
+          piece: int.parse(pieceController.text),
+        );
+        ProductEntryDbHelper()
+            .insert(productEntry.toJson())
+            .then((value) => {
+          ProductEntryDbHelper().entries.add(
+              ProductEntry.fromJson(productEntry.toJson(), value)),
+          onRefresh(),
+          //Navigator.of(context).pop(),
+        });
       } catch (e) {
         showDialog(
           context: context,

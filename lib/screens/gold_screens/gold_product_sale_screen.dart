@@ -913,13 +913,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   // isCorrect? isNull? onSale
   void onSale() async {
-    int? piece = int.tryParse(pieceTextEditingController.text);
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (context) {
           return const Center(child: CircularProgressIndicator());
         });
+    int? piece = int.tryParse(pieceTextEditingController.text);
     if (isVariablesEmpty()) {
       showDialog(
         context: context,
@@ -958,12 +958,9 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       double costPrice = (product!.cost * CurrencyService.fineGoldSale);
       soldPrice = double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
       soldGram = double.parse(soldGramTxt.replaceAll(',', '.'));
-      print('soldGram: '+ soldGram!.toString());
-      print('salesGrams: '+ product!.salesGrams.toString());
       earnedProfitTL = soldPrice! - costPrice;
       earnedProfitGram = soldGram! - product!.salesGrams;
 
-      print(earnedProfitGram);
       GoldProductDbHelper()
           .update(product!.toJson(), product!.id)
           .then((value) {

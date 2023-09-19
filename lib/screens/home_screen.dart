@@ -1,6 +1,4 @@
 // ignore_for_file: must_be_immutable
-import 'dart:math';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
@@ -22,10 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late List<FlSpot> salesChartSpotList;
-  List<FlSpot> spots = [];
-  List<String> days = [];
-  List<String> values = [];
+  List<double> salesChartRevenues = [];
+  List<double> tLProfitChartRevenues = [];
+  List<double> gramProfitChartRevenues = [];
 
   @override
   void initState() {
@@ -44,59 +41,37 @@ class _HomeScreenState extends State<HomeScreen> {
         lastDate,
       );
 
-      List<double> revenues = [];
       List.generate(chunks.length, (i) {
         if (chunks[i].isNotEmpty) {
-          double totalRevenue = chunks[i]
-              .map((sale) => sale.soldPrice * sale.piece)
+          double totalSalesRevenue = chunks[i]
+              .map((sale) {
+                // print(sale.toJson());
+                return sale.soldPrice * sale.piece;
+          })
               .reduce((a, b) => a + b);
-          revenues.add(totalRevenue);
+          salesChartRevenues.add(totalSalesRevenue);
+
+          double totalTLProfitRevenues = chunks[i]
+              .map((sale) => sale.earnedProfitTL)
+              .reduce((a, b) => a + b);
+          tLProfitChartRevenues.add(totalTLProfitRevenues);
+          // print(totalTLProfitRevenues);
+
+          double totalGramProfitRevenues = chunks[i]
+              .map((sale) => sale.earnedProfitGram)
+              .reduce((a, b) => a + b);
+          gramProfitChartRevenues.add(totalGramProfitRevenues);
         } else {
-          revenues.add(0);
+          salesChartRevenues.add(0);
+          tLProfitChartRevenues.add(0);
+          gramProfitChartRevenues.add(0);
         }
       });
-
-      double minRevenue = revenues.reduce(min);
-      double maxRevenue = revenues.reduce(max);
-      double scaleRevenue(double revenue) {
-        return (revenue - minRevenue) / (maxRevenue - minRevenue) * 6;
-      }
-
-      List<double> newRevenues = [];
-
-      switch (DateTime.now().weekday) {
-        case 1:
-          days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
-          newRevenues = [
-            revenues[1],
-            revenues[2],
-            revenues[3],
-            revenues[4],
-            revenues[5],
-            revenues[6],
-            revenues[0]
-          ];
-      }
-
-      revenues.sort((a, b) => a.compareTo(b));
-
-      List.generate(revenues.length, (i) {
-        int tempInt = revenues[i] ~/ 1000;
-        double tempDouble = revenues[i] / 1000;
-        bool control = (tempDouble - tempInt) > 0.5;
-        tempInt = tempInt > 0 ? tempInt + 1 : tempInt;
-        values.add('${tempInt}K');
-      });
-
-      List.generate(revenues.length, (i) {
-        spots.add(FlSpot(i.toDouble(), scaleRevenue(newRevenues[i])));
-      });
-
-      // print(spots);
     }
 
-    salesChartSpotList = const [];
-
+    // print(salesChartRevenues);
+    // print(tLProfitChartRevenues);
+    // print(gramProfitChartRevenues);
     //getProducts();
     super.initState();
   }
@@ -108,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (DateTime date = startDate;
         date.isBefore(endDate);
         date = date.add(const Duration(days: 1))) {
+      print(date.toIso8601String());
       // Sales listesinden o gün satılan ürünleri filtrele
       List<ProductSale>? dailySales =
           sales.where((sale) => sale.soldDate.day == date.day).toList();
@@ -168,9 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //color: Colors.white,
                         child: LineChartSample2(
                           chartName: 'Satış Grafiği',
-                          spotList: spots,
-                          days: days,
-                          values: values,
+                          revenues: salesChartRevenues,
                         ),
                       ),
                     ],
@@ -192,9 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //color: Colors.white,
                         child: LineChartSample2(
                           chartName: 'TL Kar Grafiği',
-                          spotList: salesChartSpotList,
-                          days: days,
-                          values: values,
+                          revenues: tLProfitChartRevenues,
                         ),
                       ),
                     ],
@@ -216,9 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //color: Colors.white,
                         child: LineChartSample2(
                           chartName: 'Gram Kar Grafiği',
-                          spotList: salesChartSpotList,
-                          days: days,
-                          values: values,
+                          revenues: gramProfitChartRevenues,
                         ),
                       ),
                     ],

@@ -1,28 +1,30 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/app_colors.dart';
+import 'package:kuyumcu_stok/localization/output_formatters.dart';
 
 class LineChartSample2 extends StatefulWidget {
   LineChartSample2({
     super.key,
-    required this.spotList,
-    required this.days,
-    required this.values,
+    required this.revenues,
     required this.chartName,
   });
 
+  List<double> revenues = [];
   late String chartName;
-  late List<FlSpot> spotList;
-  late List<String> days;
-  late List<String> values;
 
   @override
   State<LineChartSample2> createState() => _LineChartSample2State();
 }
 
 class _LineChartSample2State extends State<LineChartSample2> {
+  List<FlSpot> spots = [];
+  List<String> days = [];
+  List<String> values = [];
   late List<FlSpot> avgSpotList;
   late double avg;
 
@@ -35,18 +37,87 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   @override
   void initState() {
+    if (widget.revenues.isNotEmpty) {
+      double minRevenue = widget.revenues.reduce(min);
+      double maxRevenue = widget.revenues.reduce(max);
+      double scaleRevenue(double revenue) {
+        return (revenue - minRevenue) / (maxRevenue - minRevenue) * 6;
+      }
+
+      List<double> newRevenues = [];
+
+      switch (DateTime.now().weekday) {
+        case 1:
+          newRevenues = [
+            widget.revenues[1],
+            widget.revenues[2],
+            widget.revenues[3],
+            widget.revenues[4],
+            widget.revenues[5],
+            widget.revenues[6],
+            widget.revenues[0]
+          ];
+          break;
+        case 2:
+          newRevenues = [
+            widget.revenues[2],
+            widget.revenues[3],
+            widget.revenues[4],
+            widget.revenues[5],
+            widget.revenues[6],
+            widget.revenues[0],
+            widget.revenues[1],
+          ];
+          break;
+      }
+
+      widget.revenues.sort((a, b) => a.compareTo(b));
+
+      List.generate(widget.revenues.length, (i) {
+        spots.add(FlSpot(i.toDouble(), scaleRevenue(newRevenues[i])));
+      });
+
+      double scaleRevenueInverse(double scaledRevenue) {
+        return (maxRevenue - minRevenue) * scaledRevenue / 6 + minRevenue;
+      }
+
+      if (widget.chartName == "Gram Kar Grafiği") {
+        List.generate(7, (i) {
+          double value = scaleRevenueInverse(i.toDouble()) / 1;
+          value = value > 0 ? value + 1 : value;
+          values.add('${OutputFormatters.buildNumberFormat3f(value)} ');
+        });
+      }
+
+      List.generate(7, (i) {
+        int value = scaleRevenueInverse(i.toDouble()) ~/ 1000;
+        value = value > 0 ? value + 1 : value;
+        values.add('${value}K ');
+      });
+    }
+
+    switch (DateTime.now().weekday) {
+      case 1:
+        days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
+        break;
+      case 2:
+        days = ['Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı'];
+        break;
+    }
+
     avgSpotList = [];
 
-    if (widget.spotList.isNotEmpty) {
+    if (spots.isNotEmpty) {
       double temp = 0;
-      for (var element in widget.spotList) {
+      for (var element in spots) {
         temp += element.y;
       }
 
-      avg = temp / widget.spotList.length;
-      List.generate(widget.spotList.length, (i) {
+      avg = temp / spots.length;
+      List.generate(spots.length, (i) {
         avgSpotList.add(FlSpot(i.toDouble(), avg));
       });
+      //print(avg);
     }
 
     super.initState();
@@ -152,7 +223,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 70,
           ),
         ),
       ),
@@ -166,7 +237,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       maxY: 6,
       lineBarsData: [
         LineChartBarData(
-          spots: widget.spotList,
+          spots: spots,
           isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
@@ -230,7 +301,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 70,
           ),
         ),
       ),
@@ -245,7 +316,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         LineChartBarData(
           spots: avgSpotList,
-          isCurved: true,
+          isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
           ),
@@ -276,25 +347,25 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text(widget.days[0], style: style);
+        text = Text(days[0], style: style);
         break;
       case 1:
-        text = Text(widget.days[1], style: style);
+        text = Text(days[1], style: style);
         break;
       case 2:
-        text = Text(widget.days[2], style: style);
+        text = Text(days[2], style: style);
         break;
       case 3:
-        text = Text(widget.days[3], style: style);
+        text = Text(days[3], style: style);
         break;
       case 4:
-        text = Text(widget.days[4], style: style);
+        text = Text(days[4], style: style);
         break;
       case 5:
-        text = Text(widget.days[5], style: style);
+        text = Text(days[5], style: style);
         break;
       case 6:
-        text = Text(widget.days[6], style: style);
+        text = Text(days[6], style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -316,40 +387,21 @@ class _LineChartSample2State extends State<LineChartSample2> {
     String text = '';
     switch (value.toInt()) {
       case 0:
-        text = widget.values[0];
+        text = widget.revenues.isNotEmpty ? values[0]:'';
         break;
       case 2:
-        if(widget.spotList.isEmpty) {
-          break;
-        }
-        for (int i=1; i<widget.spotList.length; i++) {
-          if (widget.spotList[i].y <= value && widget.spotList[i].y >= value - 1) {
-            text = widget.values[i];
-            print('spot: ${widget.spotList[i].y}');
-            break;
-            //print('value: ${value} spot: ${widget.spotList[i].y} i: ${i}');
-          }
-        }
+        text = widget.revenues.isNotEmpty ? values[2]:'';
         break;
       case 4:
-        if(widget.spotList.isEmpty) {
-          break;
-        }
-        for (int i=4; i<widget.spotList.length; i++) {
-          if (widget.spotList[i-1].y >= value) {
-            text = widget.values[i];
-            // print('value: ${value} spot: ${widget.spotList[i].y} i: ${i}');
-            //break;
-          }
-        }
+        text = widget.revenues.isNotEmpty ? values[4]:'';
         break;
       case 6:
-        text = widget.values[6];
+        text = widget.revenues.isNotEmpty ? values[6]:'';
         break;
       default:
         return Container();
     }
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+    return Text(text, style: style, textAlign: TextAlign.center);
   }
 }

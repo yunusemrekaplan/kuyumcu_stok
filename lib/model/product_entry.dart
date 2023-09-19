@@ -1,24 +1,26 @@
+import 'dart:convert';
+
 class ProductEntry {
   late int id;
-  late int productId;
+  late Map<String, dynamic> product;
   late DateTime enteredDate;
   late int piece;
 
   ProductEntry({
-    required this.productId,
+    required this.product,
     required this.enteredDate,
     required this.piece,
   });
 
   ProductEntry.fromJson(Map<String, dynamic> json, this.id) {
-    productId = json['productId'];
+    product = jsonDecode(json['product']);
     enteredDate = DateTime.parse(json['enteredDate']);
     piece = json['piece'];
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'productId': productId,
+      'product': jsonEncode(product),
       'enteredDate': enteredDate.toIso8601String(),
       'piece': piece,
     };

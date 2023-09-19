@@ -38,7 +38,7 @@ class ProductEntryDbHelper {
     await _db.execute('''
       CREATE TABLE IF NOT EXISTS product_entries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        productId INTEGER NOT NULL,
+        product TEXT NOT NULL,
         enteredDate TEXT NOT NULL,
         piece INTEGER NOT NULL
       )

@@ -5,7 +5,9 @@ import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
 import 'package:kuyumcu_stok/localization/converters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
 import 'package:kuyumcu_stok/model/product_entry.dart';
+import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
+import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/date_picker_row.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -26,6 +28,8 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
   DateTime endTime = DateTime.now();
   late DateTime startTime;
 
+  late ButtonStyles buttonStyles;
+
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
 
@@ -33,9 +37,10 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
   late DatePickerRow endDatePickerRow;
 
   _GoldProductEntriesScreenState() {
+    initializeDateFormatting('tr_TR', null);
     entries = ProductEntryDbHelper().entries;
     products = GoldProductDbHelper().products;
-    initializeDateFormatting('tr_TR', null);
+    buttonStyles = ButtonStyles();
     startTime = timeRange;
     startDatePickerRow = DatePickerRow(
       label: 'Başlangıç Tarihi:',
@@ -58,82 +63,109 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        color: Colors.white,
-        child: Column(
-          children: [
-            buildTableHeightPaddingBox(),
-            Row(
+      backgroundColor: backgroundColor,
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          buildDateRow(),
+          const SizedBox(
+            height: 35,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height - 180,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: startDatePickerRow,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: endDatePickerRow,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: ElevatedButton(
-                    child: const Text('Tarihi Onayla'),
-                    onPressed: () {
-                      setState(() {
-                        startTime = startDatePickerRow.initialTime;
-                        endTime = endDatePickerRow.initialTime;
-                        entries;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            buildTableHeightPaddingBox(),
-            Container(
-              color: Colors.white,
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height - 170,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20.0),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20.0,),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: secondColor,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                       child: SingleChildScrollView(
                         controller: verticalScrollController,
                         scrollDirection: Axis.vertical,
-                        child: DataTable(
-                          headingRowColor:
-                              DataTableStyles.buildHeadingRowColor(),
-                          sortColumnIndex: _sortColumnIndex,
-                          sortAscending: _sortAscending,
-                          columnSpacing: 35,
-                          horizontalMargin: 10,
-                          showCheckboxColumn: false,
-                          border: DataTableStyles.buildTableBorder(),
-                          columns: buildDataColumns(),
-                          rows: buildRowList(),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: DataTable(
+                            headingRowColor:
+                                DataTableStyles.buildHeadingRowColor(),
+                            sortColumnIndex: _sortColumnIndex,
+                            sortAscending: _sortAscending,
+                            columnSpacing: 30,
+                            horizontalMargin: 10,
+                            showCheckboxColumn: false,
+                            border: DataTableStyles.buildTableBorder(),
+                            columns: buildDataColumns(),
+                            rows: buildRowList(),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Row buildDateRow() {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: startDatePickerRow,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: endDatePickerRow,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: ElevatedButton(
+            style: buttonStyles.buildBasicButtonStyle(),
+            child: const Text(
+              'Tarihi Onayla',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            onPressed: () {
+              setState(() {
+                startTime = startDatePickerRow.initialTime;
+                endTime = endDatePickerRow.initialTime;
+                entries;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
   List<DataColumn> buildDataColumns() {
     return [
-      buildEntryDateDataColumn(),
-      buildNameDataColumn(),
-      buildPieceDataColumn(),
+      buildDataColumn(label: 'Giriş Tarihi', numeric: false),
+      buildDataColumn(label: 'İsim', numeric: false),
+      buildDataColumn(label: 'Girilen Adet', numeric: true),
     ];
+  }
+
+  DataColumn buildDataColumn({required String label, required bool numeric}) {
+    return DataColumn(
+      numeric: numeric,
+      label: Text(
+        label,
+        style: buildDataColumnTextStyle(),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
   }
 
   List<DataRow> buildRowList() {
@@ -153,70 +185,30 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
 
   List<DataCell> buildDataCells(ProductEntry e) {
     return [
-      buildEntryDateDataCell(e),
-      buildNameDataCell(e),
-      buildPieceDataCell(e),
+      buildDataCell(cell: Converters.dateToTr(e.enteredDate)),
+      buildDataCell(cell: e.product['name']),
+      buildDataCell(cell: e.piece.toString()),
     ];
   }
 
-  DataColumn buildEntryDateDataColumn() {
-    return DataColumn(
-      label: const Text(
-        'Giriş Tarihi',
-        style: TextStyle(fontSize: 20),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildNameDataColumn() {
-    return DataColumn(
-      label: const Text(
-        'İsim',
-        style: TextStyle(fontSize: 20),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataColumn buildPieceDataColumn() {
-    return DataColumn(
-      label: const Text(
-        'Girilen Adet',
-        style: TextStyle(fontSize: 20),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
-  }
-
-  DataCell buildEntryDateDataCell(ProductEntry e) {
+  DataCell buildDataCell({required String cell}) {
     return DataCell(Text(
-      Converters.dateToTr(e.enteredDate),
-      style: const TextStyle(fontSize: 20),
+      cell,
+      style: buildDataCellTextStyle(),
     ));
   }
 
-  DataCell buildNameDataCell(ProductEntry e) {
-    String name = '';
-    products.where((element) => element.id == e.productId).forEach((element) {
-      name = element.name;
-    });
-    return DataCell(Text(
-      name,
-      style: const TextStyle(fontSize: 20),
-    ));
+  TextStyle buildDataCellTextStyle() {
+    return const TextStyle(
+      fontSize: 22,
+      color: Colors.white,
+    );
   }
 
-  DataCell buildPieceDataCell(ProductEntry e) {
-    return DataCell(Text(
-      e.piece.toString(),
-      style: const TextStyle(fontSize: 20),
-    ));
-  }
-
-  SizedBox buildTableHeightPaddingBox() {
-    return const SizedBox(
-      height: 20,
+  TextStyle buildDataColumnTextStyle() {
+    return const TextStyle(
+      fontSize: 24,
+      color: Colors.white,
     );
   }
 
@@ -233,32 +225,9 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
         }
       } else if (columnIndex == 1) {
         if (ascending) {
-          //a.name.compareTo(b.name)
-          entries.sort(
-            (a, b) => products
-                .where((element) => element.id == a.productId)
-                .map((e) => e.name)
-                .toString()
-                .compareTo(
-                  products
-                      .where((element) => element.id == b.productId)
-                      .map((e) => e.name)
-                      .toString(),
-                ),
-          );
+          entries.sort((a, b) => a.product['name'].compareTo(b.product['name']));
         } else {
-          entries.sort(
-            (a, b) => products
-                .where((element) => element.id == b.productId)
-                .map((e) => e.name)
-                .toString()
-                .compareTo(
-                  products
-                      .where((element) => element.id == a.productId)
-                      .map((e) => e.name)
-                      .toString(),
-                ),
-          );
+          entries.sort((a, b) => b.product['name'].compareTo(a.product['name']));
         }
       } else if (columnIndex == 2) {
         if (ascending) {
