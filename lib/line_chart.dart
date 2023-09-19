@@ -167,7 +167,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         LineChartBarData(
           spots: widget.spotList,
-          isCurved: true,
+          isCurved: false,
           gradient: LinearGradient(
             colors: gradientColors,
           ),
@@ -313,16 +313,35 @@ class _LineChartSample2State extends State<LineChartSample2> {
       fontSize: 15,
       color: Colors.white,
     );
-    String text;
+    String text = '';
     switch (value.toInt()) {
       case 0:
         text = widget.values[0];
         break;
       case 2:
-        text = widget.values[2];
+        if(widget.spotList.isEmpty) {
+          break;
+        }
+        for (int i=1; i<widget.spotList.length; i++) {
+          if (widget.spotList[i].y <= value && widget.spotList[i].y >= value - 1) {
+            text = widget.values[i];
+            print('spot: ${widget.spotList[i].y}');
+            break;
+            //print('value: ${value} spot: ${widget.spotList[i].y} i: ${i}');
+          }
+        }
         break;
       case 4:
-        text = widget.values[4];
+        if(widget.spotList.isEmpty) {
+          break;
+        }
+        for (int i=4; i<widget.spotList.length; i++) {
+          if (widget.spotList[i-1].y >= value) {
+            text = widget.values[i];
+            // print('value: ${value} spot: ${widget.spotList[i].y} i: ${i}');
+            //break;
+          }
+        }
         break;
       case 6:
         text = widget.values[6];
