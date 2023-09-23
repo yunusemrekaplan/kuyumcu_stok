@@ -37,7 +37,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String gramCellTxt = '';
   String salesGramsCellTxt = '';
   String costPriceTxt = '';
-  String soldGramTxt = '..........';
+  String soldGramTxt = '. . . . . . .';
 
   late double soldPrice;
   late double soldGram;
@@ -313,7 +313,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             controller: pieceTextEditingController,
             size: Size((size.width * 0.04), 40),
             inputFormatters: inputFormattersOnlyDigits,
-            onChanged: null,
+            onChanged: (value) {
+              setState(() {
+                pieceTextEditingController;
+              });
+            },
             onFieldSubmitted: null,
           ),
         ),
@@ -636,7 +640,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   ElevatedButton buildSaleButton() {
     return ElevatedButton(
       onPressed: onSale,
-      style: buttonStyles.buildBasicButtonStyle(),
+      style: buttonStyles.buildSaveButtonStyle(isSalable()),
       child: Text(
         '  Onayla  ',
         style: buildButtonTextStyle(),
@@ -996,7 +1000,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         pieceTextEditingController.text.isEmpty;
   }
 
-  bool isCalculable() {
-    return false;
+  bool isSalable() {
+    return saleTLTextEditingController.text.isEmpty || pieceTextEditingController.text.isEmpty;
   }
 }
