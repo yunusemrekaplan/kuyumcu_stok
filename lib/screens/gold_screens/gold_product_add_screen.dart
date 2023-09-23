@@ -136,7 +136,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    İsim:',
         formWidget: buildTextFormField(
           controller: nameController,
-          inputFormatters: [],
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(35),
+          ],
           onChanged: (value) {
             setState(() {
               nameController;
@@ -498,9 +500,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
       ).toJson();
 
       try {
-        GoldProductDbHelper()
-            .insert(goldProductJson)
-            .then(
+        GoldProductDbHelper().insert(goldProductJson).then(
               (value) => {
                 GoldProductDbHelper().products.add(
                       GoldProduct.fromJson(goldProductJson, value),
@@ -512,14 +512,13 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           enteredDate: DateTime.now(),
           piece: int.parse(pieceController.text),
         );
-        ProductEntryDbHelper()
-            .insert(productEntry.toJson())
-            .then((value) => {
-          ProductEntryDbHelper().entries.add(
-              ProductEntry.fromJson(productEntry.toJson(), value)),
-          onRefresh(),
-          //Navigator.of(context).pop(),
-        });
+        ProductEntryDbHelper().insert(productEntry.toJson()).then((value) => {
+              ProductEntryDbHelper()
+                  .entries
+                  .add(ProductEntry.fromJson(productEntry.toJson(), value)),
+              onRefresh(),
+              //Navigator.of(context).pop(),
+            });
       } catch (e) {
         showDialog(
           context: context,

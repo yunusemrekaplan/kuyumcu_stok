@@ -57,8 +57,8 @@ class _GoldProductsInventoryScreenState
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20.0,
+                      left: 15.0,
+                      right: 15.0,
                     ),
                     child: Container(
                       decoration: BoxDecoration(
@@ -145,7 +145,7 @@ class _GoldProductsInventoryScreenState
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
             constraints:
-                DecorationStyles.buildBoxConstraints(const Size(200, 35)),
+                DecorationStyles.buildBoxConstraints(const Size(210, 35)),
           ),
           cursorColor: Colors.white,
           onChanged: onSearch,
