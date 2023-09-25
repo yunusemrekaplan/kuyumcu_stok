@@ -184,9 +184,11 @@ class _GoldProductEntriesScreenState extends State<GoldProductEntriesScreen> {
   }
 
   List<DataCell> buildDataCells(ProductEntry e) {
+    String name = e.product['name'];
+    name = name.substring(0, name.length <= 20 ? name.length : 20);
     return [
       buildDataCell(cell: Converters.dateToTr(e.enteredDate)),
-      buildDataCell(cell: e.product['name']),
+      buildDataCell(cell: name),
       buildDataCell(cell: e.piece.toString()),
     ];
   }

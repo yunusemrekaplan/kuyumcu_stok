@@ -174,8 +174,8 @@ class _GoldProductsInventoryScreenState
 
   List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
     int len = e.name.length;
-    String tripleDot = (len > 11 ? '...' : '');
-    String name = e.name.substring(0, (len > 11 ? 11 : len)) + tripleDot;
+    String tripleDot = (len > 10 ? '...' : '');
+    String name = e.name.substring(0, (len > 10 ? 10 : len)) + tripleDot;
     return [
       buildDataCell(e.barcodeText),
       buildDataCell(e.piece.toString()),
@@ -250,7 +250,7 @@ class _GoldProductsInventoryScreenState
         );
       },
       icon: const Icon(Icons.delete),
-      color: Colors.red[600],
+      color: Colors.red,
       iconSize: 26,
     );
   }
@@ -267,6 +267,7 @@ class _GoldProductsInventoryScreenState
             (route) => false);
       },
       icon: const Icon(Icons.edit),
+      color: Colors.blue,
       iconSize: 26,
     );
   }
@@ -275,6 +276,7 @@ class _GoldProductsInventoryScreenState
     return IconButton(
       onPressed: () {},
       icon: const Icon(Icons.print),
+      color: Colors.white70,
       iconSize: 26,
     );
   }
@@ -283,6 +285,7 @@ class _GoldProductsInventoryScreenState
     return IconButton(
       onPressed: () {},
       icon: const Icon(Icons.add_box_outlined),
+      color: Colors.green,
       iconSize: 26,
     );
   }
@@ -291,6 +294,7 @@ class _GoldProductsInventoryScreenState
     return IconButton(
       onPressed: () {},
       icon: const Icon(Icons.remove_circle_outline),
+      color: Colors.red[600],
       iconSize: 26,
     );
   }

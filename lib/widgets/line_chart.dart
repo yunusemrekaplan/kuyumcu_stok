@@ -24,8 +24,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
   List<FlSpot> spots = [];
   List<String> days = [];
   List<String> values = [];
-  late List<FlSpot> avgSpotList;
+  List<FlSpot> avgSpotList = [];
   late double avg;
+
+  bool control = false;
 
   List<Color> gradientColors = [
     Colors.yellow,
@@ -36,34 +38,42 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   @override
   void initState() {
-    if (widget.revenues.isNotEmpty) {
+    switch (DateTime.now().weekday) {
+      case 1:
+        days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
+        break;
+      case 2:
+        days = ['Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı'];
+        break;
+      case 3:
+        days = ['Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar'];
+        break;
+      case 4:
+        days = ['Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar', 'Per'];
+        break;
+      case 5:
+        days = ['Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar', 'Per', 'Cuma'];
+        break;
+      case 6:
+        days = ['Pzr', 'Pzt', 'Salı', 'Çar', 'Per', 'Cuma', 'Cmt'];
+        break;
+      case 7:
+        days = ['Pzt', 'Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr'];
+        break;
+    }
+
+    for (var element in widget.revenues) {
+      if (element > 0) {
+        control = true;
+        break;
+      }
+    }
+
+    if (control) {
       double minRevenue = widget.revenues.reduce(min);
       double maxRevenue = widget.revenues.reduce(max);
       double scaleRevenue(double revenue) {
         return (revenue - minRevenue) / (maxRevenue - minRevenue) * 6;
-      }
-      switch (DateTime.now().weekday) {
-        case 1:
-          days = ['Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt'];
-          break;
-        case 2:
-          days = ['Çar', 'Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı'];
-          break;
-        case 3:
-          days = ['Per', 'Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar'];
-          break;
-        case 4:
-          days = ['Cuma', 'Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar', 'Per'];
-          break;
-        case 5:
-          days = ['Cmt', 'Pzr', 'Pzt', 'Salı', 'Çar', 'Per', 'Cuma'];
-          break;
-        case 6:
-          days = ['Pzr', 'Pzt', 'Salı', 'Çar', 'Per', 'Cuma', 'Cmt'];
-          break;
-        case 7:
-          days = ['Pzt', 'Salı', 'Çar', 'Per', 'Cuma', 'Cmt', 'Pzr'];
-          break;
       }
 
       List.generate(widget.revenues.length, (i) {
@@ -88,9 +98,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
         });
       }
     }
-
-    avgSpotList = [];
-
     if (spots.isNotEmpty) {
       double temp = 0;
       for (var element in spots) {
@@ -371,16 +378,16 @@ class _LineChartSample2State extends State<LineChartSample2> {
     String text = '';
     switch (value.toInt()) {
       case 0:
-        text = widget.revenues.isNotEmpty ? values[0] : '';
+        text = control ? values[0] : '0K';
         break;
       case 2:
-        text = widget.revenues.isNotEmpty ? values[2] : '';
+        text = control ? values[2] : '0K';
         break;
       case 4:
-        text = widget.revenues.isNotEmpty ? values[4] : '';
+        text = control ? values[4] : '0K';
         break;
       case 6:
-        text = widget.revenues.isNotEmpty ? values[6] : '';
+        text = control ? values[6] : '0K';
         break;
       default:
         return Container();

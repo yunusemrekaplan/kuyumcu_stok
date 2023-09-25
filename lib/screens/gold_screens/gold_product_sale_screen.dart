@@ -187,6 +187,16 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.25,
                   width: MediaQuery.of(context).size.width * 0.25,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 32.0),
+                        child: buildRefreshButton(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -659,16 +669,22 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
               },
             ),
           );
-          gramCellTxt = '..';
-          // costTxt = '....';
-          costPriceTxt = '....';
           barcodeTextEditingController.text = '';
           earningRateTLTextEditingController.text = '';
+          earningRateGramTextEditingController.text = '';
           saleTLTextEditingController.text = '';
+          pieceTextEditingController.text = '';
+          nameCellTxt = '';
+          pieceCellTxt = '';
+          gramCellTxt = '';
+          salesGramsCellTxt = '';
+          costPriceTxt = '';
+          soldGramTxt = '. . . . . . .';
         });
       },
+      style: ButtonStyles().buildBasicButtonStyle(),
       child: Text(
-        'Yenile',
+        '  Yenile  ',
         style: buildButtonTextStyle(),
       ),
     );

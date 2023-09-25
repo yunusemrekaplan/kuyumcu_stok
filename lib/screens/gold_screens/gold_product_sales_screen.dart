@@ -35,12 +35,27 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
 
   late DatePickerRow startDatePickerRow;
   late DatePickerRow endDatePickerRow;
+  late double totalSaleTl;
+  late double totalProfitTl;
+  late double totalProfitGram;
 
   _GoldProductSalesScreenState() {
     initializeDateFormatting('tr_TR', null);
     sales = ProductSaleDbHelper().sales;
     products = GoldProductDbHelper().products;
     buttonStyles = ButtonStyles();
+    totalSaleTl = 0;
+    totalProfitTl = 0;
+    totalProfitGram = 0;
+    for (var element in sales) {
+      totalSaleTl += (element.soldPrice * element.piece);
+    }
+    for (var element in sales) {
+      totalProfitTl += element.earnedProfitTL * element.piece;
+    }
+    for (var element in sales) {
+      totalProfitGram += element.earnedProfitGram * element.piece;
+    }
     startTime = timeRange;
     startDatePickerRow = DatePickerRow(
       label: 'Başlangıç Tarihi:',
@@ -65,53 +80,47 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
       backgroundColor: backgroundColor,
       body: Column(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
-          buildDateRow(),
-          const SizedBox(
-            height: 35,
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.10,
+            child: buildDateRow(),
           ),
           SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height - 180,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20.0,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: secondColor,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: SingleChildScrollView(
-                        controller: verticalScrollController,
-                        scrollDirection: Axis.vertical,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: DataTable(
-                            headingRowColor:
-                                DataTableStyles.buildHeadingRowColor(),
-                            sortColumnIndex: _sortColumnIndex,
-                            sortAscending: _sortAscending,
-                            columnSpacing: 30,
-                            horizontalMargin: 20,
-                            showCheckboxColumn: false,
-                            border: DataTableStyles.buildTableBorder(),
-                            columns: buildDataColumns(),
-                            rows: buildRowList(),
-                          ),
-                        ),
-                      ),
+            height: MediaQuery.of(context).size.height * 0.70,
+            child: buildDataTable(verticalScrollController),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.10,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 20, top: 10.0, right: 20.0, bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Toplam Satış (TL): ${OutputFormatters.buildNumberFormat0f(totalSaleTl)} TL',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
                     ),
                   ),
-                ),
-              ],
+                  Text(
+                    'Toplam Kar (TL): ${OutputFormatters.buildNumberFormat0f(totalProfitTl)} TL',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                  Text(
+                    'Toplam Kar (Gram): ${OutputFormatters.buildNumberFormat2f(totalProfitGram)} Gram',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -136,7 +145,10 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
             style: buttonStyles.buildBasicButtonStyle(),
             child: const Text(
               'Tarihi Onayla',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
             ),
             onPressed: () {
               setState(() {
@@ -144,7 +156,48 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
                 endTime = endDatePickerRow.initialTime;
                 sales;
               });
+              buildTotals();
             },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildDataTable(ScrollController verticalScrollController) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20.0,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: secondColor,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: SingleChildScrollView(
+                controller: verticalScrollController,
+                scrollDirection: Axis.vertical,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: DataTable(
+                    headingRowColor: DataTableStyles.buildHeadingRowColor(),
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending,
+                    columnSpacing: 30,
+                    horizontalMargin: 20,
+                    showCheckboxColumn: false,
+                    border: DataTableStyles.buildTableBorder(),
+                    columns: buildDataColumns(),
+                    rows: buildRowList(),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ],
@@ -153,23 +206,12 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
 
   List<DataColumn> buildDataColumns() {
     return [
-      buildDataColumn(label: 'Satış Tarihi', numeric: false),
+      buildDataColumn(label: 'Tarihi', numeric: false),
       buildDataColumn(label: 'İsim', numeric: false),
       buildDataColumn(label: 'Satılan Adet', numeric: true),
-      buildDataColumn(label: 'Edilen Kar(TL)', numeric: true),
-      buildDataColumn(label: 'Edilen Kar(Gram)', numeric: true),
+      buildDataColumn(label: 'Kar (TL)', numeric: true),
+      buildDataColumn(label: 'Kar (Gram)', numeric: true),
     ];
-  }
-
-  DataColumn buildDataColumn({required String label, required bool numeric}) {
-    return DataColumn(
-      numeric: numeric,
-      label: Text(
-        label,
-        style: buildDataColumnTextStyle(),
-      ),
-      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
-    );
   }
 
   List<DataRow> buildRowList() {
@@ -188,15 +230,28 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
   }
 
   List<DataCell> buildDataCells(ProductSale e) {
+    String name = e.product['name'];
+    name = name.substring(0, name.length <= 20 ? name.length : 20);
     return [
       buildDataCell(cell: Converters.dateToTr(e.soldDate)),
-      buildDataCell(cell: e.product['name']),
+      buildDataCell(cell: name),
       buildDataCell(cell: e.piece.toString()),
       buildDataCell(
           cell: OutputFormatters.buildNumberFormat0f(e.earnedProfitTL)),
       buildDataCell(
           cell: OutputFormatters.buildNumberFormat3f(e.earnedProfitGram)),
     ];
+  }
+
+  DataColumn buildDataColumn({required String label, required bool numeric}) {
+    return DataColumn(
+      numeric: numeric,
+      label: Text(
+        label,
+        style: buildDataColumnTextStyle(),
+      ),
+      onSort: (columnIndex, ascending) => _sortData(columnIndex, ascending),
+    );
   }
 
   DataCell buildDataCell({required String cell}) {
@@ -218,6 +273,24 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
       fontSize: 24,
       color: Colors.white,
     );
+  }
+
+  void buildTotals() {
+    totalSaleTl = 0;
+    totalProfitTl = 0;
+    totalProfitGram = 0;
+    sales.where((element) =>
+            (element.soldDate.compareTo(startTime) >= 0) &&
+            (element.soldDate.compareTo(endTime) <= 0)).map((e) {
+      totalSaleTl += e.soldPrice * e.piece;
+      totalProfitTl += e.earnedProfitTL * e.piece;
+      totalProfitGram += e.earnedProfitGram * e.piece;
+    }).toList();
+    setState(() {
+      totalSaleTl;
+      totalProfitTl;
+      totalProfitGram;
+    });
   }
 
   void _sortData(int columnIndex, bool ascending) {
@@ -251,9 +324,11 @@ class _GoldProductSalesScreenState extends State<GoldProductSalesScreen> {
         }
       } else if (columnIndex == 4) {
         if (ascending) {
-          sales.sort((a, b) => a.earnedProfitGram.compareTo(b.earnedProfitGram));
+          sales
+              .sort((a, b) => a.earnedProfitGram.compareTo(b.earnedProfitGram));
         } else {
-          sales.sort((a, b) => b.earnedProfitGram.compareTo(a.earnedProfitGram));
+          sales
+              .sort((a, b) => b.earnedProfitGram.compareTo(a.earnedProfitGram));
         }
       }
     });

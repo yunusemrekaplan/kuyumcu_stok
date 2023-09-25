@@ -36,7 +36,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     /*ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
     Routes initialRoute = Routes.homeScreen;
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Kuyumcu Stok Takibi',
       theme: mainThemeData,
       routes: {
         Routes.homeScreen.nameDefinition: (BuildContext context) =>
