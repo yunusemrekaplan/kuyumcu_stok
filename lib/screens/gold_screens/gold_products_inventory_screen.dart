@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
@@ -11,6 +13,9 @@ import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
+import 'package:barcode/barcode.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
@@ -177,7 +182,7 @@ class _GoldProductsInventoryScreenState
     String tripleDot = (len > 10 ? '...' : '');
     String name = e.name.substring(0, (len > 10 ? 10 : len)) + tripleDot;
     return [
-      buildDataCell(e.barcodeText),
+      buildBarcodeDataCell(e.barcodeText),
       buildDataCell(e.piece.toString()),
       buildDataCell(name),
       buildDataCell(e.carat.intDefinition.toString()),
@@ -189,14 +194,37 @@ class _GoldProductsInventoryScreenState
     ];
   }
 
-  DataCell buildDataCell(String cell) {
-    return DataCell(Text(
-      cell,
-      style: const TextStyle(
-        fontSize: 20,
-        color: Colors.white,
+  DataCell buildBarcodeDataCell(String cell) {
+    return DataCell(
+      Text(
+        cell,
+        style: const TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
       ),
-    ));
+      onTap: () {
+        Clipboard.setData(ClipboardData(text: cell));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Barkod kopyalandı!'),
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+      },
+    );
+  }
+
+  DataCell buildDataCell(String cell) {
+    return DataCell(
+      Text(
+        cell,
+        style: const TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   DataCell buildActionsDataCell(BuildContext context, GoldProduct e) {
@@ -205,7 +233,7 @@ class _GoldProductsInventoryScreenState
         children: [
           buildDeleteButton(context, e),
           buildEditButton(context, e),
-          buildPrinterButton(),
+          buildPrinterButton(e),
           buildAddButton(),
           buildRemoveButton(),
         ],
@@ -272,9 +300,11 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  IconButton buildPrinterButton() {
+  IconButton buildPrinterButton(GoldProduct e) {
     return IconButton(
-      onPressed: () {},
+      onPressed: () {
+        buildBarcode(e);
+      },
       icon: const Icon(Icons.print),
       color: Colors.white70,
       iconSize: 26,
@@ -359,6 +389,44 @@ class _GoldProductsInventoryScreenState
       fontSize: 22,
       color: Colors.white,
     );
+  }
+
+  void buildBarcode(GoldProduct product) async {
+    /// Create the Barcode
+    Barcode bc = Barcode.isbn();
+    String data = product.barcodeText;
+
+    final svg = bc.toSvg(
+      data,
+      width: 65,
+      height: 24,
+      fontHeight: 6,
+    );
+
+    final pdf = pw.Document();
+    const pageFormat = PdfPageFormat(68, 36);
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: pageFormat,
+        build: (pw.Context context) => pw.Column(
+          children: [
+            pw.SvgImage(svg: svg),
+            pw.SizedBox(height: 2),
+            pw.Text(
+              '${product.gram} GR    ${product.purityRate}',
+              style: const pw.TextStyle(
+                fontSize: 8,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // final file = File('${product.barcodeText}.pdf');
+    final file = File('barcode.pdf');
+    await file.writeAsBytes(await pdf.save());
   }
 
   void _sortData(int columnIndex, bool ascending) {
