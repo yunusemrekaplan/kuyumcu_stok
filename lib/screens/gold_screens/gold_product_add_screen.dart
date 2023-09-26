@@ -37,6 +37,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late TextEditingController salesGramsController;
   late TextEditingController costController;
   late ButtonStyles buttonStyles;
+  late Size size;
 
   Color cursorColor = Colors.white;
 
@@ -57,6 +58,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
@@ -67,17 +69,16 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
             color: secondColor,
             borderRadius: BorderRadius.circular(25),
           ),
-          width: MediaQuery.of(context).size.width - 300,
-          height: MediaQuery.of(context).size.height - 90,
+          width: size.width * 0.75,
+          height: size.height * 0.87,
           child: Center(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25),
               child: DataTable(
-                dataRowMinHeight: 48,
-                dataRowMaxHeight: 55,
-                columnSpacing: 30,
-                horizontalMargin: 50,
-                showCheckboxColumn: false,
+                dataRowMinHeight: size.height * 0.068,
+                dataRowMaxHeight: size.height * 0.08,
+                columnSpacing: size.width * 0.025,
+                horizontalMargin: size.width * 0.05,
                 border: DataTableStyles.buildTableBorder(),
                 columns: buildDataColumns(),
                 rows: buildDataRows(context),

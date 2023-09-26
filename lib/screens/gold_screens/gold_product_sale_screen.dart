@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_sale_db_helper.dart';
+import 'package:kuyumcu_stok/localization/converters.dart';
 import 'package:kuyumcu_stok/localization/input_formatters.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
@@ -12,7 +13,6 @@ import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
-import 'package:kuyumcu_stok/localization/converters.dart';
 
 class GoldProductSaleScreen extends StatefulWidget {
   const GoldProductSaleScreen({super.key});
@@ -54,14 +54,6 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   late TextEditingController pieceTextEditingController;
   late ButtonStyles buttonStyles;
   late Size size;
-
-  final List<TextInputFormatter> inputFormattersDouble = <TextInputFormatter>[
-    inputFormatDouble,
-  ];
-  final List<TextInputFormatter> inputFormattersOnlyDigits =
-      <TextInputFormatter>[
-    inputFormatOnlyDigits,
-  ];
 
   _GoldProductSaleScreenState() {
     products = GoldProductDbHelper().products;
@@ -216,7 +208,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             label: 'Barkod: ',
             controller: barcodeTextEditingController,
             size: Size((size.width * 0.15), 40),
-            inputFormatters: inputFormattersOnlyDigits,
+            inputFormatters: [inputFormatOnlyDigits],
             onChanged: (value) => onSearch(value, context),
             onFieldSubmitted: (value) {},
           ),
@@ -227,7 +219,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             label: 'Kar %: ',
             controller: earningRateTLTextEditingController,
             size: Size((size.width * 0.05), 40),
-            inputFormatters: inputFormattersOnlyDigits,
+            inputFormatters: [inputFormatOnlyDigits],
             onChanged: (value) => onCalculatePercent(),
             onFieldSubmitted: (value) => onCalculatePercent(),
           ),
@@ -238,7 +230,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             label: 'Gram: ',
             controller: earningRateGramTextEditingController,
             size: Size((size.width * 0.08), 40),
-            inputFormatters: inputFormattersDouble,
+            inputFormatters: [inputFormatDouble],
             onChanged: (value) => onCalculateGram(),
             onFieldSubmitted: (value) => onCalculateGram(),
           ),
@@ -322,7 +314,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             label: 'Adedi: ',
             controller: pieceTextEditingController,
             size: Size((size.width * 0.04), 40),
-            inputFormatters: inputFormattersOnlyDigits,
+            inputFormatters: [inputFormatOnlyDigits],
             onChanged: (value) {
               setState(() {
                 pieceTextEditingController;
