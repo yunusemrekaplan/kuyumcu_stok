@@ -70,11 +70,17 @@ class _GoldProductsInventoryScreenState
                         color: secondColor,
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: buildDataTable(context),
+                      child: ScrollbarTheme(
+                        data: ScrollbarThemeData(
+                          thumbColor: MaterialStateProperty.all<Color>(Colors.blueGrey),
+                          trackColor: MaterialStateProperty.all<Color>(Colors.green),
+                        ),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: buildDataTable(context),
+                          ),
                         ),
                       ),
                     ),
