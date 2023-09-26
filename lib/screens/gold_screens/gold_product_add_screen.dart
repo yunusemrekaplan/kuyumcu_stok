@@ -36,15 +36,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   late TextEditingController gramController;
   late TextEditingController salesGramsController;
   late TextEditingController costController;
-
   late ButtonStyles buttonStyles;
+
   Color cursorColor = Colors.white;
-  List<TextInputFormatter> inputFormattersDouble = <TextInputFormatter>[
-    inputFormatDouble,
-  ];
-  List<TextInputFormatter> inputFormattersOnlyDigits = <TextInputFormatter>[
-    inputFormatOnlyDigits,
-  ];
 
   _GoldProductAddScreenState() {
     buttonStyles = ButtonStyles();
@@ -123,7 +117,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    Adet:',
         formWidget: buildTextFormField(
           controller: pieceController,
-          inputFormatters: inputFormattersOnlyDigits,
+          inputFormatters: [inputFormatOnlyDigits],
           onChanged: (value) {
             setState(() {
               pieceController;
@@ -155,7 +149,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    Saflık Oranı:',
         formWidget: buildTextFormField(
           controller: purityRateController,
-          inputFormatters: inputFormattersDouble,
+          inputFormatters: [inputFormatDouble],
           onChanged: (value) {
             setState(() {
               laborCostController;
@@ -169,7 +163,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    İşçilik:',
         formWidget: buildTextFormField(
           controller: laborCostController,
-          inputFormatters: inputFormattersDouble,
+          inputFormatters: [inputFormatDouble],
           onChanged: (value) {
             setState(() {
               laborCostController;
@@ -183,7 +177,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    Gram:',
         formWidget: buildTextFormField(
           controller: gramController,
-          inputFormatters: inputFormattersDouble,
+          inputFormatters: [inputFormatDouble],
           onChanged: (value) {
             setState(() {
               gramController;
@@ -196,7 +190,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    Satış Gramı:',
         formWidget: buildTextFormField(
           controller: salesGramsController,
-          inputFormatters: inputFormattersDouble,
+          inputFormatters: [inputFormatDouble],
           onChanged: (value) {
             setState(() {
               salesGramsController;
@@ -210,7 +204,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         label: '    Maliyet:',
         formWidget: buildTextFormField(
           controller: costController,
-          inputFormatters: inputFormattersDouble,
+          inputFormatters: [inputFormatDouble],
           onChanged: (value) {
             setState(() {
               costController;
@@ -439,53 +433,20 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   void onSaved() async {
     if (barcodeNo == '0000000000000') {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Barkod oluşturun!'),
-          actions: [
-            TextButton(
-              child: const Text('Tamam'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
+      buildSnackBar('Barkod oluşturun!', Colors.red);
     } else if (isVariablesEmpty()) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Boş alanları doldurun!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Tamam'),
-            ),
-          ],
-        ),
-      );
+      buildSnackBar('Boş alanları doldurun!', Colors.red);
     } else if (isCorrectFormat()) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Doğru formatta veri girin!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Tamam'),
-            ),
-          ],
-        ),
-      );
+      buildSnackBar('Doğru formatta veri girin!', Colors.red);
     } else {
-      /*showDialog(
+      showDialog(
           barrierDismissible: false,
           context: context,
           builder: (context) {
             return const Center(child: CircularProgressIndicator());
-          });*/
+          });
 
-      Map<String, dynamic> goldProductJson = GoldProduct(
+      GoldProduct product = GoldProduct(
         barcodeText: barcodeNo,
         piece: int.parse(pieceController.text),
         name: nameController.text,
@@ -497,28 +458,19 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         cost: double.parse(costController.text.replaceAll(',', '.')),
         salesGrams:
             double.parse(salesGramsController.text.replaceAll(',', '.')),
-      ).toJson();
+      );
 
       try {
-        GoldProductDbHelper().insert(goldProductJson).then(
-              (value) => {
-                GoldProductDbHelper().products.add(
-                      GoldProduct.fromJson(goldProductJson, value),
-                    ),
-              },
-            );
+        addProduct(product);
         ProductEntry productEntry = ProductEntry(
-          product: goldProductJson,
+          product: product.toJson(),
           enteredDate: DateTime.now(),
           piece: int.parse(pieceController.text),
         );
-        ProductEntryDbHelper().insert(productEntry.toJson()).then((value) => {
-              ProductEntryDbHelper()
-                  .entries
-                  .add(ProductEntry.fromJson(productEntry.toJson(), value)),
-              onRefresh(),
-              //Navigator.of(context).pop(),
-            });
+        addProductEntry(productEntry);
+        onRefresh();
+        Navigator.of(context).pop();
+        buildSnackBar('Ürün Eklendi!', Colors.green);
       } catch (e) {
         showDialog(
           context: context,
@@ -535,6 +487,38 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         );
       }
     }
+  }
+
+  void addProduct(GoldProduct product) async {
+    int productId = await GoldProductDbHelper().insert(product.toJson());
+    GoldProductDbHelper()
+        .products
+        .add(GoldProduct.fromJson(product.toJson(), productId));
+  }
+
+  void addProductEntry(ProductEntry productEntry) async {
+    int productEntryId = await ProductEntryDbHelper().insert(productEntry.toJson());
+    ProductEntryDbHelper()
+        .entries
+        .add(ProductEntry.fromJson(productEntry.toJson(), productEntryId));
+  }
+
+  void buildSnackBar(String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 1000),
+        backgroundColor: backgroundColor,
+        content: Text(
+          message,
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+      ),
+    );
   }
 
   void onRefresh() {
