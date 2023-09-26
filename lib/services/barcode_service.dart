@@ -1,9 +1,8 @@
-import 'dart:io';
+// Bu dosyada barkod oluşturma işlemleri yapılıyor.
 import 'dart:math';
-import 'dart:typed_data';
-
-import 'package:aspose_barcode_cloud/api.dart' as barcode;
-import 'package:kuyumcu_stok/model/barcode.dart';
+import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+// import 'package:aspose_barcode_cloud/api.dart' as barcode;
+// import 'package:kuyumcu_stok/model/barcode.dart';
 
 class BarcodeService {
   static const String firstCode = '978';
@@ -29,38 +28,15 @@ class BarcodeService {
 
     int checkDigit = (sum % 10 == 0) ? 0 : (10-sum % 10);
 
-    return res + checkDigit.toString();
+    res += checkDigit.toString();
+
+    GoldProductDbHelper().products.where((element) => element.barcodeText == res).isEmpty ? res : generateCode();
+
+    return res;
   }
+}
 
-  /*// Barkod numarası oluşturma algoritması
-  static String generateCode() {
-    String res = '';
-    int sum = 0;
-
-    var random = Random();
-
-
-    res += '0';
-    sum += int.parse('0') * 3;
-
-    for(int i=1; i<7; i++) {
-      int temp = random.nextInt(9);
-      res += numbers[temp];
-      if(i % 2 == 0) {
-        sum += int.parse(numbers[temp]) * 3;
-      }
-      else {
-        sum += int.parse(numbers[temp]);
-      }
-    }
-
-    int checkDigit = (sum % 10 == 0) ? 0 : (10-sum % 10);
-    print(res);
-    print(checkDigit);
-    return res + checkDigit.toString();
-  }*/
-
-  // Isbn barkodu oluşturan fonksiyon
+/*// Isbn barkodu oluşturan fonksiyon
   static Future<Barcode> generateBarcode(String code) async {
     //final isbnCode = generateCode();
     final fileName = '$code.png';
@@ -78,5 +54,4 @@ class BarcodeService {
     print("Generated image saved to $fileName");
 
     return Barcode(text: code, path: (filePath+fileName));
-  }
-}
+  }*/
