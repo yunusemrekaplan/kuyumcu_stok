@@ -9,7 +9,6 @@ import 'package:kuyumcu_stok/screens/gold_screens/gold_product_edit_screen.dart'
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
 import 'package:kuyumcu_stok/styles/decoration_styles.dart';
-import 'package:kuyumcu_stok/styles/text_styles.dart';
 import 'package:kuyumcu_stok/theme/theme.dart';
 import 'package:kuyumcu_stok/widgets/app_bar.dart';
 import 'package:kuyumcu_stok/widgets/my_drawer.dart';
@@ -29,8 +28,8 @@ class _GoldProductsInventoryScreenState
     extends State<GoldProductsInventoryScreen> {
   late List<GoldProduct> products;
   late TextEditingController searchController;
-
   late ButtonStyles buttonStyles;
+  late Size size;
 
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
@@ -44,18 +43,19 @@ class _GoldProductsInventoryScreenState
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: appBar,
       drawer: const MyDrawer(),
       backgroundColor: backgroundColor,
       body: Column(
         children: [
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: size.height * 0.03,
           ),
           SizedBox(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height - 150,
+            height: size.height * 0.785,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -143,8 +143,8 @@ class _GoldProductsInventoryScreenState
         child: TextFormField(
           controller: searchController,
           style: const TextStyle(
-            fontSize: 20,
-            height: 1,
+            fontSize: 22,
+            height: 1.2,
             color: Colors.white,
           ),
           decoration: InputDecoration(
@@ -198,10 +198,7 @@ class _GoldProductsInventoryScreenState
     return DataCell(
       Text(
         cell,
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-        ),
+        style: buildDataCellTextStyle(),
       ),
       onTap: () {
         Clipboard.setData(ClipboardData(text: cell));
@@ -219,10 +216,7 @@ class _GoldProductsInventoryScreenState
     return DataCell(
       Text(
         cell,
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-        ),
+        style: buildDataCellTextStyle(),
       ),
     );
   }
@@ -279,7 +273,7 @@ class _GoldProductsInventoryScreenState
       },
       icon: const Icon(Icons.delete),
       color: Colors.red,
-      iconSize: 26,
+      iconSize: size.height * 0.038,
     );
   }
 
@@ -296,7 +290,7 @@ class _GoldProductsInventoryScreenState
       },
       icon: const Icon(Icons.edit),
       color: Colors.blue,
-      iconSize: 26,
+      iconSize: size.height * 0.038,
     );
   }
 
@@ -307,7 +301,7 @@ class _GoldProductsInventoryScreenState
       },
       icon: const Icon(Icons.print),
       color: Colors.white70,
-      iconSize: 26,
+      iconSize: size.height * 0.038,
     );
   }
 
@@ -316,7 +310,7 @@ class _GoldProductsInventoryScreenState
       onPressed: () {},
       icon: const Icon(Icons.add_box_outlined),
       color: Colors.green,
-      iconSize: 26,
+      iconSize: size.height * 0.038,
     );
   }
 
@@ -325,7 +319,7 @@ class _GoldProductsInventoryScreenState
       onPressed: () {},
       icon: const Icon(Icons.remove_circle_outline),
       color: Colors.red[600],
-      iconSize: 26,
+      iconSize: size.height * 0.038,
     );
   }
 
@@ -340,7 +334,7 @@ class _GoldProductsInventoryScreenState
         },
         child: Text(
           'Stok Ekle',
-          style: TextStyles.buildButtonTextStyle(),
+          style: buildButtonTextStyle(),
         ),
       ),
     );
@@ -359,7 +353,7 @@ class _GoldProductsInventoryScreenState
         },
         child: Text(
           'Stok Dışı',
-          style: TextStyles.buildButtonTextStyle(),
+          style: buildButtonTextStyle(),
         ),
       ),
     );
@@ -378,15 +372,29 @@ class _GoldProductsInventoryScreenState
         },
         child: Text(
           'Stokta',
-          style: TextStyles.buildButtonTextStyle(),
+          style: buildButtonTextStyle(),
         ),
       ),
     );
   }
 
   TextStyle buildDataColumnTextStyle() {
-    return const TextStyle(
-      fontSize: 22,
+    return TextStyle(
+      fontSize: size.height * 0.033,
+      color: Colors.white,
+    );
+  }
+
+  TextStyle buildDataCellTextStyle() {
+    return TextStyle(
+      fontSize: size.height * 0.03,
+      color: Colors.white,
+    );
+  }
+
+  TextStyle buildButtonTextStyle() {
+    return TextStyle(
+      fontSize: size.height * 0.03,
       color: Colors.white,
     );
   }
@@ -455,10 +463,10 @@ class _GoldProductsInventoryScreenState
       } else if (columnIndex == 3) {
         if (ascending) {
           products.sort(
-              (a, b) => a.carat.intDefinition.compareTo(b.carat.intDefinition));
+                  (a, b) => a.carat.intDefinition.compareTo(b.carat.intDefinition));
         } else {
           products.sort(
-              (a, b) => b.carat.intDefinition.compareTo(a.carat.intDefinition));
+                  (a, b) => b.carat.intDefinition.compareTo(a.carat.intDefinition));
         }
       } else if (columnIndex == 4) {
         if (ascending) {
@@ -499,12 +507,12 @@ class _GoldProductsInventoryScreenState
       products = products
           .where(
             (e) =>
-                e.barcodeText.contains(value) ||
-                e.name
-                    .toString()
-                    .toLowerCase()
-                    .contains(value.toString().toLowerCase()),
-          )
+        e.barcodeText.contains(value) ||
+            e.name
+                .toString()
+                .toLowerCase()
+                .contains(value.toString().toLowerCase()),
+      )
           .toList();
     });
   }
