@@ -22,7 +22,7 @@ class GoldProductSaleScreen extends StatefulWidget {
 }
 
 class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
-  late GoldProduct product;
+  GoldProduct? product;
   late List<GoldProduct> products;
   late int productIndex;
 
@@ -791,16 +791,16 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
             soldGramTxt = '. . . . . . .';
             pieceTextEditingController.text = '';
             product = GoldProductDbHelper().products[i];
-            nameCellTxt = product.name.substring(
-                0, product.name.length <= 20 ? product.name.length : 20);
-            pieceCellTxt = product.piece.toString();
-            gramCellTxt = OutputFormatters.buildNumberFormat2f(product.gram);
+            nameCellTxt = product!.name.substring(
+                0, product!.name.length <= 20 ? product!.name.length : 20);
+            pieceCellTxt = product!.piece.toString();
+            gramCellTxt = OutputFormatters.buildNumberFormat2f(product!.gram);
             salesGramsCellTxt =
-                OutputFormatters.buildNumberFormat2f(product.salesGrams);
+                OutputFormatters.buildNumberFormat2f(product!.salesGrams);
             CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
                   setState(() {
                     double costPrice =
-                        product.cost * CurrencyService.fineGoldSale;
+                        product!.cost * CurrencyService.fineGoldSale;
                     costPriceTxt =
                         '${OutputFormatters.buildNumberFormat0f(costPrice)} TL';
                     buildCurrencies(value);
@@ -846,12 +846,12 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     if (product != null) {
       isFun = 0;
       int? percent = int.tryParse(earningRateTLTextEditingController.text);
-      double costPrice = (product.cost * CurrencyService.fineGoldSale);
+      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
       if (percent != null) {
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent / 100));
         double temp = soldPrice / costPrice;
-        double gram = product.salesGrams * temp;
+        double gram = product!.salesGrams * temp;
         setState(() {
           earningRateGramTextEditingController.text =
               OutputFormatters.buildNumberFormat2f(gram);
@@ -868,13 +868,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       isFun = 1;
       double? gram = double.tryParse(
           earningRateGramTextEditingController.text.replaceAll(',', '.'));
-      double costPrice = (product.cost * CurrencyService.fineGoldSale);
+      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
       if (gram != null) {
-        double gramDiff = gram - product.salesGrams;
+        double gramDiff = gram - product!.salesGrams;
         double? percent = gramDiff == 0
             ? 0
             : double.tryParse(
-                (100 / (product.salesGrams / gramDiff)).toString());
+                (100 / (product!.salesGrams / gramDiff)).toString());
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent! / 100));
         setState(() {
@@ -892,13 +892,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
 
   void onChangedSalePrice(value) {
     if (product != null && value.isNotEmpty) {
-      double costPrice = product.cost * CurrencyService.fineGoldSale;
+      double costPrice = product!.cost * CurrencyService.fineGoldSale;
       double price = double.parse(Converters.doubleNumToTr(value));
       double diff = price - costPrice;
       String percentString = (100 / (costPrice / diff)).toString();
       double percent = double.parse(percentString);
-      double profit = (product.salesGrams * percent / 100);
-      double newSalesGram = (product.salesGrams + profit);
+      double profit = (product!.salesGrams * percent / 100);
+      double newSalesGram = (product!.salesGrams + profit);
 
       if (percent != 0) {
         setState(() {
@@ -907,7 +907,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       } else {
         setState(() {
           soldGramTxt =
-              OutputFormatters.buildNumberFormat3f(product.salesGrams);
+              OutputFormatters.buildNumberFormat3f(product!.salesGrams);
         });
       }
     }
@@ -938,7 +938,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           ],
         ),
       );
-    } else if (piece! > product.piece) {
+    } else if (piece! > product!.piece) {
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -955,20 +955,20 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         ),
       );
     } else {
-      product.piece -= piece;
+      product!.piece -= piece;
 
-      double costPrice = (product.cost * CurrencyService.fineGoldSale);
+      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
       soldPrice =
           double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
       soldGram = double.parse(soldGramTxt.replaceAll(',', '.'));
       earnedProfitTL = soldPrice - costPrice;
-      earnedProfitGram = soldGram - product.salesGrams;
+      earnedProfitGram = soldGram - product!.salesGrams;
 
-      GoldProductDbHelper().update(product.toJson(), product.id).then((value) {
-        GoldProductDbHelper().products[productIndex] = product;
+      GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) {
+        GoldProductDbHelper().products[productIndex] = product!;
 
         ProductSale productSale = ProductSale(
-          product: product.toJson(),
+          product: product!.toJson(),
           soldDate: DateTime.now(),
           piece: piece,
           costPrice: costPrice,
@@ -978,7 +978,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           earnedProfitGram: earnedProfitGram,
         );
 
-        print(productSale.toJson());
+        // print(productSale.toJson());
         setState(() {
           nameCellTxt = '';
           pieceCellTxt = '';
