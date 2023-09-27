@@ -15,6 +15,8 @@ extension ToString on MyError {
         return 'DataBase Update Error';
       case MyError.dataBaseDelete:
         return 'DataBase Delete Error';
+      case MyError.printer:
+        return 'Printer Error';
       case MyError.unknownError:
         return 'Unknown Error';
     }

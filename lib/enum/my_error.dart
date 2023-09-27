@@ -6,4 +6,5 @@ enum MyError {
   dataBaseInsert,
   dataBaseUpdate,
   dataBaseDelete,
+  printer,
 }

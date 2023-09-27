@@ -15,6 +15,7 @@ import 'package:kuyumcu_stok/widgets/my_drawer.dart';
 import 'package:barcode/barcode.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
@@ -31,9 +32,15 @@ class _GoldProductsInventoryScreenState
   late ButtonStyles buttonStyles;
   late Size size;
 
+  String barcodeFileName = 'barcode.pdf';
+
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
   bool isStock = false;
+
+  Barcode bc = Barcode.isbn();
+  final pdf = pw.Document();
+  final pageFormat = const PdfPageFormat(68, 36);
 
   _GoldProductsInventoryScreenState() {
     products = GoldProductDbHelper().products;
@@ -302,8 +309,13 @@ class _GoldProductsInventoryScreenState
 
   IconButton buildPrinterButton(GoldProduct e) {
     return IconButton(
-      onPressed: () {
-        buildBarcode(e);
+      onPressed: () async{
+        try {
+          await buildBarcode(e);
+          await printBarcode();
+        } on Exception catch (e) {
+          print(e.toString());
+        }
       },
       icon: const Icon(Icons.print),
       color: Colors.white70,
@@ -405,9 +417,7 @@ class _GoldProductsInventoryScreenState
     );
   }
 
-  void buildBarcode(GoldProduct product) async {
-    /// Create the Barcode
-    Barcode bc = Barcode.isbn();
+  Future<void> buildBarcode(GoldProduct product) async {
     String data = product.barcodeText;
 
     final svg = bc.toSvg(
@@ -416,9 +426,6 @@ class _GoldProductsInventoryScreenState
       height: 24,
       fontHeight: 6,
     );
-
-    final pdf = pw.Document();
-    const pageFormat = PdfPageFormat(68, 36);
 
     pdf.addPage(
       pw.Page(
@@ -439,8 +446,18 @@ class _GoldProductsInventoryScreenState
     );
 
     // final file = File('${product.barcodeText}.pdf');
-    final file = File('barcode.pdf');
-    await file.writeAsBytes(await pdf.save());
+    final file = File(barcodeFileName);
+    //await file.writeAsBytes(await pdf.save());
+  }
+
+  Future<void> printBarcode() async {
+    // final image = pw.MemoryImage(
+    //   File('example.pdf').readAsBytesSync(),
+    // );
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.document.documentID,
+      name: barcodeFileName,
+    );
   }
 
   void _sortData(int columnIndex, bool ascending) {
