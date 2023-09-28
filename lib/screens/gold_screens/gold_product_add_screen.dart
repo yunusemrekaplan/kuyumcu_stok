@@ -52,7 +52,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     gramController = TextEditingController();
     salesGramsController = TextEditingController();
     costController = TextEditingController();
-    purityRateController.text = OutputFormatters.buildNumberFormat1f(
+    purityRateController.text = OutputFormatters.buildNumberFormat3f(
         dropdownValue.purityRateDefinition);
   }
 
@@ -184,6 +184,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               gramController;
               buttonStyles;
             });
+            buildCalculate();
           },
         ),
       ),
@@ -197,7 +198,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               salesGramsController;
               buttonStyles;
             });
-            buildCalculate();
           },
         ),
       ),
@@ -333,7 +333,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         items: buildDropdownMenuItemList(),
         onChanged: (Carat? newValue) {
           dropdownValue = newValue!;
-          purityRateController.text = OutputFormatters.buildNumberFormat1f(
+          purityRateController.text = OutputFormatters.buildNumberFormat3f(
               dropdownValue.purityRateDefinition);
           setState(() {
             purityRateController;
@@ -541,16 +541,15 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   void buildCalculate() {
     if (purityRateController.text.isNotEmpty &&
-        salesGramsController.text.isNotEmpty &&
+        gramController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
         double cost = Calculator.calculateCostPrice(
               double.parse(purityRateController.text.replaceAll(",", ".")),
               // salesGran vs gram
-              double.parse(salesGramsController.text.replaceAll(",", ".")),
+              double.parse(gramController.text.replaceAll(",", ".")),
               double.parse(laborCostController.text.replaceAll(",", ".")),
-            ) /
-            1000;
+            );
         costController.text = OutputFormatters.buildNumberFormat3f(cost);
       });
     }

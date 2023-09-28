@@ -851,7 +851,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent / 100));
         double temp = soldPrice / costPrice;
-        double gram = product!.salesGrams * temp;
+        double gram = product!.gram * temp;
         setState(() {
           earningRateGramTextEditingController.text =
               OutputFormatters.buildNumberFormat2f(gram);
@@ -870,11 +870,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           earningRateGramTextEditingController.text.replaceAll(',', '.'));
       double costPrice = (product!.cost * CurrencyService.fineGoldSale);
       if (gram != null) {
-        double gramDiff = gram - product!.salesGrams;
+        double gramDiff = gram - product!.gram;
         double? percent = gramDiff == 0
             ? 0
             : double.tryParse(
-                (100 / (product!.salesGrams / gramDiff)).toString());
+                (100 / (product!.gram / gramDiff)).toString());
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent! / 100));
         setState(() {
@@ -897,8 +897,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       double diff = price - costPrice;
       String percentString = (100 / (costPrice / diff)).toString();
       double percent = double.parse(percentString);
-      double profit = (product!.salesGrams * percent / 100);
-      double newSalesGram = (product!.salesGrams + profit);
+      double profit = (product!.gram * percent / 100);
+      double newSalesGram = (product!.gram + profit);
 
       if (percent != 0) {
         setState(() {
@@ -962,7 +962,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
       soldGram = double.parse(soldGramTxt.replaceAll(',', '.'));
       earnedProfitTL = soldPrice - costPrice;
-      earnedProfitGram = soldGram - product!.salesGrams;
+      earnedProfitGram = soldGram - product!.gram;
 
       GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) {
         GoldProductDbHelper().products[productIndex] = product!;
@@ -989,7 +989,6 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           earningRateTLTextEditingController.text = '';
           earningRateGramTextEditingController.text = '';
           saleTLTextEditingController.text = '';
-          salesGramsCellTxt = '';
           pieceTextEditingController.text = '';
         });
 

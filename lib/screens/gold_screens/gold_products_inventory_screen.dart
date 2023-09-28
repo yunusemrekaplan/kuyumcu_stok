@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
@@ -314,7 +313,8 @@ class _GoldProductsInventoryScreenState
           await buildBarcode(e);
           await printBarcode();
         } on Exception catch (e) {
-          print(e.toString());
+          e;
+          // print(e.toString());
         }
       },
       icon: const Icon(Icons.print),
@@ -444,16 +444,9 @@ class _GoldProductsInventoryScreenState
         ),
       ),
     );
-
-    // final file = File('${product.barcodeText}.pdf');
-    final file = File(barcodeFileName);
-    //await file.writeAsBytes(await pdf.save());
   }
 
   Future<void> printBarcode() async {
-    // final image = pw.MemoryImage(
-    //   File('example.pdf').readAsBytesSync(),
-    // );
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async => pdf.document.documentID,
       name: barcodeFileName,
