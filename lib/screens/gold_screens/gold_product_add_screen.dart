@@ -132,7 +132,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         formWidget: buildTextFormField(
           controller: nameController,
           inputFormatters: [
-            LengthLimitingTextInputFormatter(35),
+            LengthLimitingTextInputFormatter(20),
           ],
           onChanged: (value) {
             setState(() {
