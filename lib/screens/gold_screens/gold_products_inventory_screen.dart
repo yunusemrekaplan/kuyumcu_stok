@@ -41,16 +41,9 @@ class _GoldProductsInventoryScreenState
 
   Barcode bc = Barcode.isbn();
   var pdf = pw.Document();
-  late Uint8List bytes;
   final pageFormat = const PdfPageFormat(270, 36);
-  late File file;
 
   _GoldProductsInventoryScreenState() {
-    file = File(barcodeFileName);
-    pdf.save().then((value) {
-      bytes = value;
-      file.writeAsBytes(bytes);
-    });
     products = GoldProductDbHelper().products;
     buttonStyles = ButtonStyles();
     searchController = TextEditingController();
@@ -427,8 +420,6 @@ class _GoldProductsInventoryScreenState
 
   Future<void> buildBarcode(GoldProduct product) async {
     String data = product.barcodeText;
-    pdf = pw.Document();
-
 
     final svg = bc.toSvg(
       data,
@@ -442,12 +433,34 @@ class _GoldProductsInventoryScreenState
         pageFormat: pageFormat,
         build: (pw.Context context) => pw.Row(
           children: [
-            pw.SvgImage(svg: svg),
-            pw.SizedBox(width: 2),
+            pw.SizedBox(
+              width: 56,
+              height: 30,
+              child: pw.SvgImage(svg: svg),
+            ),
+            pw.SizedBox(width: 15),
+            pw.Column(
+              children: [
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  '${product.gram} GR',
+                  style: const pw.TextStyle(
+                    fontSize: 6,
+                  ),
+                ),
+                pw.Text(
+                  '${product.salesGrams} SGR',
+                  style: const pw.TextStyle(
+                    fontSize: 6,
+                  ),
+                ),
+              ],
+            ),
+            pw.SizedBox(width: 10),
             pw.Text(
-              '${product.gram} GR    ${product.purityRate}',
+              '${product.carat.intDefinition}K',
               style: const pw.TextStyle(
-                fontSize: 8,
+                fontSize: 6,
               ),
             ),
           ],
