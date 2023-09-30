@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:kuyumcu_stok/model/gold_product.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class GoldProductDbHelper {
@@ -13,14 +16,17 @@ class GoldProductDbHelper {
   late Database _db;
   late List<GoldProduct> products;
 
-  String path = 'kuyumcu.db';
+  String dbName = 'kuyumcu.db';
+  late String path;
   String tableName = "gold_products";
 
   Future<void> open() async {
-    products = [];
-    sqfliteFfiInit();
+    Directory directory = await getApplicationDocumentsDirectory();
 
-    _db = await databaseFactoryFfi.openDatabase(path);
+    path = '${directory.path}/$dbName';
+    products = [];
+
+    _db = await databaseFactoryFfi.openDatabase(dbName);
     //await _db.execute('DROP TABLE gold_products');
     await _createTable();
     await GoldProductDbHelper().queryAllRows().then((value) {

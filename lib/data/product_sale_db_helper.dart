@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:kuyumcu_stok/model/product_sale.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class ProductSaleDbHelper {
@@ -13,14 +16,18 @@ class ProductSaleDbHelper {
   late Database _db;
   late List<ProductSale> sales;
 
-  String path = 'kuyumcu.db';
+  String dbName = 'kuyumcu.db';
+  late String path;
   String tableName = "product_sales";
 
   Future<void> open() async {
-    sales = [];
-    sqfliteFfiInit();
+    Directory directory = await getApplicationDocumentsDirectory();
 
-    _db = await databaseFactoryFfi.openDatabase(path);
+    path = '${directory.path}/$dbName';
+
+    sales = [];
+
+    _db = await databaseFactoryFfi.openDatabase(dbName);
     //await _db.execute('DROP TABLE product_sales');
     await _createTable();
     await ProductSaleDbHelper().queryAllRows().then((value) {

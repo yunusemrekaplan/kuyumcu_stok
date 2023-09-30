@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/data/product_entry_db_helper.dart';
@@ -12,6 +14,8 @@ import 'package:kuyumcu_stok/screens/gold_screens/gold_product_add_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_sales_screen.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_products_inventory_screen.dart';
 import 'package:kuyumcu_stok/screens/home_screen.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:kuyumcu_stok/enum/routes.dart';
 import 'package:kuyumcu_stok/options/window_options.dart';
@@ -25,6 +29,9 @@ Future<void> main() async {
     await windowManager.show();
     await windowManager.focus();
   });
+
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
 
   await GoldProductDbHelper().open();
   await ProductEntryDbHelper().open();
@@ -47,6 +54,7 @@ class MyApp extends StatelessWidget {
         ),
       );
     };*/
+
     Routes initialRoute = Routes.homeScreen;
 
     return MaterialApp(

@@ -529,7 +529,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         pieceController.text = '';
         nameController.text = '';
         dropdownValue = Carat.twentyFour;
-        purityRateController.text = OutputFormatters.buildNumberFormat1f(
+        purityRateController.text = OutputFormatters.buildNumberFormat3f(
             dropdownValue.purityRateDefinition);
         laborCostController.text = '';
         gramController.text = '';
