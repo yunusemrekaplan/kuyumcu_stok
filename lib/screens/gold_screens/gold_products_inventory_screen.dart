@@ -328,7 +328,7 @@ class _GoldProductsInventoryScreenState
     return IconButton(
       onPressed: () {},
       icon: const Icon(Icons.add_box_outlined),
-      color: Colors.green,
+      // color: Colors.green,
       iconSize: size.height * 0.038,
     );
   }
@@ -337,7 +337,7 @@ class _GoldProductsInventoryScreenState
     return IconButton(
       onPressed: () {},
       icon: const Icon(Icons.remove_circle_outline),
-      color: Colors.red[600],
+      // color: Colors.red[600],
       iconSize: size.height * 0.038,
     );
   }

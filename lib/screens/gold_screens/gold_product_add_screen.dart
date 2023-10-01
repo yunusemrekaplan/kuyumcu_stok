@@ -52,8 +52,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
     gramController = TextEditingController();
     salesGramsController = TextEditingController();
     costController = TextEditingController();
-    purityRateController.text = OutputFormatters.buildNumberFormat3f(
-        dropdownValue.purityRateDefinition);
+    purityRateController.text =
+        OutputFormatters.buildNumberFormat3f(dropdownValue.purityRateDefinition);
   }
 
   @override
@@ -255,8 +255,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
               child: ElevatedButton(
                 style: buttonStyles.buildBasicButtonStyle(),
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context,
-                      '/gold-products-inventory-screen', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/gold-products-inventory-screen', (route) => false);
                 },
                 child: Text(
                   ' Geri Dön ',
@@ -333,8 +333,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         items: buildDropdownMenuItemList(),
         onChanged: (Carat? newValue) {
           dropdownValue = newValue!;
-          purityRateController.text = OutputFormatters.buildNumberFormat3f(
-              dropdownValue.purityRateDefinition);
+          purityRateController.text =
+              OutputFormatters.buildNumberFormat3f(dropdownValue.purityRateDefinition);
           setState(() {
             purityRateController;
             buttonStyles;
@@ -422,11 +422,9 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
   }
 
   bool isCorrectFormat() {
-    return double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
-            null ||
+    return double.tryParse(purityRateController.text.replaceAll(",", ".")) == null ||
         int.tryParse(pieceController.text) == null ||
-        double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
-            null ||
+        double.tryParse(laborCostController.text.replaceAll(",", ".")) == null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
         double.tryParse(costController.text.replaceAll(",", ".")) == null ||
         double.tryParse(salesGramsController.text.replaceAll(",", ".")) == null;
@@ -453,12 +451,10 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         name: nameController.text,
         carat: dropdownValue,
         gram: double.parse(gramController.text.replaceAll(',', '.')),
-        purityRate:
-            double.parse(purityRateController.text.replaceAll(",", ".")),
+        purityRate: double.parse(purityRateController.text.replaceAll(",", ".")),
         laborCost: double.parse(laborCostController.text.replaceAll(',', '.')),
         cost: double.parse(costController.text.replaceAll(',', '.')),
-        salesGrams:
-            double.parse(salesGramsController.text.replaceAll(',', '.')),
+        salesGrams: double.parse(salesGramsController.text.replaceAll(',', '.')),
       );
 
       try {
@@ -492,9 +488,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
 
   void addProduct(GoldProduct product) async {
     int productId = await GoldProductDbHelper().insert(product.toJson());
-    GoldProductDbHelper()
-        .products
-        .add(GoldProduct.fromJson(product.toJson(), productId));
+    GoldProductDbHelper().products.add(GoldProduct.fromJson(product.toJson(), productId));
   }
 
   void addProductEntry(ProductEntry productEntry) async {
@@ -529,8 +523,8 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         pieceController.text = '';
         nameController.text = '';
         dropdownValue = Carat.twentyFour;
-        purityRateController.text = OutputFormatters.buildNumberFormat3f(
-            dropdownValue.purityRateDefinition);
+        purityRateController.text =
+            OutputFormatters.buildNumberFormat3f(dropdownValue.purityRateDefinition);
         laborCostController.text = '';
         gramController.text = '';
         costController.text = '';
@@ -545,11 +539,11 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         laborCostController.text.isNotEmpty) {
       setState(() {
         double cost = Calculator.calculateCostPrice(
-              double.parse(purityRateController.text.replaceAll(",", ".")),
-              // salesGran vs gram
-              double.parse(gramController.text.replaceAll(",", ".")),
-              double.parse(laborCostController.text.replaceAll(",", ".")),
-            );
+          double.parse(purityRateController.text.replaceAll(",", ".")),
+          // salesGran vs gram
+          double.parse(gramController.text.replaceAll(",", ".")),
+          double.parse(laborCostController.text.replaceAll(",", ".")),
+        );
         costController.text = OutputFormatters.buildNumberFormat3f(cost);
       });
     }

@@ -23,8 +23,7 @@ class GoldProductEditScreen extends StatefulWidget {
   GoldProductEditScreen({super.key, required this.product});
 
   @override
-  State<GoldProductEditScreen> createState() =>
-      _GoldProductEditScreenState(product: product);
+  State<GoldProductEditScreen> createState() => _GoldProductEditScreenState(product: product);
 }
 
 class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
@@ -55,13 +54,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
     gramController = TextEditingController();
     salesGramsController = TextEditingController();
     costController = TextEditingController();
-    purityRateController.text = OutputFormatters.buildNumberFormat1f(
-        dropdownValue.purityRateDefinition);
     nameController.text = product.name.toString();
-    purityRateController.text = OutputFormatters.buildNumberFormat1f(product.purityRate);
-    laborCostController.text = OutputFormatters.buildNumberFormat1f(product.laborCost);
-    gramController.text = OutputFormatters.buildNumberFormat3f(product.gram);
-    salesGramsController.text = OutputFormatters.buildNumberFormat3f(product.salesGrams);
+    purityRateController.text = OutputFormatters.buildNumberFormat3f(product.purityRate);
+    laborCostController.text = OutputFormatters.buildNumberFormat3f(product.laborCost);
+    gramController.text = OutputFormatters.buildNumberFormat2f(product.gram);
+    salesGramsController.text = OutputFormatters.buildNumberFormat2f(product.salesGrams);
     costController.text = OutputFormatters.buildNumberFormat3f(product.cost);
   }
 
@@ -227,8 +224,8 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
               child: ElevatedButton(
                 style: buttonStyles.buildBasicButtonStyle(),
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context,
-                      '/gold-products-inventory-screen', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/gold-products-inventory-screen', (route) => false);
                 },
                 child: Text(
                   ' Geri Dön ',
@@ -305,8 +302,8 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         items: buildDropdownMenuItemList(),
         onChanged: (Carat? newValue) {
           dropdownValue = newValue!;
-          purityRateController.text = OutputFormatters.buildNumberFormat1f(
-              dropdownValue.purityRateDefinition);
+          purityRateController.text =
+              OutputFormatters.buildNumberFormat1f(dropdownValue.purityRateDefinition);
           setState(() {
             purityRateController;
             buttonStyles;
@@ -406,10 +403,11 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         laborCostController.text.isNotEmpty) {
       setState(() {
         costController.text = OutputFormatters.buildNumberFormat3f(Calculator.calculateCostPrice(
-          double.parse(purityRateController.text.replaceAll(",", ".")),
-          double.parse(salesGramsController.text.replaceAll(",", ".")),
-          double.parse(laborCostController.text.replaceAll(",", ".")),
-        ) / 1000);
+              double.parse(purityRateController.text.replaceAll(",", ".")),
+              double.parse(salesGramsController.text.replaceAll(",", ".")),
+              double.parse(laborCostController.text.replaceAll(",", ".")),
+            ) /
+            1000);
       });
     }
   }
@@ -445,21 +443,15 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
       product.name = nameController.text;
       product.carat = dropdownValue;
       product.gram = double.parse(gramController.text.replaceAll(',', '.'));
-      product.laborCost =
-          double.parse(laborCostController.text.replaceAll(',', '.'));
+      product.laborCost = double.parse(laborCostController.text.replaceAll(',', '.'));
       product.cost = double.parse(costController.text.replaceAll(',', '.'));
-      product.purityRate =
-          double.parse(purityRateController.text.replaceAll(',', '.'));
+      product.purityRate = double.parse(purityRateController.text.replaceAll(',', '.'));
 
-      GoldProductDbHelper()
-          .update(product.toJson(), product.id)
-          .then((value) => {
-                GoldProductDbHelper()
-                    .getProductById(product.id)
-                    .then((value) => print(value)),
-                Navigator.pushNamedAndRemoveUntil(context,
-                    '/gold-products-inventory-screen', (route) => false),
-              });
+      GoldProductDbHelper().update(product.toJson(), product.id).then((value) => {
+            GoldProductDbHelper().getProductById(product.id).then((value) => print(value)),
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/gold-products-inventory-screen', (route) => false),
+          });
     }
   }
 
@@ -472,10 +464,8 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         costController.text.isEmpty) {
       return 0;
     }
-    if (double.tryParse(purityRateController.text.replaceAll(",", ".")) ==
-            null ||
-        double.tryParse(laborCostController.text.replaceAll(",", ".")) ==
-            null ||
+    if (double.tryParse(purityRateController.text.replaceAll(",", ".")) == null ||
+        double.tryParse(laborCostController.text.replaceAll(",", ".")) == null ||
         double.tryParse(gramController.text.replaceAll(",", ".")) == null ||
         double.tryParse(costController.text.replaceAll(",", ".")) == null) {
       return 1;
