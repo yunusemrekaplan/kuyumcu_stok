@@ -26,8 +26,8 @@ class GoldProductDbHelper {
     path = '${directory.path}/$dbName';
     products = [];
 
-    _db = await databaseFactoryFfi.openDatabase(dbName);
-    //await _db.execute('DROP TABLE gold_products');
+    _db = await databaseFactoryFfi.openDatabase(path);
+    // await _db.execute('DROP TABLE gold_products');
     await _createTable();
     await GoldProductDbHelper().queryAllRows().then((value) {
       for (int i = 0; i < value.length; i++) {

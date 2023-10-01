@@ -27,8 +27,8 @@ class ProductSaleDbHelper {
 
     sales = [];
 
-    _db = await databaseFactoryFfi.openDatabase(dbName);
-    //await _db.execute('DROP TABLE product_sales');
+    _db = await databaseFactoryFfi.openDatabase(path);
+    // await _db.execute('DROP TABLE product_sales');
     await _createTable();
     await ProductSaleDbHelper().queryAllRows().then((value) {
       for (int i = 0; i < value.length; i++) {

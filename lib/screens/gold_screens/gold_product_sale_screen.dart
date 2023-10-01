@@ -873,8 +873,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         double gramDiff = gram - product!.gram;
         double? percent = gramDiff == 0
             ? 0
-            : double.tryParse(
-                (100 / (product!.gram / gramDiff)).toString());
+            : double.tryParse((100 / (product!.gram / gramDiff)).toString());
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent! / 100));
         setState(() {
@@ -923,37 +922,11 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         });
     int? piece = int.tryParse(pieceTextEditingController.text);
     if (isVariablesEmpty()) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Boş alanları doldurun!'),
-          actions: [
-            TextButton(
-              onPressed: () => {
-                Navigator.of(context).pop(),
-                Navigator.of(context).pop(),
-              },
-              child: const Text('Tamam'),
-            ),
-          ],
-        ),
-      );
+      Navigator.of(context).pop();
+      buildSnackBar('Boş Alanları Doldurun!!!', Colors.red);
     } else if (piece! > product!.piece) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Yeterli sayıda ürün bulunmamaktadır'),
-          actions: [
-            TextButton(
-              onPressed: () => {
-                Navigator.of(context).pop(),
-                Navigator.of(context).pop(),
-              },
-              child: const Text('Tamam'),
-            ),
-          ],
-        ),
-      );
+      Navigator.of(context).pop();
+      buildSnackBar('Yeterli sayıda ürün bulunmamaktadır!!!', Colors.red);
     } else {
       product!.piece -= piece;
 
@@ -964,7 +937,9 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       earnedProfitTL = soldPrice - costPrice;
       earnedProfitGram = soldGram - product!.gram;
 
-      GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) {
+      GoldProductDbHelper()
+          .update(product!.toJson(), product!.id)
+          .then((value) async {
         GoldProductDbHelper().products[productIndex] = product!;
 
         ProductSale productSale = ProductSale(
@@ -992,14 +967,34 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           pieceTextEditingController.text = '';
         });
 
-        ProductSaleDbHelper().insert(productSale.toJson()).then((value) {
+        await ProductSaleDbHelper().insert(productSale.toJson()).then((value) {
           ProductSaleDbHelper()
               .sales
               .add(ProductSale.fromJson(productSale.toJson(), value));
           Navigator.of(context).pop();
         });
+
+        buildSnackBar('Satış Tamamlandı', Colors.green);
       });
     }
+  }
+
+  void buildSnackBar(String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(milliseconds: 1000),
+        backgroundColor: backgroundColor,
+        content: Text(
+          message,
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        showCloseIcon: true,
+        closeIconColor: Colors.white,
+      ),
+    );
   }
 
   bool isVariablesEmpty() {
@@ -1008,6 +1003,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   }
 
   bool isSalable() {
-    return saleTLTextEditingController.text.isEmpty || pieceTextEditingController.text.isEmpty;
+    return saleTLTextEditingController.text.isEmpty ||
+        pieceTextEditingController.text.isEmpty;
   }
 }
