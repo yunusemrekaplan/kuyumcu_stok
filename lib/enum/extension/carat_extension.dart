@@ -11,6 +11,8 @@ extension ToPurityRate on Carat {
         return 0.750;
       case Carat.fourteen:
         return 0.585;
+      case Carat.eight:
+        return 0.333;
     }
   }
 }
@@ -26,6 +28,8 @@ extension ToInt on Carat {
         return 18;
       case Carat.fourteen:
         return 14;
+      case Carat.eight:
+        return 8;
     }
   }
 }
@@ -41,6 +45,8 @@ extension ToCarat on int {
         return Carat.eighteen;
       case 14:
         return Carat.fourteen;
+      case 8:
+        return Carat.eight;
       default:
         return null;
     }

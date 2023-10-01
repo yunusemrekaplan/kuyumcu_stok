@@ -3,4 +3,5 @@ enum Carat {
   twentyTwo,
   eighteen,
   fourteen,
+  eight,
 }

@@ -200,9 +200,9 @@ class _GoldProductsInventoryScreenState
       buildDataCell(e.piece.toString()),
       buildDataCell(name),
       buildDataCell(e.carat.intDefinition.toString()),
-      buildDataCell(OutputFormatters.buildNumberFormat1f(e.laborCost)),
-      buildDataCell(OutputFormatters.buildNumberFormat3f(e.gram)),
-      buildDataCell(OutputFormatters.buildNumberFormat3f(e.salesGrams)),
+      buildDataCell(OutputFormatters.buildNumberFormat3f(e.laborCost)),
+      buildDataCell(OutputFormatters.buildNumberFormat2f(e.gram)),
+      buildDataCell(OutputFormatters.buildNumberFormat2f(e.salesGrams)),
       buildDataCell(OutputFormatters.buildNumberFormat3f(e.cost)),
       buildActionsDataCell(context, e),
     ];

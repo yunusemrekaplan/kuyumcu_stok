@@ -1,8 +1,9 @@
-import 'dart:io';
-
-import 'package:kuyumcu_stok/model/gold_product.dart';
-import 'package:path_provider/path_provider.dart';
+import 'dart:io' as io;
+import 'package:path/path.dart' as p;
+import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:kuyumcu_stok/model/gold_product.dart';
 
 class GoldProductDbHelper {
   static final GoldProductDbHelper _instance = GoldProductDbHelper._internal();
@@ -16,19 +17,22 @@ class GoldProductDbHelper {
   late Database _db;
   late List<GoldProduct> products;
 
-  String dbName = 'kuyumcu.db';
-  late String path;
+  // String dbName = 'kuyumcu_stok_takibi.db';
   String tableName = "gold_products";
 
+
   Future<void> open() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-
-    path = '${directory.path}/$dbName';
     products = [];
+    final io.Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    String dbPath = p.join(appDocumentsDir.path, "databases", "kuyumcu_stok_takibi.db");
 
-    _db = await databaseFactoryFfi.openDatabase(path);
+    _db = await databaseFactory.openDatabase(dbPath);
+
+    print("Path: $dbPath");
+
     // await _db.execute('DROP TABLE gold_products');
     await _createTable();
+
     await GoldProductDbHelper().queryAllRows().then((value) {
       for (int i = 0; i < value.length; i++) {
         GoldProductDbHelper()

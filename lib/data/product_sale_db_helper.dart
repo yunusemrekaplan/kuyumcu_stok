@@ -1,8 +1,9 @@
-import 'dart:io';
-
-import 'package:kuyumcu_stok/model/product_sale.dart';
-import 'package:path_provider/path_provider.dart';
+import 'dart:io' as io;
+import 'package:path/path.dart' as p;
+import 'package:sqflite_common/sqlite_api.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:kuyumcu_stok/model/product_sale.dart';
 
 class ProductSaleDbHelper {
   static final ProductSaleDbHelper _instance = ProductSaleDbHelper._internal();
@@ -16,18 +17,15 @@ class ProductSaleDbHelper {
   late Database _db;
   late List<ProductSale> sales;
 
-  String dbName = 'kuyumcu.db';
-  late String path;
+  // String dbName = 'kuyumcu_stok_takibi.db';
   String tableName = "product_sales";
 
   Future<void> open() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-
-    path = '${directory.path}/$dbName';
-
     sales = [];
+    final io.Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    String dbPath = p.join(appDocumentsDir.path, "databases", "kuyumcu_stok_takibi.db");
 
-    _db = await databaseFactoryFfi.openDatabase(path);
+    _db = await databaseFactory.openDatabase(dbPath);
     // await _db.execute('DROP TABLE product_sales');
     await _createTable();
     await ProductSaleDbHelper().queryAllRows().then((value) {
