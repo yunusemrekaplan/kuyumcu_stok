@@ -36,7 +36,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   String pieceCellTxt = '';
   String gramCellTxt = '';
   String salesGramsCellTxt = '';
-  String costPriceTxt = '';
+  String costTxt = '';
   String soldGramTxt = '. . . . . . .';
 
   late double soldPrice;
@@ -530,14 +530,14 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       DataColumn(
         numeric: true,
         label: Text(
-          'S. Gramı',
+          'Maliyet',
           style: buildDataColumnTextStyle(),
         ),
       ),
       DataColumn(
         numeric: true,
         label: Text(
-          'Maliyet Fiyatı',
+          'S. Gramı',
           style: buildDataColumnTextStyle(),
         ),
       ),
@@ -568,13 +568,13 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           ),
           DataCell(
             Text(
-              salesGramsCellTxt,
+              costTxt,
               style: buildDataCellTextStyle(),
             ),
           ),
           DataCell(
             Text(
-              costPriceTxt,
+              salesGramsCellTxt,
               style: buildDataCellTextStyle(),
             ),
           ),
@@ -670,7 +670,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           pieceCellTxt = '';
           gramCellTxt = '';
           salesGramsCellTxt = '';
-          costPriceTxt = '';
+          costTxt = '';
           soldGramTxt = '. . . . . . .';
         });
       },
@@ -761,10 +761,8 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     usdSale = value['usdSale']!.toString();
     eurBuy = value['eurBuy']!.toString();
     eurSale = value['eurSale']!.toString();
-    fineGoldBuy =
-        OutputFormatters.buildNumberFormat1f(double.parse(fineGoldBuy));
-    fineGoldSale =
-        OutputFormatters.buildNumberFormat1f(double.parse(fineGoldSale));
+    fineGoldBuy = OutputFormatters.buildNumberFormat1f(double.parse(fineGoldBuy));
+    fineGoldSale = OutputFormatters.buildNumberFormat1f(double.parse(fineGoldSale));
     usdBuy = OutputFormatters.buildNumberFormat1f(double.parse(usdBuy));
     usdSale = OutputFormatters.buildNumberFormat1f(double.parse(usdSale));
     eurBuy = OutputFormatters.buildNumberFormat1f(double.parse(eurBuy));
@@ -785,24 +783,20 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         if (products[i].barcodeText == value) {
           productIndex = i;
           setState(() {
-            earningRateTLTextEditingController.text = '';
-            earningRateGramTextEditingController.text = '';
-            saleTLTextEditingController.text = '';
-            soldGramTxt = '. . . . . . .';
-            pieceTextEditingController.text = '';
             product = GoldProductDbHelper().products[i];
             nameCellTxt = product!.name.substring(
-                0, product!.name.length <= 20 ? product!.name.length : 20);
+              0,
+              product!.name.length <= 25 ? product!.name.length : 25,
+            );
             pieceCellTxt = product!.piece.toString();
             gramCellTxt = OutputFormatters.buildNumberFormat2f(product!.gram);
-            salesGramsCellTxt =
-                OutputFormatters.buildNumberFormat2f(product!.salesGrams);
+            costTxt = OutputFormatters.buildNumberFormat3f(product!.cost);
+            salesGramsCellTxt = OutputFormatters.buildNumberFormat2f(product!.salesGrams);
             CurrencyService.getCurrenciesOfHakanAltin().then((value) => {
                   setState(() {
-                    double costPrice =
-                        product!.cost * CurrencyService.fineGoldSale;
-                    costPriceTxt =
-                        '${OutputFormatters.buildNumberFormat0f(costPrice)} TL';
+                    saleTLTextEditingController.text =
+                        OutputFormatters.buildNumberFormat0f(
+                            product!.salesGrams * CurrencyService.fineGoldSale);
                     buildCurrencies(value);
                   }),
                 });
@@ -846,12 +840,12 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
     if (product != null) {
       isFun = 0;
       int? percent = int.tryParse(earningRateTLTextEditingController.text);
-      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
+      double costPrice = (product!.salesGrams * CurrencyService.fineGoldSale);
       if (percent != null) {
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent / 100));
         double temp = soldPrice / costPrice;
-        double gram = product!.gram * temp;
+        double gram = product!.salesGrams * temp;
         setState(() {
           earningRateGramTextEditingController.text =
               OutputFormatters.buildNumberFormat2f(gram);
@@ -866,14 +860,14 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
   void onCalculateGram() {
     if (product != null) {
       isFun = 1;
-      double? gram = double.tryParse(
-          earningRateGramTextEditingController.text.replaceAll(',', '.'));
-      double costPrice = (product!.cost * CurrencyService.fineGoldSale);
+      double? gram =
+          double.tryParse(earningRateGramTextEditingController.text.replaceAll(',', '.'));
+      double costPrice = (product!.salesGrams * CurrencyService.fineGoldSale);
       if (gram != null) {
-        double gramDiff = gram - product!.gram;
+        double gramDiff = gram - product!.salesGrams;
         double? percent = gramDiff == 0
             ? 0
-            : double.tryParse((100 / (product!.gram / gramDiff)).toString());
+            : double.tryParse((100 / (product!.salesGrams / gramDiff)).toString());
         soldPrice = (double.parse(costPrice.toString()) +
             (double.parse(costPrice.toString()) * percent! / 100));
         setState(() {
@@ -905,8 +899,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
         });
       } else {
         setState(() {
-          soldGramTxt =
-              OutputFormatters.buildNumberFormat3f(product!.salesGrams);
+          soldGramTxt = OutputFormatters.buildNumberFormat3f(product!.salesGrams);
         });
       }
     }
@@ -931,15 +924,12 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
       product!.piece -= piece;
 
       double costPrice = (product!.cost * CurrencyService.fineGoldSale);
-      soldPrice =
-          double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
+      soldPrice = double.parse(saleTLTextEditingController.text.replaceAll('.', ''));
       soldGram = double.parse(soldGramTxt.replaceAll(',', '.'));
       earnedProfitTL = soldPrice - costPrice;
       earnedProfitGram = soldGram - product!.gram;
 
-      GoldProductDbHelper()
-          .update(product!.toJson(), product!.id)
-          .then((value) async {
+      GoldProductDbHelper().update(product!.toJson(), product!.id).then((value) async {
         GoldProductDbHelper().products[productIndex] = product!;
 
         ProductSale productSale = ProductSale(
@@ -959,7 +949,7 @@ class _GoldProductSaleScreenState extends State<GoldProductSaleScreen> {
           pieceCellTxt = '';
           gramCellTxt = '';
           salesGramsCellTxt = '';
-          costPriceTxt = '';
+          costTxt = '';
           barcodeTextEditingController.text = '';
           earningRateTLTextEditingController.text = '';
           earningRateGramTextEditingController.text = '';
