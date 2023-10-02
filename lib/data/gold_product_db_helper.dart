@@ -28,7 +28,7 @@ class GoldProductDbHelper {
 
     _db = await databaseFactory.openDatabase(dbPath);
 
-    print("Path: $dbPath");
+    // print("Path: $dbPath");
 
     // await _db.execute('DROP TABLE gold_products');
     await _createTable();
