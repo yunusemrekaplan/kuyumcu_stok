@@ -457,11 +457,22 @@ class _GoldProductsInventoryScreenState
               ],
             ),
             pw.SizedBox(width: 10),
-            pw.Text(
-              '${product.carat.intDefinition}K',
-              style: const pw.TextStyle(
-                fontSize: 6,
-              ),
+            pw.Column(
+              children: [
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  '${product.cost}',
+                  style: const pw.TextStyle(
+                    fontSize: 6,
+                  ),
+                ),
+                pw.Text(
+                  '${product.carat.intDefinition}K',
+                  style: const pw.TextStyle(
+                    fontSize: 6,
+                  ),
+                ),
+              ]
             ),
           ],
         ),

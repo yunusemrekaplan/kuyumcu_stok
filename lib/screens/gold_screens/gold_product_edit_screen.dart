@@ -167,6 +167,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
               gramController;
               buttonStyles;
             });
+            buildCalculate();
           },
         ),
       ),
@@ -303,7 +304,7 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         onChanged: (Carat? newValue) {
           dropdownValue = newValue!;
           purityRateController.text =
-              OutputFormatters.buildNumberFormat1f(dropdownValue.purityRateDefinition);
+              OutputFormatters.buildNumberFormat3f(dropdownValue.purityRateDefinition);
           setState(() {
             purityRateController;
             buttonStyles;
@@ -399,15 +400,14 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
 
   void buildCalculate() {
     if (purityRateController.text.isNotEmpty &&
-        salesGramsController.text.isNotEmpty &&
+        gramController.text.isNotEmpty &&
         laborCostController.text.isNotEmpty) {
       setState(() {
         costController.text = OutputFormatters.buildNumberFormat3f(Calculator.calculateCostPrice(
               double.parse(purityRateController.text.replaceAll(",", ".")),
-              double.parse(salesGramsController.text.replaceAll(",", ".")),
+              double.parse(gramController.text.replaceAll(",", ".")),
               double.parse(laborCostController.text.replaceAll(",", ".")),
-            ) /
-            1000);
+            ));
       });
     }
   }
