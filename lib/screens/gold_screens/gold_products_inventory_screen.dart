@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
+import 'package:kuyumcu_stok/enum/my_error.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
 import 'package:kuyumcu_stok/model/gold_product.dart';
+import 'package:kuyumcu_stok/model/log.dart';
 import 'package:kuyumcu_stok/screens/gold_screens/gold_product_edit_screen.dart';
 import 'package:kuyumcu_stok/styles/button_styles.dart';
 import 'package:kuyumcu_stok/styles/data_table_styles.dart';
@@ -22,12 +22,10 @@ class GoldProductsInventoryScreen extends StatefulWidget {
   const GoldProductsInventoryScreen({super.key});
 
   @override
-  State<GoldProductsInventoryScreen> createState() =>
-      _GoldProductsInventoryScreenState();
+  State<GoldProductsInventoryScreen> createState() => _GoldProductsInventoryScreenState();
 }
 
-class _GoldProductsInventoryScreenState
-    extends State<GoldProductsInventoryScreen> {
+class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScreen> {
   late List<GoldProduct> products;
   late TextEditingController searchController;
   late ButtonStyles buttonStyles;
@@ -116,7 +114,7 @@ class _GoldProductsInventoryScreenState
       headingRowColor: DataTableStyles.buildHeadingRowColor(),
       sortColumnIndex: _sortColumnIndex,
       sortAscending: _sortAscending,
-      columnSpacing: 30,
+      columnSpacing: 25,
       horizontalMargin: 20,
       showCheckboxColumn: false,
       border: DataTableStyles.buildTableBorder(),
@@ -133,9 +131,44 @@ class _GoldProductsInventoryScreenState
       buildDataColumn(label: 'Ayar', numeric: true),
       buildDataColumn(label: 'İşçilik', numeric: true),
       buildDataColumn(label: 'Gram', numeric: true),
-      buildDataColumn(label: 'S. Gramı', numeric: true),
       buildDataColumn(label: 'Maliyet', numeric: true),
+      buildDataColumn(label: 'S. Gramı', numeric: true),
       buildActionsDataColumn(),
+    ];
+  }
+
+  List<DataRow> buildRowList(BuildContext context) {
+    List<DataRow> res = products
+        .where(
+          (e) {
+        return isStock ? e.piece == 0 : e.piece > 0;
+      },
+    )
+        .map(
+          (e) => DataRow(
+        color: DataTableStyles.buildDataRowColor(),
+        cells: buildDataCells(e, context),
+        onSelectChanged: (selected) {},
+      ),
+    )
+        .toList();
+    return res;
+  }
+
+  List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
+    int len = e.name.length;
+    String tripleDot = (len > 15 ? '...' : '');
+    String name = e.name.substring(0, (len > 15 ? 15 : len)) + tripleDot;
+    return [
+      buildBarcodeDataCell(e.barcodeText),
+      buildDataCell(e.piece.toString()),
+      buildDataCell(name),
+      buildDataCell(e.carat.intDefinition.toString()),
+      buildDataCell(OutputFormatters.buildNumberFormat3f(e.laborCost)),
+      buildDataCell(OutputFormatters.buildNumberFormat2f(e.gram)),
+      buildDataCell(OutputFormatters.buildNumberFormat3f(e.cost)),
+      buildDataCell(OutputFormatters.buildNumberFormat2f(e.salesGrams)),
+      buildActionsDataCell(context, e),
     ];
   }
 
@@ -163,49 +196,13 @@ class _GoldProductsInventoryScreenState
           ),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
-            constraints:
-                DecorationStyles.buildBoxConstraints(const Size(210, 35)),
+            constraints: DecorationStyles.buildBoxConstraints(const Size(210, 35)),
           ),
           cursorColor: Colors.white,
           onChanged: onSearch,
         ),
       ),
     );
-  }
-
-  List<DataRow> buildRowList(BuildContext context) {
-    List<DataRow> res = products
-        .where(
-          (e) {
-            return isStock ? e.piece == 0 : e.piece > 0;
-          },
-        )
-        .map(
-          (e) => DataRow(
-            color: DataTableStyles.buildDataRowColor(),
-            cells: buildDataCells(e, context),
-            onSelectChanged: (selected) {},
-          ),
-        )
-        .toList();
-    return res;
-  }
-
-  List<DataCell> buildDataCells(GoldProduct e, BuildContext context) {
-    int len = e.name.length;
-    String tripleDot = (len > 10 ? '...' : '');
-    String name = e.name.substring(0, (len > 10 ? 10 : len)) + tripleDot;
-    return [
-      buildBarcodeDataCell(e.barcodeText),
-      buildDataCell(e.piece.toString()),
-      buildDataCell(name),
-      buildDataCell(e.carat.intDefinition.toString()),
-      buildDataCell(OutputFormatters.buildNumberFormat3f(e.laborCost)),
-      buildDataCell(OutputFormatters.buildNumberFormat2f(e.gram)),
-      buildDataCell(OutputFormatters.buildNumberFormat2f(e.salesGrams)),
-      buildDataCell(OutputFormatters.buildNumberFormat3f(e.cost)),
-      buildActionsDataCell(context, e),
-    ];
   }
 
   DataCell buildBarcodeDataCell(String cell) {
@@ -297,8 +294,7 @@ class _GoldProductsInventoryScreenState
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  GoldProductEditScreen(product: e),
+              builder: (BuildContext context) => GoldProductEditScreen(product: e),
             ),
             (route) => false);
       },
@@ -310,12 +306,16 @@ class _GoldProductsInventoryScreenState
 
   IconButton buildPrinterButton(GoldProduct e) {
     return IconButton(
-      onPressed: () async{
+      onPressed: () async {
         try {
           await buildBarcode(e);
           await printBarcode();
         } on Exception catch (e) {
-          print(e.toString());
+          Log(
+            dateTime: DateTime.now(),
+            state: MyError.printer,
+            errorMessage: e.toString(),
+          );
         }
       },
       icon: const Icon(Icons.print),
@@ -399,7 +399,7 @@ class _GoldProductsInventoryScreenState
 
   TextStyle buildDataColumnTextStyle() {
     return TextStyle(
-      fontSize: size.height * 0.033,
+      fontSize: size.height * 0.032,
       color: Colors.white,
     );
   }
@@ -457,23 +457,21 @@ class _GoldProductsInventoryScreenState
               ],
             ),
             pw.SizedBox(width: 10),
-            pw.Column(
-              children: [
-                pw.SizedBox(height: 10),
-                pw.Text(
-                  '${product.cost}',
-                  style: const pw.TextStyle(
-                    fontSize: 6,
-                  ),
+            pw.Column(children: [
+              pw.SizedBox(height: 10),
+              pw.Text(
+                '${product.cost}',
+                style: const pw.TextStyle(
+                  fontSize: 6,
                 ),
-                pw.Text(
-                  '${product.carat.intDefinition}K',
-                  style: const pw.TextStyle(
-                    fontSize: 6,
-                  ),
+              ),
+              pw.Text(
+                '${product.carat.intDefinition}K',
+                style: const pw.TextStyle(
+                  fontSize: 6,
                 ),
-              ]
-            ),
+              ),
+            ]),
           ],
         ),
       ),
@@ -485,7 +483,8 @@ class _GoldProductsInventoryScreenState
 
   Future<void> printBarcode() async {
     await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => await pdf.save(),// pdf.document.documentID,
+      onLayout: (PdfPageFormat format) async =>
+          await pdf.save(), // pdf.document.documentID,
       name: barcodeFileName,
     );
     pdf = pw.Document();
@@ -516,11 +515,9 @@ class _GoldProductsInventoryScreenState
         }
       } else if (columnIndex == 3) {
         if (ascending) {
-          products.sort(
-                  (a, b) => a.carat.intDefinition.compareTo(b.carat.intDefinition));
+          products.sort((a, b) => a.carat.intDefinition.compareTo(b.carat.intDefinition));
         } else {
-          products.sort(
-                  (a, b) => b.carat.intDefinition.compareTo(a.carat.intDefinition));
+          products.sort((a, b) => b.carat.intDefinition.compareTo(a.carat.intDefinition));
         }
       } else if (columnIndex == 4) {
         if (ascending) {
@@ -561,12 +558,9 @@ class _GoldProductsInventoryScreenState
       products = products
           .where(
             (e) =>
-        e.barcodeText.contains(value) ||
-            e.name
-                .toString()
-                .toLowerCase()
-                .contains(value.toString().toLowerCase()),
-      )
+                e.barcodeText.contains(value) ||
+                e.name.toString().toLowerCase().contains(value.toString().toLowerCase()),
+          )
           .toList();
     });
   }
