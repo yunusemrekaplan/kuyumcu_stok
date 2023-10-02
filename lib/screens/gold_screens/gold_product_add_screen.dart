@@ -132,7 +132,7 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         formWidget: buildTextFormField(
           controller: nameController,
           inputFormatters: [
-            LengthLimitingTextInputFormatter(20),
+            LengthLimitingTextInputFormatter(25),
           ],
           onChanged: (value) {
             setState(() {
@@ -189,19 +189,6 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
         ),
       ),
       buildDataRow(
-        label: '    Satış Gramı:',
-        formWidget: buildTextFormField(
-          controller: salesGramsController,
-          inputFormatters: [inputFormatDouble],
-          onChanged: (value) {
-            setState(() {
-              salesGramsController;
-              buttonStyles;
-            });
-          },
-        ),
-      ),
-      buildDataRow(
         label: '    Maliyet:',
         formWidget: buildTextFormField(
           controller: costController,
@@ -209,6 +196,19 @@ class _GoldProductAddScreenState extends State<GoldProductAddScreen> {
           onChanged: (value) {
             setState(() {
               costController;
+              buttonStyles;
+            });
+          },
+        ),
+      ),
+      buildDataRow(
+        label: '    Satış Gramı:',
+        formWidget: buildTextFormField(
+          controller: salesGramsController,
+          inputFormatters: [inputFormatDouble],
+          onChanged: (value) {
+            setState(() {
+              salesGramsController;
               buttonStyles;
             });
           },
