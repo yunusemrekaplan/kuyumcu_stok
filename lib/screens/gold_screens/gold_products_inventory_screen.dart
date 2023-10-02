@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kuyumcu_stok/data/gold_product_db_helper.dart';
+import 'package:kuyumcu_stok/enum/carat.dart';
 import 'package:kuyumcu_stok/enum/extension/carat_extension.dart';
 import 'package:kuyumcu_stok/enum/my_error.dart';
 import 'package:kuyumcu_stok/localization/output_formatters.dart';
@@ -31,12 +32,18 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
   late ButtonStyles buttonStyles;
   late Size size;
 
-  String barcodeFileName = 'barcode.pdf';
-
   int _sortColumnIndex = 0;
   bool _sortAscending = true;
   bool isStock = false;
 
+  int numOfEightCarats = 0;
+  int numOfFourteenCarats = 0;
+  int numOfEighteenCarats = 0;
+  int numOfTwentyTwoCarats = 0;
+  int numOfTwentyFourCarats = 0;
+  double totalGram = 0;
+
+  String barcodeFileName = 'barcode.pdf';
   Barcode bc = Barcode.isbn();
   var pdf = pw.Document();
   final pageFormat = const PdfPageFormat(270, 36);
@@ -45,6 +52,33 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
     products = GoldProductDbHelper().products;
     buttonStyles = ButtonStyles();
     searchController = TextEditingController();
+  }
+
+  @override
+  void initState() {
+    for (var product in products) {
+      if (product.piece > 0) {
+        totalGram += product.gram;
+        switch (product.carat) {
+          case Carat.eight:
+            numOfEightCarats++;
+            break;
+          case Carat.fourteen:
+            numOfFourteenCarats++;
+            break;
+          case Carat.eighteen:
+            numOfEighteenCarats++;
+            break;
+          case Carat.twentyTwo:
+            numOfTwentyTwoCarats++;
+            break;
+          case Carat.twentyFour:
+            numOfTwentyFourCarats++;
+            break;
+        }
+      }
+    }
+    super.initState();
   }
 
   @override
@@ -101,6 +135,16 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                 buildStockAddButton(context),
                 buildViewOutOfStockButton(context),
                 buildViewInStockButton(context),
+                const SizedBox(width: 20,),
+                Text('8K Adedi: $numOfEightCarats', style: buildDataCellTextStyle()),
+                const SizedBox(width: 20,),
+                Text('14K Adedi: $numOfFourteenCarats', style: buildDataCellTextStyle()),
+                const SizedBox(width: 20,),
+                Text('18K Adedi: $numOfEighteenCarats', style: buildDataCellTextStyle()),
+                const SizedBox(width: 20,),
+                Text('22K Adedi: $numOfTwentyTwoCarats', style: buildDataCellTextStyle()),
+                const SizedBox(width: 20,),
+                Text('Toplam Gram: ${OutputFormatters.buildNumberFormat2f(totalGram)}', style: buildDataCellTextStyle()),
               ],
             ),
           ),
