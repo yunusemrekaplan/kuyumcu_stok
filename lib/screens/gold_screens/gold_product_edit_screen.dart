@@ -172,20 +172,6 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
         ),
       ),
       buildDataRow(
-        label: '    Satış Gramı:',
-        formWidget: buildTextFormField(
-          controller: salesGramsController,
-          inputFormatters: inputFormattersDouble,
-          onChanged: (value) {
-            setState(() {
-              salesGramsController;
-              buttonStyles;
-            });
-            buildCalculate();
-          },
-        ),
-      ),
-      buildDataRow(
         label: '    Maliyet:',
         formWidget: buildTextFormField(
           controller: costController,
@@ -193,6 +179,19 @@ class _GoldProductEditScreenState extends State<GoldProductEditScreen> {
           onChanged: (value) {
             setState(() {
               costController;
+              buttonStyles;
+            });
+          },
+        ),
+      ),
+      buildDataRow(
+        label: '    Satış Gramı:',
+        formWidget: buildTextFormField(
+          controller: salesGramsController,
+          inputFormatters: inputFormattersDouble,
+          onChanged: (value) {
+            setState(() {
+              salesGramsController;
               buttonStyles;
             });
           },
