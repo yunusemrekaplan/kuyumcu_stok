@@ -485,39 +485,45 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
             pw.SizedBox(width: 15),
             pw.Column(
               children: [
-                pw.SizedBox(height: 4),
+                pw.SizedBox(height: 12),
                 pw.Text(
-                  'AHMEDHAN',
+                  product.laborCost.toString(),
                   style: const pw.TextStyle(
                     fontSize: 5,
                   ),
                 ),
-                pw.SizedBox(height: 3),
+                pw.Text(
+                  product.gram.toStringAsFixed(2),
+                  style: const pw.TextStyle(
+                    fontSize: 5,
+                  ),
+                ),
+              ],
+            ),
+            pw.SizedBox(width: 4.5),
+            pw.Column(
+              children: [
+                pw.SizedBox(height: 12),
                 pw.Text(
                   '${product.cost.toStringAsFixed(2)} Mgr',
                   style: const pw.TextStyle(
-                    fontSize: 6,
+                    fontSize: 5,
                   ),
                 ),
                 pw.Text(
                   '${product.salesGrams.toStringAsFixed(2)} Sgr',
                   style: const pw.TextStyle(
-                    fontSize: 6,
-                  ),
-                ),
-              ],
-            ),
-            pw.SizedBox(width: 6),
-            pw.Column(
-              children: [
-                pw.SizedBox(height: 16),
-                pw.Text(
-                  '${product.carat.intDefinition}K',
-                  style: const pw.TextStyle(
-                    fontSize: 6,
+                    fontSize: 5,
                   ),
                 ),
               ]
+            ),
+            pw.SizedBox(width: 4.5),
+            pw.Text(
+              '${product.carat.intDefinition}K',
+              style: const pw.TextStyle(
+                fontSize: 5,
+              ),
             ),
           ],
         ),
