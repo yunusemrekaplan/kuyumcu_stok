@@ -305,7 +305,7 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
                 ),
                 onPressed: () {
                   setState(
-                    () {
+                        () {
                       GoldProductDbHelper().products.remove(e);
                       GoldProductDbHelper().delete(e.id);
                     },
@@ -340,7 +340,7 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
             MaterialPageRoute(
               builder: (BuildContext context) => GoldProductEditScreen(product: e),
             ),
-            (route) => false);
+                (route) => false);
       },
       icon: const Icon(Icons.edit),
       color: Colors.blue,
@@ -485,37 +485,40 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
             pw.SizedBox(width: 15),
             pw.Column(
               children: [
-                pw.SizedBox(height: 10),
+                pw.SizedBox(height: 4),
                 pw.Text(
-                  '${product.gram} GR',
+                  'AHMEDHAN',
+                  style: const pw.TextStyle(
+                    fontSize: 5,
+                  ),
+                ),
+                pw.SizedBox(height: 3),
+                pw.Text(
+                  '${product.cost.toStringAsFixed(2)} Mgr',
                   style: const pw.TextStyle(
                     fontSize: 6,
                   ),
                 ),
                 pw.Text(
-                  '${product.salesGrams} SGR',
+                  '${product.salesGrams.toStringAsFixed(2)} Sgr',
                   style: const pw.TextStyle(
                     fontSize: 6,
                   ),
                 ),
               ],
             ),
-            pw.SizedBox(width: 10),
-            pw.Column(children: [
-              pw.SizedBox(height: 10),
-              pw.Text(
-                '${product.cost}',
-                style: const pw.TextStyle(
-                  fontSize: 6,
+            pw.SizedBox(width: 6),
+            pw.Column(
+              children: [
+                pw.SizedBox(height: 16),
+                pw.Text(
+                  '${product.carat.intDefinition}K',
+                  style: const pw.TextStyle(
+                    fontSize: 6,
+                  ),
                 ),
-              ),
-              pw.Text(
-                '${product.carat.intDefinition}K',
-                style: const pw.TextStyle(
-                  fontSize: 6,
-                ),
-              ),
-            ]),
+              ]
+            ),
           ],
         ),
       ),
@@ -528,7 +531,7 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
   Future<void> printBarcode() async {
     await Printing.layoutPdf(
       onLayout: (PdfPageFormat format) async =>
-          await pdf.save(), // pdf.document.documentID,
+      await pdf.save(), // pdf.document.documentID,
       name: barcodeFileName,
     );
     pdf = pw.Document();
@@ -602,9 +605,9 @@ class _GoldProductsInventoryScreenState extends State<GoldProductsInventoryScree
       products = products
           .where(
             (e) =>
-                e.barcodeText.contains(value) ||
-                e.name.toString().toLowerCase().contains(value.toString().toLowerCase()),
-          )
+        e.barcodeText.contains(value) ||
+            e.name.toString().toLowerCase().contains(value.toString().toLowerCase()),
+      )
           .toList();
     });
   }
